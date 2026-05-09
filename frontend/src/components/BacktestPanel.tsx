@@ -13,6 +13,7 @@ import {
   Legend,
 } from "recharts";
 import { api, type BacktestResult } from "@/lib/api";
+import { getCurrencySymbol } from "@/lib/currency";
 
 interface Props {
   ticker: string;
@@ -23,6 +24,7 @@ interface Props {
 }
 
 export function BacktestPanel({ ticker, result, onRunBacktest, capital, riskTolerance }: Props) {
+  const currency = getCurrencySymbol(ticker);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [startDate, setStartDate] = useState("2018-01-01");
@@ -73,7 +75,7 @@ export function BacktestPanel({ ticker, result, onRunBacktest, capital, riskTole
             <label className="block text-xs text-[var(--text-muted)] mb-1.5">Capital</label>
             <input
               type="text"
-              value={`$${capital.toLocaleString()}`}
+              value={`${currency}${capital.toLocaleString()}`}
               readOnly
               className="input-dark w-36 opacity-60"
             />
@@ -137,7 +139,7 @@ export function BacktestPanel({ ticker, result, onRunBacktest, capital, riskTole
                     axisLine={false}
                     tickLine={false}
                     tick={{ fill: "#5a6580", fontSize: 11 }}
-                    tickFormatter={(v) => `$${(v / 1000).toFixed(0)}K`}
+                    tickFormatter={(v) => `${currency}${(v / 1000).toFixed(0)}K`}
                     width={65}
                   />
                   <Tooltip
@@ -148,7 +150,7 @@ export function BacktestPanel({ ticker, result, onRunBacktest, capital, riskTole
                       color: "#f0f2f8",
                       fontSize: "13px",
                     }}
-                    formatter={(value: number) => [`$${value.toFixed(0)}`, "Portfolio"]}
+                    formatter={(value) => [`${currency}${Number(value).toFixed(0)}`, "Portfolio"]}
                   />
                   <Legend />
                   <Line
@@ -176,8 +178,8 @@ export function BacktestPanel({ ticker, result, onRunBacktest, capital, riskTole
                   <tr className="text-left text-[var(--text-muted)] text-xs uppercase">
                     <th className="pb-3 pr-4">Entry</th>
                     <th className="pb-3 pr-4">Exit</th>
-                    <th className="pb-3 pr-4">Entry $</th>
-                    <th className="pb-3 pr-4">Exit $</th>
+                    <th className="pb-3 pr-4">Entry Price</th>
+                    <th className="pb-3 pr-4">Exit Price</th>
                     <th className="pb-3 pr-4">P&L</th>
                     <th className="pb-3 pr-4">Return</th>
                     <th className="pb-3">Reason</th>
@@ -188,10 +190,10 @@ export function BacktestPanel({ ticker, result, onRunBacktest, capital, riskTole
                     <tr key={i} className="border-t border-[var(--border)]">
                       <td className="py-2.5 pr-4 font-mono text-xs">{String(t.entry_date).slice(0, 10)}</td>
                       <td className="py-2.5 pr-4 font-mono text-xs">{String(t.exit_date).slice(0, 10)}</td>
-                      <td className="py-2.5 pr-4">${Number(t.entry_price).toFixed(2)}</td>
-                      <td className="py-2.5 pr-4">${Number(t.exit_price).toFixed(2)}</td>
+                      <td className="py-2.5 pr-4">{currency}{Number(t.entry_price).toFixed(2)}</td>
+                      <td className="py-2.5 pr-4">{currency}{Number(t.exit_price).toFixed(2)}</td>
                       <td className={`py-2.5 pr-4 font-bold ${Number(t.pnl) >= 0 ? "text-[var(--accent-green)]" : "text-[var(--accent-red)]"}`}>
-                        {Number(t.pnl) >= 0 ? "+" : ""}${Number(t.pnl).toFixed(0)}
+                        {Number(t.pnl) >= 0 ? "+" : ""}{currency}{Math.abs(Number(t.pnl)).toFixed(0)}
                       </td>
                       <td className={`py-2.5 pr-4 ${Number(t.return_pct) >= 0 ? "text-[var(--accent-green)]" : "text-[var(--accent-red)]"}`}>
                         {(Number(t.return_pct) * 100).toFixed(1)}%

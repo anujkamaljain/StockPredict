@@ -86,3 +86,413 @@
 2026-05-10 01:48:21.919 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDFCHD': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
 2026-05-10 01:48:22.743 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDFCHDF': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
 2026-05-10 01:48:23.569 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDFCHDFC': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:48:38.765 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'H': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:48:39.604 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HD': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:48:40.424 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDF': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:48:41.257 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDFC': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:49:37.666 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'H': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:49:38.218 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HD': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:49:39.038 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDF': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:49:39.878 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDFC': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:49:56.198 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDFC': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:50:00.569 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'AAPL': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:50:05.345 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'Google': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:50:15.068 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 01:50:15.072 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching AAPL data from Yahoo Finance...
+2026-05-10 01:50:15.072 | INFO     | app.data.providers.yahoo:fetch_ohlcv:63 - Loading cached OHLCV data for AAPL
+2026-05-10 01:50:17.773 | INFO     | app.data.validation:clean:210 - [AAPL] Winsorizing 9 extreme returns
+2026-05-10 01:50:17.781 | INFO     | app.data.validation:clean:224 - [AAPL] Cleaned data: 2854 rows remaining
+2026-05-10 01:50:17.781 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for AAPL
+2026-05-10 01:50:39.272 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDFCA': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:50:48.515 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 01:50:48.517 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching AAPL data from Yahoo Finance...
+2026-05-10 01:50:48.517 | INFO     | app.data.providers.yahoo:fetch_ohlcv:63 - Loading cached OHLCV data for AAPL
+2026-05-10 01:50:48.978 | INFO     | app.data.validation:clean:210 - [AAPL] Winsorizing 9 extreme returns
+2026-05-10 01:50:48.985 | INFO     | app.data.validation:clean:224 - [AAPL] Cleaned data: 2854 rows remaining
+2026-05-10 01:50:48.985 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for AAPL
+2026-05-10 01:50:50.254 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 01:50:50.255 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching AAPL data from Yahoo Finance...
+2026-05-10 01:50:50.255 | INFO     | app.data.providers.yahoo:fetch_ohlcv:63 - Loading cached OHLCV data for AAPL
+2026-05-10 01:50:50.652 | INFO     | app.data.validation:clean:210 - [AAPL] Winsorizing 9 extreme returns
+2026-05-10 01:50:50.657 | INFO     | app.data.validation:clean:224 - [AAPL] Cleaned data: 2854 rows remaining
+2026-05-10 01:50:50.658 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for AAPL
+2026-05-10 01:50:51.184 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2854 rows...
+2026-05-10 01:50:51.368 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 01:50:56.429 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 01:50:56.805 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 01:50:56.816 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 01:51:07.357 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'H': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:51:08.186 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HD': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:51:08.758 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDF': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:51:09.805 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDFC': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:51:12.064 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDF': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:51:12.955 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'H': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:51:13.582 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'G': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:51:15.325 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'GOOGLE': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:51:19.794 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 01:51:19.795 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching GOOGLE data from Yahoo Finance...
+2026-05-10 01:51:19.795 | INFO     | app.data.providers.yahoo:fetch_ohlcv:89 - Fetching OHLCV data for GOOGLE from 2015-01-01 to now
+2026-05-10 01:51:21.604 | WARNING  | app.data.providers.yahoo:fetch_ohlcv:93 - No data returned for GOOGLE
+2026-05-10 01:51:21.604 | WARNING  | app.data.ingestion:fetch_stock_data:70 - Yahoo Finance failed for GOOGLE, trying Alpha Vantage...
+2026-05-10 01:51:21.605 | ERROR    | app.data.providers.alpha_vantage:_sync_request:80 - Alpha Vantage API key not configured
+2026-05-10 01:51:21.605 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for GOOGLE
+2026-05-10 01:51:22.746 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 01:51:22.747 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching GOOGLE data from Yahoo Finance...
+2026-05-10 01:51:22.748 | INFO     | app.data.providers.yahoo:fetch_ohlcv:89 - Fetching OHLCV data for GOOGLE from 2015-01-01 to now
+2026-05-10 01:51:23.611 | WARNING  | app.data.providers.yahoo:fetch_ohlcv:93 - No data returned for GOOGLE
+2026-05-10 01:51:23.611 | WARNING  | app.data.ingestion:fetch_stock_data:70 - Yahoo Finance failed for GOOGLE, trying Alpha Vantage...
+2026-05-10 01:51:23.611 | ERROR    | app.data.providers.alpha_vantage:_sync_request:80 - Alpha Vantage API key not configured
+2026-05-10 01:51:23.612 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for GOOGLE
+2026-05-10 01:51:25.948 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 01:51:25.949 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching GOOGL data from Yahoo Finance...
+2026-05-10 01:51:25.949 | INFO     | app.data.providers.yahoo:fetch_ohlcv:89 - Fetching OHLCV data for GOOGL from 2015-01-01 to now
+2026-05-10 01:51:26.659 | INFO     | app.data.providers.yahoo:fetch_ohlcv:107 - Fetched 2854 rows for GOOGL
+2026-05-10 01:51:26.666 | INFO     | app.data.validation:clean:210 - [GOOGL] Winsorizing 9 extreme returns
+2026-05-10 01:51:26.673 | INFO     | app.data.validation:clean:224 - [GOOGL] Cleaned data: 2854 rows remaining
+2026-05-10 01:51:26.673 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for GOOGL
+2026-05-10 01:51:27.880 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 01:51:27.881 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching GOOGL data from Yahoo Finance...
+2026-05-10 01:51:27.881 | INFO     | app.data.providers.yahoo:fetch_ohlcv:63 - Loading cached OHLCV data for GOOGL
+2026-05-10 01:51:28.318 | INFO     | app.data.validation:clean:210 - [GOOGL] Winsorizing 9 extreme returns
+2026-05-10 01:51:28.323 | INFO     | app.data.validation:clean:224 - [GOOGL] Cleaned data: 2854 rows remaining
+2026-05-10 01:51:28.323 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for GOOGL
+2026-05-10 01:51:29.850 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2854 rows...
+2026-05-10 01:51:30.012 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 01:51:34.456 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 01:51:34.804 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 01:51:34.812 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 01:51:40.631 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'H': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:51:40.677 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HD': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:51:41.111 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDF': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:51:43.558 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'AM': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:51:46.005 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'A': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:51:46.489 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'AM': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:52:10.697 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 01:52:10.697 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching META data from Yahoo Finance...
+2026-05-10 01:52:10.698 | INFO     | app.data.providers.yahoo:fetch_ohlcv:89 - Fetching OHLCV data for META from 2015-01-01 to now
+2026-05-10 01:52:11.206 | INFO     | app.data.providers.yahoo:fetch_ohlcv:107 - Fetched 2854 rows for META
+2026-05-10 01:52:11.213 | INFO     | app.data.validation:clean:210 - [META] Winsorizing 10 extreme returns
+2026-05-10 01:52:11.218 | INFO     | app.data.validation:clean:224 - [META] Cleaned data: 2854 rows remaining
+2026-05-10 01:52:11.218 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for META
+2026-05-10 01:52:12.309 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 01:52:12.309 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching META data from Yahoo Finance...
+2026-05-10 01:52:12.309 | INFO     | app.data.providers.yahoo:fetch_ohlcv:63 - Loading cached OHLCV data for META
+2026-05-10 01:52:12.698 | INFO     | app.data.validation:clean:210 - [META] Winsorizing 10 extreme returns
+2026-05-10 01:52:12.702 | INFO     | app.data.validation:clean:224 - [META] Cleaned data: 2854 rows remaining
+2026-05-10 01:52:12.702 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for META
+2026-05-10 01:52:13.724 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2854 rows...
+2026-05-10 01:52:13.923 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 01:52:18.151 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 01:52:18.486 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 01:52:18.495 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 01:52:37.305 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDFC': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:53:12.122 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 01:53:12.122 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching GOOGL data from Yahoo Finance...
+2026-05-10 01:53:12.122 | INFO     | app.data.providers.yahoo:fetch_ohlcv:63 - Loading cached OHLCV data for GOOGL
+2026-05-10 02:43:24.342 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'apple': 10 results
+2026-05-10 02:43:24.344 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'apple': 10 results
+2026-05-10 02:43:36.239 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching AAPL data from Alpha Vantage (primary)...
+2026-05-10 02:43:36.945 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for AAPL
+2026-05-10 02:43:36.946 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for AAPL...
+2026-05-10 02:43:36.946 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for AAPL
+2026-05-10 02:43:38.301 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 2854 rows for AAPL
+2026-05-10 02:43:38.308 | INFO     | app.data.validation:clean:210 - [AAPL] Winsorizing 9 extreme returns
+2026-05-10 02:43:38.314 | INFO     | app.data.validation:clean:224 - [AAPL] Cleaned data: 2854 rows remaining
+2026-05-10 02:43:38.314 | DEBUG    | app.data.providers.alpha_vantage:_rate_limit:61 - Rate limiting: sleeping 9.9s
+2026-05-10 02:43:48.898 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2854 rows...
+2026-05-10 02:43:49.063 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 02:43:53.654 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 02:43:53.970 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 02:43:53.987 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 02:45:43.587 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'H': 10 results
+2026-05-10 02:45:43.587 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'H': 10 results
+2026-05-10 02:45:43.760 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'HD'
+2026-05-10 02:45:45.252 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'HDF': 10 results
+2026-05-10 02:45:45.252 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'HDF': 10 results
+2026-05-10 02:45:51.199 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'HD': 10 results
+2026-05-10 02:45:51.199 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'HD': 10 results
+2026-05-10 02:45:57.207 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'HDFC': 10 results
+2026-05-10 02:45:57.207 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'HDFC': 10 results
+2026-05-10 02:46:05.327 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'H': 10 results
+2026-05-10 02:46:05.328 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'H': 10 results
+2026-05-10 02:46:05.756 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'M'
+2026-05-10 02:46:06.773 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'MO': 10 results
+2026-05-10 02:46:06.773 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'MO': 10 results
+2026-05-10 02:46:07.204 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'MOTI'
+2026-05-10 02:46:08.869 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'MOTILA': 10 results
+2026-05-10 02:46:08.869 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'MOTILA': 10 results
+2026-05-10 02:46:08.938 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'MOTILAL'
+2026-05-10 02:46:12.919 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'MOTILA': 10 results
+2026-05-10 02:46:12.919 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'MOTILA': 10 results
+2026-05-10 02:46:13.454 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'M'
+2026-05-10 02:46:14.652 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'ED': 10 results
+2026-05-10 02:46:14.653 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'ED': 10 results
+2026-05-10 02:46:16.234 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'EDW': 10 results
+2026-05-10 02:46:16.234 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'EDW': 10 results
+2026-05-10 02:46:17.080 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'EDWE'
+2026-05-10 02:47:26.707 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'EDEL': 7 results
+2026-05-10 02:47:26.708 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'EDEL': 7 results
+2026-05-10 02:47:28.519 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'EDELW': 4 results
+2026-05-10 02:47:28.519 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'EDELW': 4 results
+2026-05-10 02:47:29.077 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'EDELWEI'
+2026-05-10 02:47:29.858 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'EDELWEISS': 4 results
+2026-05-10 02:47:29.859 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'EDELWEISS': 4 results
+2026-05-10 02:47:34.897 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'EDELWEISS ': 3 results
+2026-05-10 02:47:34.897 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'EDELWEISS ': 3 results
+2026-05-10 02:47:36.950 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'EDELWEISS US '
+2026-05-10 02:47:40.587 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'EDELWEISS US T'
+2026-05-10 02:50:12.385 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-10 02:50:13.594 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-10 02:50:13.594 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-10 02:50:13.595 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for 0P0001J938.BO from 2015-01-01 to now
+2026-05-10 02:50:14.065 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 1454 rows for 0P0001J938.BO
+2026-05-10 02:50:14.065 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 1454 rows for 0P0001J938.BO
+2026-05-10 02:50:14.070 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1454 rows (100.0%)']
+2026-05-10 02:50:14.074 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1454 rows remaining
+2026-05-10 02:50:14.074 | DEBUG    | app.data.providers.alpha_vantage:_rate_limit:61 - Rate limiting: sleeping 10.3s
+2026-05-10 02:50:25.128 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-10 02:50:26.743 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-10 02:50:27.451 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-10 02:50:27.451 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-10 02:50:27.451 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-10 02:50:27.888 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 1454 rows for 0P0001J938.BO
+2026-05-10 02:50:27.893 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1454 rows (100.0%)']
+2026-05-10 02:50:27.896 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1454 rows remaining
+2026-05-10 02:50:27.896 | DEBUG    | app.data.providers.alpha_vantage:_rate_limit:61 - Rate limiting: sleeping 10.8s
+2026-05-10 02:50:39.495 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-10 02:50:40.602 | INFO     | app.features.engineering:compute_features:51 - Computing features for 1454 rows...
+2026-05-10 02:50:40.705 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 02:50:42.957 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 02:50:43.114 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 02:50:43.131 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 02:52:56.753 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-10 02:52:57.916 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-10 02:52:57.917 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-10 02:52:57.917 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-10 02:52:59.289 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 1454 rows for 0P0001J938.BO
+2026-05-10 02:52:59.295 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1454 rows (100.0%)']
+2026-05-10 02:52:59.300 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1454 rows remaining
+2026-05-10 02:52:59.300 | DEBUG    | app.data.providers.alpha_vantage:_rate_limit:61 - Rate limiting: sleeping 9.5s
+2026-05-10 02:53:09.389 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-10 02:53:10.267 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-10 02:53:10.944 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-10 02:53:10.945 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-10 02:53:10.945 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-10 02:53:10.965 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 1454 rows for 0P0001J938.BO
+2026-05-10 02:53:10.969 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1454 rows (100.0%)']
+2026-05-10 02:53:10.972 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1454 rows remaining
+2026-05-10 02:53:10.972 | DEBUG    | app.data.providers.alpha_vantage:_rate_limit:61 - Rate limiting: sleeping 11.3s
+2026-05-10 02:53:22.983 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-10 02:53:24.035 | INFO     | app.api.routes.signals:generate_signal:40 - Signal generation for 0P0001J938.BO: 1454 raw rows
+2026-05-10 02:53:24.035 | INFO     | app.features.engineering:compute_features:51 - Computing features for 1454 rows...
+2026-05-10 02:53:24.151 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 02:53:26.616 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 02:53:26.780 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 02:53:26.794 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 02:53:49.027 | INFO     | app.data.providers.alpha_vantage:search_symbols:238 - Alpha Vantage search for 'E': 10 results
+2026-05-10 02:53:49.028 | INFO     | app.api.routes.data:search_stocks:87 - Alpha Vantage search for 'E': 10 results
+2026-05-10 02:53:49.463 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'EDEL'
+2026-05-10 02:53:50.283 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'EDELWEIS'
+2026-05-10 02:53:50.894 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'EDELWEISS'
+2026-05-10 02:53:51.042 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'EDELWEISS '
+2026-05-10 02:53:57.099 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'EDELWEISS TECHNOLO'
+2026-05-10 02:53:58.251 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'EDELWEISS TECHNOLOGY '
+2026-05-10 02:54:13.203 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'EDELWEISS  TECHNOLOGY '
+2026-05-10 02:54:13.459 | INFO     | app.api.routes.data:search_stocks:93 - Falling back to Yahoo Finance search for 'EDELWEISS US TECHNOLOGY '
+2026-05-10 02:54:16.995 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-10 02:54:17.724 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-10 02:54:17.725 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-10 02:54:17.725 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-10 02:54:18.993 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 1454 rows for 0P0001J938.BO
+2026-05-10 02:54:18.999 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1454 rows (100.0%)']
+2026-05-10 02:54:19.002 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1454 rows remaining
+2026-05-10 02:54:19.004 | DEBUG    | app.data.providers.alpha_vantage:_rate_limit:61 - Rate limiting: sleeping 10.0s
+2026-05-10 02:54:29.550 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-10 02:54:30.107 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-10 02:54:30.108 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-10 02:54:30.108 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-10 02:54:30.127 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 1454 rows for 0P0001J938.BO
+2026-05-10 02:54:30.131 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1454 rows (100.0%)']
+2026-05-10 02:54:30.135 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1454 rows remaining
+2026-05-10 02:54:30.135 | INFO     | app.api.routes.signals:generate_signal:40 - Signal generation for 0P0001J938.BO: 1454 raw rows
+2026-05-10 02:54:30.136 | INFO     | app.features.engineering:compute_features:51 - Computing features for 1454 rows...
+2026-05-10 02:54:30.244 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 02:54:32.775 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 02:54:32.994 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 02:54:33.016 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 02:54:33.026 | INFO     | app.api.routes.signals:generate_signal:66 - Signal generation for 0P0001J938.BO: 1405 rows after feature engineering
+2026-05-10 03:01:51.635 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'HDFC '
+2026-05-10 03:01:51.779 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'HDFC M'
+2026-05-10 03:01:51.924 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'HD'
+2026-05-10 03:01:52.917 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'HDFC MID'
+2026-05-10 03:01:53.074 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'HDFC MID '
+2026-05-10 03:01:54.582 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'HDFC MID CAP'
+2026-05-10 03:02:14.037 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'HDFC MID CAP FUND'
+2026-05-10 03:02:18.523 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'HDFC MID CAP'
+2026-05-10 03:02:56.312 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0000XW8F.BO data from Alpha Vantage (primary)...
+2026-05-10 03:02:56.620 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0000XW8F.BO data from Alpha Vantage (primary)...
+2026-05-10 03:02:57.005 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0000XW8F.BO
+2026-05-10 03:02:57.005 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0000XW8F.BO...
+2026-05-10 03:02:57.005 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for 0P0000XW8F.BO from 2015-01-01 to now
+2026-05-10 03:02:57.343 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0000XW8F.BO
+2026-05-10 03:02:57.343 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0000XW8F.BO...
+2026-05-10 03:02:57.343 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for 0P0000XW8F.BO from 2015-01-01 to now
+2026-05-10 03:02:58.303 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2050 rows for 0P0000XW8F.BO
+2026-05-10 03:02:58.304 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 2050 rows for 0P0000XW8F.BO
+2026-05-10 03:02:58.309 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0000XW8F.BO: ['Found 4 return outliers (>5.0σ)', 'Zero volume in 2050 rows (100.0%)']
+2026-05-10 03:02:58.311 | INFO     | app.data.validation:clean:210 - [0P0000XW8F.BO] Winsorizing 4 extreme returns
+2026-05-10 03:02:58.315 | INFO     | app.data.validation:clean:224 - [0P0000XW8F.BO] Cleaned data: 2050 rows remaining
+2026-05-10 03:02:58.316 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0000XW8F.BO
+2026-05-10 03:02:58.638 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2050 rows for 0P0000XW8F.BO
+2026-05-10 03:02:58.639 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 2050 rows for 0P0000XW8F.BO
+2026-05-10 03:02:58.643 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0000XW8F.BO: ['Found 4 return outliers (>5.0σ)', 'Zero volume in 2050 rows (100.0%)']
+2026-05-10 03:02:58.644 | INFO     | app.data.validation:clean:210 - [0P0000XW8F.BO] Winsorizing 4 extreme returns
+2026-05-10 03:02:58.649 | INFO     | app.data.validation:clean:224 - [0P0000XW8F.BO] Cleaned data: 2050 rows remaining
+2026-05-10 03:02:58.649 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0000XW8F.BO
+2026-05-10 03:02:59.162 | INFO     | app.api.routes.signals:generate_signal:42 - Signal generation for 0P0000XW8F.BO: 2050 raw rows
+2026-05-10 03:02:59.162 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2050 rows...
+2026-05-10 03:02:59.290 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 03:03:02.765 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 03:03:03.031 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 03:03:03.050 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 03:03:03.061 | INFO     | app.api.routes.signals:generate_signal:68 - Signal generation for 0P0000XW8F.BO: 2001 rows after feature engineering
+2026-05-10 03:04:26.362 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDEL'
+2026-05-10 03:04:26.514 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDELW'
+2026-05-10 03:04:26.660 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDELWE'
+2026-05-10 03:04:26.810 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDELWEISS '
+2026-05-10 03:04:31.957 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDELWEISS US TECHNOLO'
+2026-05-10 03:04:32.602 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDELWEISS US TECHNOLOY'
+2026-05-10 03:04:33.343 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDELWEISS US TECHNOLOGY'
+2026-05-10 03:04:35.528 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-10 03:04:35.529 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-10 03:04:36.311 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-10 03:04:36.312 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-10 03:04:36.312 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-10 03:04:36.312 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-10 03:04:36.314 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-10 03:04:36.314 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-10 03:04:36.624 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 1454 rows for 0P0001J938.BO
+2026-05-10 03:04:36.630 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1454 rows (100.0%)']
+2026-05-10 03:04:36.634 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1454 rows remaining
+2026-05-10 03:04:36.635 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-10 03:04:36.640 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 1454 rows for 0P0001J938.BO
+2026-05-10 03:04:36.644 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1454 rows (100.0%)']
+2026-05-10 03:04:36.647 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1454 rows remaining
+2026-05-10 03:04:36.648 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-10 03:04:38.040 | INFO     | app.api.routes.signals:generate_signal:42 - Signal generation for 0P0001J938.BO: 1454 raw rows
+2026-05-10 03:04:38.040 | INFO     | app.features.engineering:compute_features:51 - Computing features for 1454 rows...
+2026-05-10 03:04:38.147 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 03:04:40.481 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 03:04:40.637 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 03:04:40.651 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 03:04:40.659 | INFO     | app.api.routes.signals:generate_signal:68 - Signal generation for 0P0001J938.BO: 1405 rows after feature engineering
+2026-05-10 03:10:05.148 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-10 03:10:06.194 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-10 03:10:06.194 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-10 03:10:06.195 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-10 03:10:06.216 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 4 rows for 0P0001J938.BO
+2026-05-10 03:10:06.220 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0001J938.BO: ['Insufficient history: 4 rows < 252 required', 'Zero volume in 4 rows (100.0%)']
+2026-05-10 03:10:06.224 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 4 rows remaining
+2026-05-10 03:10:06.224 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-10 03:10:18.113 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-10 03:10:18.629 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-10 03:10:18.629 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-10 03:10:18.630 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-10 03:10:18.661 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 1454 rows for 0P0001J938.BO
+2026-05-10 03:10:18.667 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1454 rows (100.0%)']
+2026-05-10 03:10:18.673 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1454 rows remaining
+2026-05-10 03:10:18.673 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-10 03:10:36.962 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-10 03:10:37.464 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-10 03:10:37.464 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-10 03:10:37.465 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-10 03:10:37.485 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 1454 rows for 0P0001J938.BO
+2026-05-10 03:10:37.490 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1454 rows (100.0%)']
+2026-05-10 03:10:37.494 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1454 rows remaining
+2026-05-10 03:10:37.494 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-10 03:11:22.328 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'E'
+2026-05-10 03:11:22.796 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDE'
+2026-05-10 03:11:23.438 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDEI'
+2026-05-10 03:11:24.510 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDEK'
+2026-05-10 03:11:24.975 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDEKW'
+2026-05-10 03:11:25.758 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDE'
+2026-05-10 03:11:27.007 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDELWEISS '
+2026-05-10 03:11:28.756 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDELWEISS US TECHNOLO'
+2026-05-10 03:11:29.189 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDELWEISS US TECHNOLOG'
+2026-05-10 03:11:30.244 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDELWEISS US TECHNOLOGY TECHNOLOGY '
+2026-05-10 03:11:33.284 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDELWEISS US TECHNOLOGY TECHNOLOGY'
+2026-05-10 03:11:34.131 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDELWEISS US TECHNOLOGY'
+2026-05-10 03:11:36.030 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-10 03:11:36.031 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-10 03:11:36.621 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-10 03:11:36.621 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-10 03:11:36.623 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-10 03:11:36.630 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-10 03:11:36.632 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-10 03:11:36.632 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-10 03:11:36.642 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 1454 rows for 0P0001J938.BO
+2026-05-10 03:11:36.648 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1454 rows (100.0%)']
+2026-05-10 03:11:36.652 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1454 rows remaining
+2026-05-10 03:11:36.652 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-10 03:11:36.658 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 1454 rows for 0P0001J938.BO
+2026-05-10 03:11:36.664 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1454 rows (100.0%)']
+2026-05-10 03:11:36.668 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1454 rows remaining
+2026-05-10 03:11:36.669 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-10 03:11:37.876 | INFO     | app.api.routes.signals:generate_signal:42 - Signal generation for 0P0001J938.BO: 1454 raw rows
+2026-05-10 03:11:37.876 | INFO     | app.features.engineering:compute_features:51 - Computing features for 1454 rows...
+2026-05-10 03:11:37.992 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 03:11:40.599 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 03:11:40.767 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 03:11:40.784 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 03:11:40.792 | INFO     | app.api.routes.signals:generate_signal:68 - Signal generation for 0P0001J938.BO: 1405 rows after feature engineering
+2026-05-10 03:13:50.590 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'EDELWEISS US TECHNOLOGY'
+2026-05-10 03:13:52.950 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-10 03:13:52.951 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-10 03:13:53.472 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-10 03:13:53.473 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-10 03:13:53.473 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-10 03:13:53.491 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-10 03:13:53.491 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-10 03:13:53.492 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-10 03:13:53.510 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 1454 rows for 0P0001J938.BO
+2026-05-10 03:13:53.521 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1454 rows (100.0%)']
+2026-05-10 03:13:53.527 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1454 rows remaining
+2026-05-10 03:13:53.528 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-10 03:13:53.542 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 1454 rows for 0P0001J938.BO
+2026-05-10 03:13:53.550 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1454 rows (100.0%)']
+2026-05-10 03:13:53.555 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1454 rows remaining
+2026-05-10 03:13:53.556 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-10 03:13:54.726 | INFO     | app.api.routes.signals:generate_signal:42 - Signal generation for 0P0001J938.BO: 1454 raw rows
+2026-05-10 03:13:54.727 | INFO     | app.features.engineering:compute_features:51 - Computing features for 1454 rows...
+2026-05-10 03:13:54.864 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 03:13:57.626 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 03:13:57.802 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 03:13:57.821 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 03:13:57.830 | INFO     | app.api.routes.signals:generate_signal:68 - Signal generation for 0P0001J938.BO: 1405 rows after feature engineering
+2026-05-10 03:18:29.362 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'HDFC '
+2026-05-10 03:18:29.564 | INFO     | app.api.routes.data:search_stocks:94 - Falling back to Yahoo Finance search for 'HDFC MID'
+2026-05-10 03:18:47.504 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0000XW8F.BO data from Alpha Vantage (primary)...
+2026-05-10 03:18:47.504 | INFO     | app.data.ingestion:fetch_stock_data:68 - Fetching 0P0000XW8F.BO data from Alpha Vantage (primary)...
+2026-05-10 03:18:48.155 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0000XW8F.BO
+2026-05-10 03:18:48.156 | WARNING  | app.data.ingestion:fetch_stock_data:75 - Alpha Vantage returned empty data for 0P0000XW8F.BO
+2026-05-10 03:18:48.157 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0000XW8F.BO...
+2026-05-10 03:18:48.157 | INFO     | app.data.ingestion:fetch_stock_data:86 - Falling back to Yahoo Finance for 0P0000XW8F.BO...
+2026-05-10 03:18:48.157 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0000XW8F.BO
+2026-05-10 03:18:48.157 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0000XW8F.BO
+2026-05-10 03:18:48.366 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 2050 rows for 0P0000XW8F.BO
+2026-05-10 03:18:48.373 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0000XW8F.BO: ['Found 4 return outliers (>5.0σ)', 'Zero volume in 2050 rows (100.0%)']
+2026-05-10 03:18:48.374 | INFO     | app.data.validation:clean:210 - [0P0000XW8F.BO] Winsorizing 4 extreme returns
+2026-05-10 03:18:48.382 | INFO     | app.data.validation:clean:224 - [0P0000XW8F.BO] Cleaned data: 2050 rows remaining
+2026-05-10 03:18:48.382 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0000XW8F.BO
+2026-05-10 03:18:48.385 | INFO     | app.data.ingestion:fetch_stock_data:90 - Yahoo Finance returned 2050 rows for 0P0000XW8F.BO
+2026-05-10 03:18:48.390 | WARNING  | app.data.ingestion:fetch_stock_data:105 - Validation issues for 0P0000XW8F.BO: ['Found 4 return outliers (>5.0σ)', 'Zero volume in 2050 rows (100.0%)']
+2026-05-10 03:18:48.391 | INFO     | app.data.validation:clean:210 - [0P0000XW8F.BO] Winsorizing 4 extreme returns
+2026-05-10 03:18:48.396 | INFO     | app.data.validation:clean:224 - [0P0000XW8F.BO] Cleaned data: 2050 rows remaining
+2026-05-10 03:18:48.396 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0000XW8F.BO
+2026-05-10 03:18:49.277 | INFO     | app.api.routes.signals:generate_signal:42 - Signal generation for 0P0000XW8F.BO: 2050 raw rows
+2026-05-10 03:18:49.277 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2050 rows...
+2026-05-10 03:18:49.411 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 03:18:52.622 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 03:18:52.835 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 03:18:52.850 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 03:18:52.859 | INFO     | app.api.routes.signals:generate_signal:68 - Signal generation for 0P0000XW8F.BO: 2001 rows after feature engineering

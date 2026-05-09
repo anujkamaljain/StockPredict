@@ -5,6 +5,7 @@ Data API routes — fetch and manage market data.
 from fastapi import APIRouter, Query, HTTPException
 from typing import Optional, List
 from loguru import logger
+import numpy as np
 
 from app.data.ingestion import DataIngestionService
 from app.config import config
@@ -20,8 +21,9 @@ async def fetch_stock_data(
 ):
     """Fetch OHLCV data for a single stock."""
     try:
+        import asyncio
         service = DataIngestionService()
-        result = service.fetch_stock_data(ticker.upper(), start=start, end=end)
+        result = await asyncio.to_thread(service.fetch_stock_data, ticker.upper(), start, end)
 
         if result["ohlcv"].empty:
             raise HTTPException(status_code=404, detail=f"No data found for {ticker}")
@@ -43,8 +45,8 @@ async def fetch_stock_data(
             },
             "latest": {
                 "close": round(float(df["Close"].iloc[-1]), 2),
-                "change": round(float(df["Close"].pct_change().iloc[-1] * 100), 2),
-                "volume": int(df["Volume"].iloc[-1]),
+                "change": round(float(df["Close"].pct_change().iloc[-1] * 100), 2) if len(df) > 1 and np.isfinite(df["Close"].pct_change().iloc[-1]) else 0.0,
+                "volume": int(df["Volume"].iloc[-1]) if df["Volume"].iloc[-1] == df["Volume"].iloc[-1] else 0,
             },
         }
     except HTTPException:
@@ -68,27 +70,47 @@ async def get_fundamentals(ticker: str):
 
 @router.get("/search")
 async def search_stocks(q: str = Query(..., min_length=1, description="Search query")):
-    """Search for stocks by ticker or name using Yahoo Finance autocomplete."""
-    import aiohttp
+    """
+    Search for stocks by ticker or company name.
 
+    Priority:
+    🥇 Alpha Vantage SYMBOL_SEARCH (official API, match scores)
+    🥈 Yahoo Finance search (fallback — no API key needed)
+    """
+    import httpx
+    from app.data.providers.alpha_vantage import AlphaVantageProvider
+
+    # --- 🥇 Try Alpha Vantage SYMBOL_SEARCH first ---
+    av = AlphaVantageProvider(api_key=config.api_keys.alpha_vantage)
+    if av.is_configured:
+        try:
+            av_results = await av.search_symbols(q)
+            if av_results:
+                logger.info(f"Alpha Vantage search for '{q}': {len(av_results)} results")
+                return av_results
+        except Exception as e:
+            logger.warning(f"Alpha Vantage search failed for '{q}': {e}")
+
+    # --- 🥈 Fallback to Yahoo Finance search ---
+    logger.info(f"Falling back to Yahoo Finance search for '{q}'")
     url = "https://query2.finance.yahoo.com/v1/finance/search"
     params = {
         "q": q,
-        "quotesCount": 10,
+        "quotesCount": 8,
         "newsCount": 0,
         "listsCount": 0,
         "enableFuzzyQuery": True,
         "quotesQueryId": "tss_match_phrase_query",
     }
-    headers = {"User-Agent": "Mozilla/5.0"}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+    }
 
     try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, params=params, headers=headers, timeout=aiohttp.ClientTimeout(total=5)) as resp:
-                if resp.status != 200:
-                    logger.warning(f"Yahoo search returned {resp.status} for '{q}'")
-                    return []
-                data = await resp.json()
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            resp = await client.get(url, params=params, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
 
         quotes = data.get("quotes", [])
         results = []
@@ -107,7 +129,7 @@ async def search_stocks(q: str = Query(..., min_length=1, description="Search qu
             })
         return results
     except Exception as e:
-        logger.warning(f"Search failed for '{q}': {e}")
+        logger.warning(f"Yahoo search also failed for '{q}': {e}")
         return []
 
 

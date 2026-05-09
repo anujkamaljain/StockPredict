@@ -30,7 +30,7 @@ class Signal:
             "action": self.action,
             "confidence": round(self.confidence, 4),
             "direction_prob": round(self.direction_prob, 4),
-            "expected_return": round(self.expected_return, 6) if self.expected_return else None,
+            "expected_return": round(self.expected_return, 6) if self.expected_return is not None else None,
             "risk_score": round(self.risk_score, 4),
             "model_agreement": round(self.model_agreement, 4),
             "features_summary": self.features_summary,

@@ -27,17 +27,17 @@ export function MetricsGrid({ signal }: Props) {
     },
     {
       label: "Volatility (20d)",
-      value: f.volatility_20 ? `${(f.volatility_20 * 100).toFixed(1)}%` : "—",
-      subtext: f.volatility_20 ? (f.volatility_20 > 0.3 ? "High" : f.volatility_20 < 0.15 ? "Low" : "Normal") : "",
+      value: f.volatility_20 != null ? `${(f.volatility_20 * 100).toFixed(1)}%` : "—",
+      subtext: f.volatility_20 != null ? (f.volatility_20 > 0.3 ? "High" : f.volatility_20 < 0.15 ? "Low" : "Normal") : "",
       icon: Activity,
-      color: f.volatility_20 ? (f.volatility_20 > 0.3 ? "red" : "green") : "blue",
+      color: f.volatility_20 != null ? (f.volatility_20 > 0.3 ? "red" : "green") : "blue",
     },
     {
       label: "Drawdown",
-      value: f.drawdown ? `${(f.drawdown * 100).toFixed(1)}%` : "—",
-      subtext: f.drawdown ? (f.drawdown < -0.1 ? "Deep" : f.drawdown < -0.05 ? "Moderate" : "Shallow") : "",
+      value: f.drawdown != null ? `${(f.drawdown * 100).toFixed(1)}%` : "—",
+      subtext: f.drawdown != null ? (f.drawdown < -0.1 ? "Deep" : f.drawdown < -0.05 ? "Moderate" : f.drawdown === 0 ? "At Peak" : "Shallow") : "",
       icon: AlertTriangle,
-      color: f.drawdown ? (f.drawdown < -0.1 ? "red" : f.drawdown < -0.05 ? "yellow" : "green") : "blue",
+      color: f.drawdown != null ? (f.drawdown < -0.1 ? "red" : f.drawdown < -0.05 ? "yellow" : "green") : "blue",
     },
   ];
 

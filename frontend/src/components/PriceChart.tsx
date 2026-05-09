@@ -11,19 +11,28 @@ import {
   CartesianGrid,
 } from "recharts";
 import type { StockData } from "@/lib/api";
+import { getCurrencySymbol } from "@/lib/currency";
 
 interface Props {
   data: StockData;
 }
 
 export function PriceChart({ data }: Props) {
+  const currency = getCurrencySymbol(data.ticker);
   const chartData = useMemo(() => {
     const last250 = Math.max(0, data.data.dates.length - 250);
-    return data.data.dates.slice(last250).map((date, i) => ({
-      date: date.slice(5),
-      close: data.data.close[last250 + i],
-      volume: data.data.volume[last250 + i],
-    }));
+    return data.data.dates.slice(last250).map((date, i) => {
+      // Format: "Jan '25" for axis, full date for tooltip
+      const d = new Date(date);
+      const month = d.toLocaleString("en", { month: "short" });
+      const year = String(d.getFullYear()).slice(2); // "25", "26"
+      return {
+        date: `${month} '${year}`,
+        fullDate: date,
+        close: data.data.close[last250 + i],
+        volume: data.data.volume[last250 + i],
+      };
+    });
   }, [data]);
 
   const minPrice = Math.min(...chartData.map((d) => d.close)) * 0.98;
@@ -50,18 +59,24 @@ export function PriceChart({ data }: Props) {
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#1f2640" />
             <XAxis
-              dataKey="date"
+              dataKey="fullDate"
               axisLine={false}
               tickLine={false}
               tick={{ fill: "#5a6580", fontSize: 11 }}
               interval={Math.floor(chartData.length / 6)}
+              tickFormatter={(d) => {
+                const dt = new Date(d);
+                const m = dt.toLocaleString("en", { month: "short" });
+                const y = String(dt.getFullYear()).slice(2);
+                return `${m} '${y}`;
+              }}
             />
             <YAxis
               domain={[minPrice, maxPrice]}
               axisLine={false}
               tickLine={false}
               tick={{ fill: "#5a6580", fontSize: 11 }}
-              tickFormatter={(v) => `$${v.toFixed(0)}`}
+              tickFormatter={(v) => `${currency}${v.toFixed(0)}`}
               width={60}
             />
             <Tooltip
@@ -72,7 +87,7 @@ export function PriceChart({ data }: Props) {
                 color: "#f0f2f8",
                 fontSize: "13px",
               }}
-              formatter={(value: number) => [`$${value.toFixed(2)}`, "Close"]}
+              formatter={(value) => [`${currency}${Number(value).toFixed(2)}`, "Close"]}
             />
             <Area
               type="monotone"

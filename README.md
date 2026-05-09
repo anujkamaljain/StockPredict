@@ -5,7 +5,7 @@
 ## 🏗️ Architecture
 
 A production-grade ML pipeline that:
-- Fetches real-time and historical stock market data (Yahoo Finance + Alpha Vantage + FRED)
+- Fetches real-time and historical stock market data (Alpha Vantage 🥇 + Yahoo Finance 🥈 + FRED)
 - Engineers 100+ meaningful financial features (technical, statistical, regime, macro)
 - Trains state-of-the-art ML/DL models (LSTM, Transformer, CNN, XGBoost, LightGBM, CatBoost)
 - Outputs actionable signals (BUY / SELL / HOLD + confidence score)
@@ -43,14 +43,15 @@ npm run dev
 
 Open http://localhost:3000
 
-### API Keys (Optional but recommended)
+### API Keys
 
-| Service | Purpose | Get Key |
-|---------|---------|---------|
-| Alpha Vantage | Fallback market data | https://www.alphavantage.co/support/ |
-| FRED | Macroeconomic indicators | https://fred.stlouisfed.org/docs/api/api_key.html |
+| Service | Priority | Purpose | Get Key |
+|---------|----------|---------|---------|
+| Alpha Vantage | 🥇 Primary | Market data, search, fundamentals | https://www.alphavantage.co/support/ |
+| FRED | — | Macroeconomic indicators | https://fred.stlouisfed.org/docs/api/api_key.html |
+| Yahoo Finance | 🥈 Fallback | Missing data recovery, sanity checks | No key needed |
 
-The system works without API keys using Yahoo Finance as the primary data source.
+> Alpha Vantage is the **primary** data source (official API, stable). Yahoo Finance is used as a **fallback** for missing data recovery and sanity checks. The system gracefully degrades to Yahoo-only if no Alpha Vantage key is configured.
 
 ## 📊 Features
 
@@ -75,7 +76,8 @@ The system works without API keys using Yahoo Finance as the primary data source
 ### Markets Supported
 - US stocks (NYSE, NASDAQ)
 - Indian stocks (NSE via .NS suffix, e.g., RELIANCE.NS)
-- Any ticker supported by Yahoo Finance
+- Forex & macro data (via Alpha Vantage)
+- Any ticker supported by Alpha Vantage / Yahoo Finance
 
 ## 🧠 Model Architecture
 

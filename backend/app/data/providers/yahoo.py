@@ -1,6 +1,8 @@
 """
 Yahoo Finance data provider using yfinance.
-Primary data source for OHLCV, fundamentals, and corporate actions.
+SECONDARY (fallback) data source — used when Alpha Vantage is unavailable,
+for missing data recovery, sanity checks, and redundancy.
+Also provides search autocomplete (unlimited, no API key needed).
 """
 
 import pandas as pd
@@ -14,8 +16,8 @@ from pathlib import Path
 
 class YahooFinanceProvider:
     """
-    Fetches market data from Yahoo Finance.
-    Serves as the primary data source due to reliability and breadth.
+    Fallback data source using Yahoo Finance.
+    Used for missing data recovery, sanity checks, and search autocomplete.
     """
 
     def __init__(self, cache_dir: Optional[Path] = None):

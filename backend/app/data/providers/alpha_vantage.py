@@ -1,6 +1,9 @@
 """
-Alpha Vantage data provider — fallback source for market data and additional indicators.
-Provides access to technical indicators, fundamental data, and economic indicators.
+Alpha Vantage data provider — PRIMARY source for market data and additional indicators.
+Provides access to OHLCV, technical indicators, fundamental data, symbol search,
+and economic indicators.
+
+NOTE: Free tier = 25 requests/day, 5/min. Rate limiting is enforced.
 """
 
 import os
@@ -17,8 +20,17 @@ from loguru import logger
 
 class AlphaVantageProvider:
     """
-    Fetches data from Alpha Vantage API.
-    Free tier: 25 requests/day. Used as fallback and for supplementary data.
+    Primary data source for the StockML system.
+    Fetches data from the Alpha Vantage API.
+
+    Provides:
+    - Daily OHLCV data (TIME_SERIES_DAILY)
+    - Company overview / fundamentals (OVERVIEW)
+    - Income statements (INCOME_STATEMENT)
+    - Earnings data (EARNINGS)
+    - Symbol search (SYMBOL_SEARCH)
+
+    Free tier: 25 requests/day, 5 requests/minute.
     """
 
     BASE_URL = "https://www.alphavantage.co/query"
@@ -35,6 +47,11 @@ class AlphaVantageProvider:
 
         if not self.api_key:
             logger.warning("Alpha Vantage API key not set. Limited functionality available.")
+
+    @property
+    def is_configured(self) -> bool:
+        """Check if a valid API key is set."""
+        return bool(self.api_key) and self.api_key not in ("", "your_alpha_vantage_key_here")
 
     def _rate_limit(self):
         """Enforce rate limiting for free tier."""
@@ -100,6 +117,33 @@ class AlphaVantageProvider:
             logger.error(f"Alpha Vantage request failed: {e}")
             return None
 
+    async def _async_request(self, params: Dict[str, str]) -> Optional[Dict]:
+        """Make an async API request (for search, etc.)."""
+        import httpx
+
+        if not self.api_key:
+            return None
+
+        params["apikey"] = self.api_key
+
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                response = await client.get(self.BASE_URL, params=params)
+                response.raise_for_status()
+                data = response.json()
+
+            if "Error Message" in data:
+                logger.error(f"Alpha Vantage error: {data['Error Message']}")
+                return None
+            if "Note" in data:
+                logger.warning(f"Alpha Vantage rate limit hit")
+                return None
+
+            return data
+        except Exception as e:
+            logger.error(f"Alpha Vantage async request failed: {e}")
+            return None
+
     def fetch_daily(
         self,
         ticker: str,
@@ -149,6 +193,51 @@ class AlphaVantageProvider:
 
         logger.info(f"Fetched {len(df)} daily records for {ticker} from Alpha Vantage")
         return df
+
+    async def search_symbols(self, keywords: str, use_cache: bool = True) -> List[Dict[str, str]]:
+        """
+        Search for stock symbols using Alpha Vantage SYMBOL_SEARCH.
+
+        Args:
+            keywords: Search keywords (ticker or company name)
+            use_cache: Whether to use cached results
+
+        Returns:
+            List of matching symbols with metadata
+        """
+        cache_key = f"search_{keywords.upper().replace(' ', '_')}"
+        if use_cache:
+            cached = self._read_cache(cache_key, max_age_hours=168)  # 1 week cache for search
+            if cached:
+                logger.debug(f"Using cached search results for '{keywords}'")
+                return cached
+
+        params = {
+            "function": "SYMBOL_SEARCH",
+            "keywords": keywords,
+        }
+
+        data = await self._async_request(params)
+        if not data or "bestMatches" not in data:
+            return []
+
+        results = []
+        for match in data["bestMatches"]:
+            results.append({
+                "ticker": match.get("1. symbol", ""),
+                "name": match.get("2. name", ""),
+                "type": match.get("3. type", "Equity"),
+                "region": match.get("4. region", ""),
+                "exchange": match.get("8. currency", "") or match.get("4. region", ""),
+                "currency": match.get("8. currency", "USD"),
+                "match_score": match.get("9. matchScore", "0"),
+            })
+
+        if results:
+            self._write_cache(cache_key, results)
+            logger.info(f"Alpha Vantage search for '{keywords}': {len(results)} results")
+
+        return results
 
     def fetch_company_overview(self, ticker: str, use_cache: bool = True) -> Dict[str, Any]:
         """Fetch company fundamentals overview."""

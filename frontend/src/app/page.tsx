@@ -113,9 +113,9 @@ export default function Home() {
           <p>
             Stock markets are stochastic and partially efficient. No model guarantees profit.
             This system provides probabilistic decision support — not financial advice.
-            All signals originate from trained ML models focusing on risk-adjusted returns.
-            Past performance does not guarantee future results. Always consult a qualified
-            financial advisor before making investment decisions.
+            Signals originate from statistical indicators (pre-training) or trained ML ensemble models (post-training),
+            focusing on risk-adjusted returns. Past performance does not guarantee future results.
+            Always consult a qualified financial advisor before making investment decisions.
           </p>
         </footer>
       </main>

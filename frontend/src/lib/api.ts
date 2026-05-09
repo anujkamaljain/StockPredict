@@ -94,7 +94,7 @@ export const api = {
     fetchAPI<StockData>(`/api/data/fetch/${ticker}?start=${start}`),
 
   searchStocks: (query: string) =>
-    fetchAPI<Array<Record<string, unknown>>>(`/api/data/search?q=${query}`),
+    fetchAPI<Array<{ ticker: string; name: string; exchange: string; type: string; sector?: string; industry?: string }>>(`/api/data/search?q=${encodeURIComponent(query)}`),
 
   getFundamentals: (ticker: string) =>
     fetchAPI<Record<string, unknown>>(`/api/data/fundamentals/${ticker}`),

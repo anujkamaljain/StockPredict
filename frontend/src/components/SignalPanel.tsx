@@ -2,6 +2,7 @@
 
 import { TrendingUp, TrendingDown, Minus, ShieldCheck, BarChart3 } from "lucide-react";
 import type { SignalResponse } from "@/lib/api";
+import { getCurrencySymbol } from "@/lib/currency";
 
 interface Props {
   signal: SignalResponse;
@@ -9,6 +10,7 @@ interface Props {
 
 export function SignalPanel({ signal }: Props) {
   const s = signal.signal;
+  const currency = getCurrencySymbol(s.ticker);
   const actionColor =
     s.action === "BUY" ? "green" : s.action === "SELL" ? "red" : "yellow";
   const ActionIcon =
@@ -32,7 +34,7 @@ export function SignalPanel({ signal }: Props) {
 
       {/* Price */}
       <div className="mb-5">
-        <div className="text-3xl font-bold">${signal.price.current.toFixed(2)}</div>
+        <div className="text-3xl font-bold">{currency}{signal.price.current.toFixed(2)}</div>
         <div className="flex gap-3 mt-1 text-sm">
           <span className={signal.price.change_1d >= 0 ? "text-[var(--accent-green)]" : "text-[var(--accent-red)]"}>
             {signal.price.change_1d >= 0 ? "+" : ""}{signal.price.change_1d.toFixed(2)}% 1D

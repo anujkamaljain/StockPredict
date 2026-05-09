@@ -6,6 +6,7 @@ from fastapi import APIRouter, Query, HTTPException
 from typing import Optional
 from loguru import logger
 import numpy as np
+import pandas as pd
 
 from app.data.ingestion import DataIngestionService
 from app.features.engineering import FeatureEngineer
@@ -29,24 +30,42 @@ async def generate_signal(
     try:
         ticker = ticker.upper()
 
-        # Fetch data
+        # Fetch data (run in thread to prevent blocking event loop during AV rate limiting)
+        import asyncio
         service = DataIngestionService()
-        result = service.fetch_stock_data(ticker, start="2015-01-01")
+        result = await asyncio.to_thread(service.fetch_stock_data, ticker, "2015-01-01")
 
         if result["ohlcv"].empty:
             raise HTTPException(status_code=404, detail=f"No data for {ticker}")
 
         df = result["ohlcv"]
+        logger.info(f"Signal generation for {ticker}: {len(df)} raw rows")
 
         # Compute features
         engineer = FeatureEngineer()
         featured_df = engineer.compute_features(df)
 
-        # Drop NaN rows from rolling windows
-        featured_df = featured_df.dropna()
+        # Smart NaN handling — don't dropna() on ALL 170+ columns
+        # Mutual funds / illiquid tickers have zero volume → volume-based features are NaN
+        # Only require core price-based columns to be non-NaN
+        core_cols = [c for c in ["Close", "simple_return", "rsi_14", "macd", "sma_50"] if c in featured_df.columns]
+        if core_cols:
+            featured_df = featured_df.dropna(subset=core_cols)
 
-        if len(featured_df) < 100:
-            raise HTTPException(status_code=400, detail="Insufficient data after feature engineering")
+        # Fill remaining NaN with 0 for non-critical features (volume indicators etc.)
+        featured_df = featured_df.fillna(0)
+
+        # Replace inf values
+        featured_df = featured_df.replace([np.inf, -np.inf], 0)
+
+        if len(featured_df) < 50:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Insufficient data for {ticker}: only {len(featured_df)} rows after feature engineering (need 50+). "
+                       f"This can happen with mutual funds or tickers with sparse/short trading history."
+            )
+
+        logger.info(f"Signal generation for {ticker}: {len(featured_df)} rows after feature engineering")
 
         # Get latest features for signal
         latest = featured_df.iloc[-1]
@@ -63,8 +82,12 @@ async def generate_signal(
         for f in key_features:
             if f in latest.index:
                 val = latest[f]
-                if not (val != val):  # not NaN
-                    feature_dict[f] = round(float(val), 4)
+                try:
+                    fval = float(val)
+                    if np.isfinite(fval):
+                        feature_dict[f] = round(fval, 4)
+                except (ValueError, TypeError):
+                    pass
 
         # Generate signal using statistical features (model-based when trained)
         # For now, use a calibrated statistical approach until models are trained
@@ -80,13 +103,21 @@ async def generate_signal(
             volatility=float(latest.get("ann_vol_20", 0.2)) if "ann_vol_20" in latest.index else None,
         )
 
+        # Safely compute price changes (mutual funds / illiquid assets may have NaN)
+        def _safe_pct(series, periods=1):
+            try:
+                val = series.pct_change(periods).iloc[-1] * 100
+                return round(float(val), 2) if np.isfinite(val) else 0.0
+            except Exception:
+                return 0.0
+
         return {
             "signal": signal.to_dict(),
             "price": {
                 "current": round(float(df["Close"].iloc[-1]), 2),
-                "change_1d": round(float(df["Close"].pct_change().iloc[-1] * 100), 2),
-                "change_5d": round(float(df["Close"].pct_change(5).iloc[-1] * 100), 2),
-                "change_20d": round(float(df["Close"].pct_change(20).iloc[-1] * 100), 2),
+                "change_1d": _safe_pct(df["Close"], 1),
+                "change_5d": _safe_pct(df["Close"], 5),
+                "change_20d": _safe_pct(df["Close"], 20),
             },
             "features": feature_dict,
             "meta": {
@@ -99,7 +130,7 @@ async def generate_signal(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Signal generation error for {ticker}: {e}")
+        logger.error(f"Signal generation error for {ticker}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 

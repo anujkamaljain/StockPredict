@@ -47,8 +47,8 @@ class DataIngestionService:
         Fetch complete stock data (OHLCV + fundamentals) with fallback.
 
         Priority:
-        1. Yahoo Finance (primary)
-        2. Alpha Vantage (fallback)
+        🥇 1. Alpha Vantage (primary — official API, stable, OHLCV + indicators)
+        🥈 2. Yahoo Finance (fallback — missing data recovery, sanity checks)
 
         Returns:
             Dict with 'ohlcv', 'fundamentals', 'validation_report'
@@ -61,21 +61,40 @@ class DataIngestionService:
             "source": None,
         }
 
-        # Try Yahoo Finance first
-        logger.info(f"Fetching {ticker} data from Yahoo Finance...")
-        ohlcv = self.yahoo.fetch_ohlcv(ticker, start=start, end=end, interval=interval)
+        ohlcv = pd.DataFrame()
 
-        if ohlcv.empty:
-            # Fallback to Alpha Vantage
-            logger.warning(f"Yahoo Finance failed for {ticker}, trying Alpha Vantage...")
-            if self.alpha_vantage.requests_remaining > 0:
+        # 🥇 Try Alpha Vantage first (primary source)
+        if self.alpha_vantage.is_configured and self.alpha_vantage.requests_remaining > 0:
+            logger.info(f"Fetching {ticker} data from Alpha Vantage (primary)...")
+            try:
                 ohlcv = self.alpha_vantage.fetch_daily(ticker)
-                result["source"] = "alpha_vantage"
+                if not ohlcv.empty:
+                    result["source"] = "alpha_vantage"
+                    logger.info(f"Alpha Vantage returned {len(ohlcv)} rows for {ticker}")
+                else:
+                    logger.warning(f"Alpha Vantage returned empty data for {ticker}")
+            except Exception as e:
+                logger.warning(f"Alpha Vantage failed for {ticker}: {e}")
+        else:
+            if not self.alpha_vantage.is_configured:
+                logger.info(f"Alpha Vantage not configured, skipping to Yahoo fallback for {ticker}")
+            else:
+                logger.warning(f"Alpha Vantage rate limit reached, falling back to Yahoo for {ticker}")
+
+        # 🥈 Fallback to Yahoo Finance
+        if ohlcv.empty:
+            logger.info(f"Falling back to Yahoo Finance for {ticker}...")
+            ohlcv = self.yahoo.fetch_ohlcv(ticker, start=start, end=end, interval=interval)
+            if not ohlcv.empty:
+                result["source"] = "yahoo"
+                logger.info(f"Yahoo Finance returned {len(ohlcv)} rows for {ticker}")
             else:
                 logger.error(f"All data sources exhausted for {ticker}")
                 return result
-        else:
-            result["source"] = "yahoo"
+
+        # If Alpha Vantage was primary and start date filtering is needed
+        if result["source"] == "alpha_vantage" and start:
+            ohlcv = ohlcv[ohlcv.index >= pd.Timestamp(start)]
 
         # Validate data
         if validate and not ohlcv.empty:
@@ -91,9 +110,18 @@ class DataIngestionService:
 
         result["ohlcv"] = ohlcv
 
-        # Fetch fundamentals (non-blocking, best-effort)
+        # Fetch fundamentals — skip AV if it already failed for this ticker's OHLCV
         try:
-            result["fundamentals"] = self.yahoo.fetch_fundamentals(ticker)
+            if result["source"] == "alpha_vantage" and self.alpha_vantage.requests_remaining > 0:
+                # AV worked for OHLCV, so try AV for fundamentals too
+                overview = self.alpha_vantage.fetch_company_overview(ticker)
+                if overview:
+                    result["fundamentals"] = overview
+                else:
+                    result["fundamentals"] = self.yahoo.fetch_fundamentals(ticker)
+            else:
+                # AV failed or wasn't used — go straight to Yahoo for fundamentals
+                result["fundamentals"] = self.yahoo.fetch_fundamentals(ticker)
         except Exception as e:
             logger.warning(f"Failed to fetch fundamentals for {ticker}: {e}")
 

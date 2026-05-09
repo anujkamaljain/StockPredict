@@ -41,6 +41,7 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from app.data.providers.yahoo import YahooFinanceProvider
+from app.data.providers.alpha_vantage import AlphaVantageProvider
 from app.data.validation import DataValidator
 from app.features.engineering import FeatureEngineer
 from app.models.lstm import LSTMModel
@@ -74,6 +75,8 @@ def parse_args():
     parser.add_argument("--output_dir", type=str, default="trained_models")
     parser.add_argument("--device", type=str, default="auto",
                         help="cuda, cpu, or auto")
+    parser.add_argument("--alpha_vantage_key", type=str, default="",
+                        help="Alpha Vantage API key (primary data source)")
     return parser.parse_args()
 
 
@@ -89,21 +92,55 @@ def detect_device(preference: str) -> torch.device:
     return torch.device(preference)
 
 
-def fetch_and_prepare_data(tickers: list, start: str, seq_length: int):
-    """Fetch data for all tickers and build combined feature matrix."""
+def fetch_and_prepare_data(tickers: list, start: str, seq_length: int, av_key: str = ""):
+    """
+    Fetch data for all tickers and build combined feature matrix.
+
+    Priority:
+    🥇 Alpha Vantage (primary — official API)
+    🥈 Yahoo Finance (fallback — missing data recovery)
+    """
     print("\n📊 STEP 1: Fetching data...")
+    print(f"   🥇 Primary: Alpha Vantage | 🥈 Fallback: Yahoo Finance")
+
+    # Initialize providers
+    av_api_key = av_key or os.getenv("ALPHA_VANTAGE_API_KEY", "")
+    alpha_vantage = AlphaVantageProvider(api_key=av_api_key)
     yahoo = YahooFinanceProvider()
     validator = DataValidator()
     engineer = FeatureEngineer()
+
+    if alpha_vantage.is_configured:
+        print(f"   ✅ Alpha Vantage API key configured")
+    else:
+        print(f"   ⚠️  No Alpha Vantage key — using Yahoo Finance only")
 
     all_X, all_targets = [], []
     feature_names = None
 
     for ticker in tickers:
         print(f"  Fetching {ticker}...", end=" ")
-        df = yahoo.fetch_ohlcv(ticker, start=start, use_cache=False)
+        df = pd.DataFrame()
+
+        # 🥇 Try Alpha Vantage first
+        if alpha_vantage.is_configured and alpha_vantage.requests_remaining > 0:
+            try:
+                df = alpha_vantage.fetch_daily(ticker, use_cache=False)
+                if not df.empty:
+                    # Filter by start date
+                    df = df[df.index >= pd.Timestamp(start)]
+                    print(f"[AV: {len(df)} rows]", end=" ")
+            except Exception as e:
+                print(f"[AV error: {e}]", end=" ")
+
+        # 🥈 Fallback to Yahoo
         if df.empty:
-            print("❌ No data")
+            df = yahoo.fetch_ohlcv(ticker, start=start, use_cache=False)
+            if not df.empty:
+                print(f"[Yahoo: {len(df)} rows]", end=" ")
+
+        if df.empty:
+            print("❌ No data from any source")
             continue
 
         df = validator.clean(df, ticker)
@@ -248,7 +285,7 @@ def main():
 
     # ---- STEP 1: Fetch & prepare data ----
     X, y, feature_names, scaler = fetch_and_prepare_data(
-        tickers, args.start, args.seq_length
+        tickers, args.start, args.seq_length, av_key=args.alpha_vantage_key
     )
 
     # Save scaler and feature names

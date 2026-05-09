@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import { Search, Loader2, TrendingUp, X } from "lucide-react";
+import { Search, Loader2, TrendingUp, X, Sparkles } from "lucide-react";
 import { api, type SignalResponse, type StockData } from "@/lib/api";
 
 interface SearchResult {
@@ -24,34 +24,44 @@ export function StockSearch({ onSelect, riskTolerance }: Props) {
   const [suggestions, setSuggestions] = useState<SearchResult[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [highlightIndex, setHighlightIndex] = useState(-1);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   // Debounced search for suggestions
   const fetchSuggestions = useCallback(async (q: string) => {
     if (q.length < 1) {
       setSuggestions([]);
       setShowDropdown(false);
+      setHasSearched(false);
       return;
     }
 
+    // Cancel any in-flight request
+    if (abortRef.current) abortRef.current.abort();
+    abortRef.current = new AbortController();
+
     setSearchLoading(true);
+    setShowDropdown(true);
     try {
       const results = await api.searchStocks(q);
-      const mapped: SearchResult[] = (results as SearchResult[]).map((r) => ({
+      const mapped: SearchResult[] = results.map((r) => ({
         ticker: r.ticker,
         name: r.name || "",
         exchange: r.exchange || "",
         type: r.type || "EQUITY",
       }));
       setSuggestions(mapped);
-      setShowDropdown(mapped.length > 0);
+      setShowDropdown(true);
+      setHasSearched(true);
       setHighlightIndex(-1);
     } catch {
       setSuggestions([]);
-      setShowDropdown(false);
+      setHasSearched(true);
     } finally {
       setSearchLoading(false);
     }
@@ -62,11 +72,22 @@ export function StockSearch({ onSelect, riskTolerance }: Props) {
     setQuery(upper);
     setError("");
 
-    // Debounce search
+    if (!upper.trim()) {
+      setSuggestions([]);
+      setShowDropdown(false);
+      setHasSearched(false);
+      return;
+    }
+
+    // Show dropdown immediately with loading state
+    setShowDropdown(true);
+    setSearchLoading(true);
+
+    // Debounce the actual API call
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       fetchSuggestions(upper);
-    }, 300);
+    }, 250);
   };
 
   // Analyze a selected stock
@@ -76,6 +97,7 @@ export function StockSearch({ onSelect, riskTolerance }: Props) {
       setQuery(ticker);
       setLoading(true);
       setError("");
+      setSuggestions([]);
 
       try {
         const [data, signal] = await Promise.all([
@@ -109,14 +131,18 @@ export function StockSearch({ onSelect, riskTolerance }: Props) {
 
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setHighlightIndex((prev) =>
-        prev < suggestions.length - 1 ? prev + 1 : 0
-      );
+      setHighlightIndex((prev) => {
+        const next = prev < suggestions.length - 1 ? prev + 1 : 0;
+        scrollToItem(next);
+        return next;
+      });
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setHighlightIndex((prev) =>
-        prev > 0 ? prev - 1 : suggestions.length - 1
-      );
+      setHighlightIndex((prev) => {
+        const next = prev > 0 ? prev - 1 : suggestions.length - 1;
+        scrollToItem(next);
+        return next;
+      });
     } else if (e.key === "Enter") {
       e.preventDefault();
       if (highlightIndex >= 0 && highlightIndex < suggestions.length) {
@@ -126,6 +152,18 @@ export function StockSearch({ onSelect, riskTolerance }: Props) {
       }
     } else if (e.key === "Escape") {
       setShowDropdown(false);
+      inputRef.current?.blur();
+    } else if (e.key === "Tab") {
+      setShowDropdown(false);
+    }
+  };
+
+  const scrollToItem = (index: number) => {
+    const dropdown = dropdownRef.current;
+    if (!dropdown) return;
+    const items = dropdown.querySelectorAll("[data-search-item]");
+    if (items[index]) {
+      items[index].scrollIntoView({ block: "nearest", behavior: "smooth" });
     }
   };
 
@@ -133,10 +171,8 @@ export function StockSearch({ onSelect, riskTolerance }: Props) {
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node) &&
-        inputRef.current &&
-        !inputRef.current.contains(e.target as Node)
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
       ) {
         setShowDropdown(false);
       }
@@ -161,14 +197,50 @@ export function StockSearch({ onSelect, riskTolerance }: Props) {
     }
   };
 
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case "ETF":
+        return "📊";
+      case "INDEX":
+        return "📈";
+      case "MUTUALFUND":
+        return "🏦";
+      default:
+        return "🏢";
+    }
+  };
+
+  // Highlight matching text in name/ticker
+  const highlightMatch = (text: string, q: string) => {
+    if (!q || !text) return text;
+    const idx = text.toUpperCase().indexOf(q.toUpperCase());
+    if (idx === -1) return text;
+    return (
+      <>
+        {text.slice(0, idx)}
+        <span style={{ color: "var(--accent-blue)", fontWeight: 700 }}>
+          {text.slice(idx, idx + q.length)}
+        </span>
+        {text.slice(idx + q.length)}
+      </>
+    );
+  };
+
+  const isDropdownVisible = showDropdown && query.trim().length > 0;
+
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto" ref={containerRef}>
       <div className="relative flex gap-2">
         {/* Search Input with Icon */}
-        <div className="relative flex-1">
+        <div className="relative flex-1" style={{ zIndex: 50 }}>
           <Search
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-muted)] pointer-events-none"
-            style={{ zIndex: 1 }}
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none transition-colors duration-200"
+            style={{
+              color: isDropdownVisible
+                ? "var(--accent-blue)"
+                : "var(--text-muted)",
+              zIndex: 1,
+            }}
           />
 
           <input
@@ -180,128 +252,321 @@ export function StockSearch({ onSelect, riskTolerance }: Props) {
             onChange={(e) => handleInputChange(e.target.value)}
             onKeyDown={handleKeyDown}
             onFocus={() => {
-              if (suggestions.length > 0) setShowDropdown(true);
+              if (query.trim().length > 0) {
+                if (suggestions.length > 0) {
+                  setShowDropdown(true);
+                } else if (!hasSearched) {
+                  fetchSuggestions(query);
+                }
+              }
             }}
             className="input-dark h-12 text-base"
-            style={{ paddingLeft: "44px", paddingRight: query ? "36px" : "16px" }}
+            style={{
+              paddingLeft: "44px",
+              paddingRight: query ? "36px" : "16px",
+              borderColor: isDropdownVisible
+                ? "var(--accent-blue)"
+                : undefined,
+              boxShadow: isDropdownVisible
+                ? "0 0 0 3px rgba(79, 107, 255, 0.15), 0 8px 32px rgba(0, 0, 0, 0.2)"
+                : undefined,
+              borderBottomLeftRadius: isDropdownVisible ? "0" : undefined,
+              borderBottomRightRadius: isDropdownVisible ? "0" : undefined,
+            }}
             autoComplete="off"
             spellCheck={false}
+            role="combobox"
+            aria-expanded={isDropdownVisible}
+            aria-haspopup="listbox"
+            aria-autocomplete="list"
+            aria-controls="search-dropdown"
           />
 
-          {/* Clear button */}
+          {/* Clear button / loading spinner in input */}
           {query && (
             <button
               onClick={() => {
                 setQuery("");
                 setSuggestions([]);
                 setShowDropdown(false);
+                setHasSearched(false);
                 inputRef.current?.focus();
               }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full hover:bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full hover:bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all duration-200"
+              aria-label="Clear search"
             >
-              <X className="w-4 h-4" />
+              {searchLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" style={{ color: "var(--accent-blue)" }} />
+              ) : (
+                <X className="w-4 h-4" />
+              )}
             </button>
           )}
 
           {/* Autocomplete Dropdown */}
-          {showDropdown && (
+          {isDropdownVisible && (
             <div
               ref={dropdownRef}
-              className="absolute top-full left-0 right-0 mt-2 overflow-hidden z-50"
+              id="search-dropdown"
+              role="listbox"
+              className="absolute top-full left-0 right-0 overflow-hidden"
               style={{
                 background: "var(--bg-secondary)",
-                border: "1px solid var(--border)",
-                borderRadius: "12px",
-                boxShadow: "0 12px 40px rgba(0, 0, 0, 0.5)",
-                maxHeight: "360px",
+                border: "1px solid var(--accent-blue)",
+                borderTop: "1px solid var(--border)",
+                borderRadius: "0 0 12px 12px",
+                boxShadow: "0 16px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(79, 107, 255, 0.1)",
+                maxHeight: "380px",
                 overflowY: "auto",
+                animation: "dropdownSlide 0.15s ease-out",
               }}
             >
               {searchLoading ? (
-                <div className="flex items-center gap-3 px-4 py-3 text-sm text-[var(--text-muted)]">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Searching...
-                </div>
-              ) : (
-                suggestions.map((item, idx) => (
-                  <button
-                    key={item.ticker}
-                    onClick={() => analyzeStock(item.ticker)}
-                    onMouseEnter={() => setHighlightIndex(idx)}
-                    className="w-full text-left px-4 py-3 flex items-center gap-3 transition-colors"
-                    style={{
-                      background:
-                        highlightIndex === idx
-                          ? "var(--bg-card-hover)"
-                          : "transparent",
-                      borderBottom:
-                        idx < suggestions.length - 1
-                          ? "1px solid rgba(42, 48, 80, 0.5)"
-                          : "none",
-                    }}
-                  >
-                    {/* Ticker badge */}
+                /* Shimmer loading skeletons */
+                <div style={{ padding: "4px 0" }}>
+                  {[1, 2, 3, 4].map((i) => (
                     <div
-                      className="flex-shrink-0 flex items-center justify-center rounded-lg font-bold text-xs"
+                      key={i}
+                      className="flex items-center gap-3 px-4 py-3"
                       style={{
-                        width: "44px",
-                        height: "36px",
-                        background: `${getTypeColor(item.type)}15`,
-                        color: getTypeColor(item.type),
-                        border: `1px solid ${getTypeColor(item.type)}30`,
+                        opacity: 1 - i * 0.15,
                       }}
                     >
-                      {item.ticker.length > 5
-                        ? item.ticker.slice(0, 4) + "…"
-                        : item.ticker}
-                    </div>
-
-                    {/* Stock details */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-[var(--text-primary)] truncate">
-                          {item.ticker}
-                        </span>
-                        <span
-                          className="text-[10px] font-medium px-1.5 py-0.5 rounded"
+                      <div
+                        className="shimmer"
+                        style={{
+                          width: "44px",
+                          height: "36px",
+                          borderRadius: "8px",
+                          flexShrink: 0,
+                        }}
+                      />
+                      <div className="flex-1 space-y-2">
+                        <div
+                          className="shimmer"
                           style={{
-                            background: `${getTypeColor(item.type)}15`,
-                            color: getTypeColor(item.type),
+                            height: "14px",
+                            borderRadius: "4px",
+                            width: `${60 + i * 10}%`,
                           }}
-                        >
-                          {item.type}
-                        </span>
-                      </div>
-                      <div className="text-xs text-[var(--text-muted)] truncate mt-0.5">
-                        {item.name}
-                        {item.exchange && (
-                          <span className="ml-1 opacity-60">
-                            · {item.exchange}
-                          </span>
-                        )}
+                        />
+                        <div
+                          className="shimmer"
+                          style={{
+                            height: "10px",
+                            borderRadius: "4px",
+                            width: `${40 + i * 8}%`,
+                          }}
+                        />
                       </div>
                     </div>
-
-                    {/* Arrow indicator */}
-                    <TrendingUp
-                      className="flex-shrink-0 w-4 h-4"
-                      style={{
-                        color:
-                          highlightIndex === idx
-                            ? "var(--accent-blue)"
-                            : "var(--text-muted)",
-                        opacity: highlightIndex === idx ? 1 : 0.3,
-                      }}
-                    />
-                  </button>
-                ))
-              )}
-
-              {!searchLoading && suggestions.length === 0 && query.length >= 1 && (
-                <div className="px-4 py-3 text-sm text-[var(--text-muted)] text-center">
-                  No stocks found for &quot;{query}&quot;
+                  ))}
                 </div>
-              )}
+              ) : suggestions.length > 0 ? (
+                /* Actual results */
+                <div style={{ padding: "4px 0" }}>
+                  <div
+                    className="px-4 py-2 flex items-center gap-2"
+                    style={{
+                      borderBottom: "1px solid rgba(42, 48, 80, 0.5)",
+                    }}
+                  >
+                    <Sparkles className="w-3 h-3" style={{ color: "var(--accent-blue)" }} />
+                    <span
+                      style={{
+                        fontSize: "10px",
+                        fontWeight: 600,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.08em",
+                        color: "var(--text-muted)",
+                      }}
+                    >
+                      {suggestions.length} result{suggestions.length !== 1 ? "s" : ""} found
+                    </span>
+                  </div>
+                  {suggestions.map((item, idx) => (
+                    <button
+                      key={item.ticker}
+                      data-search-item
+                      role="option"
+                      aria-selected={highlightIndex === idx}
+                      onClick={() => analyzeStock(item.ticker)}
+                      onMouseEnter={() => setHighlightIndex(idx)}
+                      className="w-full text-left px-4 py-3 flex items-center gap-3 transition-all duration-150"
+                      style={{
+                        background:
+                          highlightIndex === idx
+                            ? "linear-gradient(90deg, rgba(79, 107, 255, 0.12), rgba(79, 107, 255, 0.04))"
+                            : "transparent",
+                        borderLeft:
+                          highlightIndex === idx
+                            ? "3px solid var(--accent-blue)"
+                            : "3px solid transparent",
+                        borderBottom:
+                          idx < suggestions.length - 1
+                            ? "1px solid rgba(42, 48, 80, 0.3)"
+                            : "none",
+                        animation: `fadeSlideIn 0.2s ease-out ${idx * 0.03}s both`,
+                      }}
+                    >
+                      {/* Ticker badge with icon */}
+                      <div
+                        className="flex-shrink-0 flex items-center justify-center rounded-lg font-bold text-xs"
+                        style={{
+                          width: "48px",
+                          height: "38px",
+                          background: `${getTypeColor(item.type)}12`,
+                          color: getTypeColor(item.type),
+                          border: `1px solid ${getTypeColor(item.type)}25`,
+                          transition: "all 0.2s ease",
+                          transform:
+                            highlightIndex === idx
+                              ? "scale(1.05)"
+                              : "scale(1)",
+                        }}
+                      >
+                        <span style={{ fontSize: "10px", marginRight: "2px" }}>
+                          {getTypeIcon(item.type)}
+                        </span>
+                      </div>
+
+                      {/* Stock details */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="text-sm font-bold truncate"
+                            style={{
+                              color:
+                                highlightIndex === idx
+                                  ? "var(--text-primary)"
+                                  : "var(--text-primary)",
+                            }}
+                          >
+                            {highlightMatch(item.ticker, query)}
+                          </span>
+                          <span
+                            className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full"
+                            style={{
+                              background: `${getTypeColor(item.type)}18`,
+                              color: getTypeColor(item.type),
+                              letterSpacing: "0.03em",
+                            }}
+                          >
+                            {item.type}
+                          </span>
+                        </div>
+                        <div
+                          className="text-xs truncate mt-0.5"
+                          style={{ color: "var(--text-muted)" }}
+                        >
+                          {highlightMatch(item.name, query)}
+                          {item.exchange && (
+                            <span style={{ opacity: 0.5, marginLeft: "4px" }}>
+                              · {item.exchange}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Action indicator */}
+                      <div
+                        className="flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-200"
+                        style={{
+                          width: "28px",
+                          height: "28px",
+                          background:
+                            highlightIndex === idx
+                              ? "rgba(79, 107, 255, 0.15)"
+                              : "transparent",
+                        }}
+                      >
+                        <TrendingUp
+                          className="w-3.5 h-3.5 transition-all duration-200"
+                          style={{
+                            color:
+                              highlightIndex === idx
+                                ? "var(--accent-blue)"
+                                : "var(--text-muted)",
+                            opacity: highlightIndex === idx ? 1 : 0.25,
+                            transform:
+                              highlightIndex === idx
+                                ? "translateX(1px)"
+                                : "none",
+                          }}
+                        />
+                      </div>
+                    </button>
+                  ))}
+
+                  {/* Keyboard hint */}
+                  <div
+                    className="px-4 py-2 flex items-center gap-3 justify-center"
+                    style={{
+                      borderTop: "1px solid rgba(42, 48, 80, 0.5)",
+                      background: "rgba(10, 14, 23, 0.3)",
+                    }}
+                  >
+                    <span className="flex items-center gap-1 text-[10px]" style={{ color: "var(--text-muted)" }}>
+                      <kbd style={{
+                        background: "var(--bg-card)",
+                        border: "1px solid var(--border)",
+                        borderRadius: "3px",
+                        padding: "1px 4px",
+                        fontSize: "9px",
+                        fontFamily: "monospace",
+                      }}>↑↓</kbd>
+                      navigate
+                    </span>
+                    <span className="flex items-center gap-1 text-[10px]" style={{ color: "var(--text-muted)" }}>
+                      <kbd style={{
+                        background: "var(--bg-card)",
+                        border: "1px solid var(--border)",
+                        borderRadius: "3px",
+                        padding: "1px 4px",
+                        fontSize: "9px",
+                        fontFamily: "monospace",
+                      }}>↵</kbd>
+                      select
+                    </span>
+                    <span className="flex items-center gap-1 text-[10px]" style={{ color: "var(--text-muted)" }}>
+                      <kbd style={{
+                        background: "var(--bg-card)",
+                        border: "1px solid var(--border)",
+                        borderRadius: "3px",
+                        padding: "1px 4px",
+                        fontSize: "9px",
+                        fontFamily: "monospace",
+                      }}>esc</kbd>
+                      close
+                    </span>
+                  </div>
+                </div>
+              ) : hasSearched ? (
+                /* No results found */
+                <div className="px-4 py-6 text-center">
+                  <div
+                    style={{
+                      fontSize: "28px",
+                      marginBottom: "8px",
+                      opacity: 0.6,
+                    }}
+                  >
+                    🔍
+                  </div>
+                  <div
+                    className="text-sm font-medium"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    No stocks found for &quot;{query}&quot;
+                  </div>
+                  <div
+                    className="text-xs mt-1"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    Try searching by ticker symbol or company name
+                  </div>
+                </div>
+              ) : null}
             </div>
           )}
         </div>
@@ -312,6 +577,11 @@ export function StockSearch({ onSelect, riskTolerance }: Props) {
           onClick={handleSearch}
           disabled={loading || !query.trim()}
           className="btn-primary h-12 px-8 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{
+            whiteSpace: "nowrap",
+            position: "relative",
+            zIndex: 51,
+          }}
         >
           {loading ? (
             <>
@@ -335,6 +605,9 @@ export function StockSearch({ onSelect, riskTolerance }: Props) {
             onClick={() => analyzeStock(t)}
             disabled={loading}
             className="px-3 py-1.5 rounded-lg text-xs font-medium text-[var(--text-secondary)] bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--accent-blue)] hover:text-white transition-all disabled:opacity-50"
+            style={{
+              cursor: loading ? "not-allowed" : "pointer",
+            }}
           >
             {t}
           </button>
@@ -346,6 +619,7 @@ export function StockSearch({ onSelect, riskTolerance }: Props) {
           {error}
         </div>
       )}
+
     </div>
   );
 }

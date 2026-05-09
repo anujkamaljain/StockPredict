@@ -34,9 +34,10 @@ async def run_backtest(
     try:
         ticker = ticker.upper()
 
-        # Fetch data
+        # Fetch data (run in thread to prevent blocking event loop)
+        import asyncio
         service = DataIngestionService()
-        result = service.fetch_stock_data(ticker, start=start, end=end)
+        result = await asyncio.to_thread(service.fetch_stock_data, ticker, start, end)
 
         if result["ohlcv"].empty:
             raise HTTPException(status_code=404, detail=f"No data for {ticker}")
@@ -46,10 +47,19 @@ async def run_backtest(
         # Compute features
         engineer = FeatureEngineer()
         featured_df = engineer.compute_features(df)
-        featured_df = featured_df.dropna()
 
-        if len(featured_df) < 100:
-            raise HTTPException(status_code=400, detail="Insufficient data for backtest")
+        # Smart NaN handling — only require core columns
+        core_cols = [c for c in ["Close", "simple_return", "rsi_14", "macd", "sma_50"] if c in featured_df.columns]
+        if core_cols:
+            featured_df = featured_df.dropna(subset=core_cols)
+        featured_df = featured_df.fillna(0)
+        featured_df = featured_df.replace([np.inf, -np.inf], 0)
+
+        if len(featured_df) < 50:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Insufficient data for {ticker}: {len(featured_df)} rows after feature engineering (need 50+)"
+            )
 
         # Generate signals
         signal_gen = SignalGenerator(risk_tolerance=risk_tolerance)
