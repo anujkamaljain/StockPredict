@@ -1,0 +1,88 @@
+2026-05-10 00:47:18.224 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 00:47:18.228 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching AAPL data from Yahoo Finance...
+2026-05-10 00:47:18.229 | INFO     | app.data.providers.yahoo:fetch_ohlcv:89 - Fetching OHLCV data for AAPL from 2015-01-01 to now
+2026-05-10 00:47:24.548 | INFO     | app.data.providers.yahoo:fetch_ohlcv:107 - Fetched 2854 rows for AAPL
+2026-05-10 00:47:24.561 | INFO     | app.data.validation:clean:210 - [AAPL] Winsorizing 9 extreme returns
+2026-05-10 00:47:24.570 | INFO     | app.data.validation:clean:224 - [AAPL] Cleaned data: 2854 rows remaining
+2026-05-10 00:47:24.571 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for AAPL
+2026-05-10 00:47:25.336 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 00:47:25.336 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching AAPL data from Yahoo Finance...
+2026-05-10 00:47:25.337 | INFO     | app.data.providers.yahoo:fetch_ohlcv:63 - Loading cached OHLCV data for AAPL
+2026-05-10 00:47:26.865 | INFO     | app.data.validation:clean:210 - [AAPL] Winsorizing 9 extreme returns
+2026-05-10 00:47:26.874 | INFO     | app.data.validation:clean:224 - [AAPL] Cleaned data: 2854 rows remaining
+2026-05-10 00:47:26.874 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for AAPL
+2026-05-10 00:47:27.767 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2854 rows...
+2026-05-10 00:47:27.962 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 00:47:33.224 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 00:47:33.646 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 00:47:33.659 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 00:49:03.425 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 00:49:03.425 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching AAPL data from Yahoo Finance...
+2026-05-10 00:49:03.426 | INFO     | app.data.providers.yahoo:fetch_ohlcv:63 - Loading cached OHLCV data for AAPL
+2026-05-10 00:49:03.914 | INFO     | app.data.validation:clean:210 - [AAPL] Winsorizing 9 extreme returns
+2026-05-10 00:49:03.919 | INFO     | app.data.validation:clean:224 - [AAPL] Cleaned data: 2854 rows remaining
+2026-05-10 00:49:03.919 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for AAPL
+2026-05-10 00:49:05.160 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 00:49:05.160 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching AAPL data from Yahoo Finance...
+2026-05-10 00:49:05.161 | INFO     | app.data.providers.yahoo:fetch_ohlcv:63 - Loading cached OHLCV data for AAPL
+2026-05-10 00:49:05.551 | INFO     | app.data.validation:clean:210 - [AAPL] Winsorizing 9 extreme returns
+2026-05-10 00:49:05.556 | INFO     | app.data.validation:clean:224 - [AAPL] Cleaned data: 2854 rows remaining
+2026-05-10 00:49:05.556 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for AAPL
+2026-05-10 00:49:06.562 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2854 rows...
+2026-05-10 00:49:06.732 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 00:49:11.552 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 00:49:11.954 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 00:49:11.967 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 00:55:05.471 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 00:55:05.471 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching MSFT data from Yahoo Finance...
+2026-05-10 00:55:05.472 | INFO     | app.data.providers.yahoo:fetch_ohlcv:89 - Fetching OHLCV data for MSFT from 2015-01-01 to now
+2026-05-10 00:55:06.200 | INFO     | app.data.providers.yahoo:fetch_ohlcv:107 - Fetched 2854 rows for MSFT
+2026-05-10 00:55:06.206 | INFO     | app.data.validation:clean:210 - [MSFT] Winsorizing 9 extreme returns
+2026-05-10 00:55:06.212 | INFO     | app.data.validation:clean:224 - [MSFT] Cleaned data: 2854 rows remaining
+2026-05-10 00:55:06.212 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for MSFT
+2026-05-10 00:55:07.574 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 00:55:07.574 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching MSFT data from Yahoo Finance...
+2026-05-10 00:55:07.574 | INFO     | app.data.providers.yahoo:fetch_ohlcv:63 - Loading cached OHLCV data for MSFT
+2026-05-10 00:55:08.111 | INFO     | app.data.validation:clean:210 - [MSFT] Winsorizing 9 extreme returns
+2026-05-10 00:55:08.115 | INFO     | app.data.validation:clean:224 - [MSFT] Cleaned data: 2854 rows remaining
+2026-05-10 00:55:08.115 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for MSFT
+2026-05-10 00:55:09.288 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2854 rows...
+2026-05-10 00:55:09.439 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 00:55:13.487 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 00:55:13.816 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 00:55:13.824 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 00:55:13.830 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 00:55:13.830 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching AAPL data from Yahoo Finance...
+2026-05-10 00:55:13.830 | INFO     | app.data.providers.yahoo:fetch_ohlcv:63 - Loading cached OHLCV data for AAPL
+2026-05-10 00:55:15.017 | INFO     | app.data.validation:clean:210 - [AAPL] Winsorizing 9 extreme returns
+2026-05-10 00:55:15.024 | INFO     | app.data.validation:clean:224 - [AAPL] Cleaned data: 2854 rows remaining
+2026-05-10 00:55:15.025 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for AAPL
+2026-05-10 00:55:16.978 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2854 rows...
+2026-05-10 00:55:17.138 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-10 00:55:21.233 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-10 00:55:21.554 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-10 00:55:21.562 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-10 00:55:21.568 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 00:55:21.569 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching AAPL data from Yahoo Finance...
+2026-05-10 00:55:21.569 | INFO     | app.data.providers.yahoo:fetch_ohlcv:63 - Loading cached OHLCV data for AAPL
+2026-05-10 00:55:22.087 | INFO     | app.data.validation:clean:210 - [AAPL] Winsorizing 9 extreme returns
+2026-05-10 00:55:22.092 | INFO     | app.data.validation:clean:224 - [AAPL] Cleaned data: 2854 rows remaining
+2026-05-10 00:55:22.092 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for AAPL
+2026-05-10 00:55:43.694 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 00:55:43.694 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching HDFC data from Yahoo Finance...
+2026-05-10 00:55:43.694 | INFO     | app.data.providers.yahoo:fetch_ohlcv:89 - Fetching OHLCV data for HDFC from 2015-01-01 to now
+2026-05-10 00:55:45.839 | WARNING  | app.data.providers.yahoo:fetch_ohlcv:93 - No data returned for HDFC
+2026-05-10 00:55:45.839 | WARNING  | app.data.ingestion:fetch_stock_data:70 - Yahoo Finance failed for HDFC, trying Alpha Vantage...
+2026-05-10 00:55:45.839 | ERROR    | app.data.providers.alpha_vantage:_sync_request:80 - Alpha Vantage API key not configured
+2026-05-10 00:55:45.839 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for HDFC
+2026-05-10 00:55:46.998 | WARNING  | app.data.providers.alpha_vantage:__init__:37 - Alpha Vantage API key not set. Limited functionality available.
+2026-05-10 00:55:46.998 | INFO     | app.data.ingestion:fetch_stock_data:65 - Fetching HDFC data from Yahoo Finance...
+2026-05-10 00:55:46.998 | INFO     | app.data.providers.yahoo:fetch_ohlcv:89 - Fetching OHLCV data for HDFC from 2015-01-01 to now
+2026-05-10 00:55:48.028 | WARNING  | app.data.providers.yahoo:fetch_ohlcv:93 - No data returned for HDFC
+2026-05-10 00:55:48.028 | WARNING  | app.data.ingestion:fetch_stock_data:70 - Yahoo Finance failed for HDFC, trying Alpha Vantage...
+2026-05-10 00:55:48.028 | ERROR    | app.data.providers.alpha_vantage:_sync_request:80 - Alpha Vantage API key not configured
+2026-05-10 00:55:48.029 | INFO     | app.data.providers.yahoo:fetch_fundamentals:120 - Fetching fundamentals for HDFC
+2026-05-10 01:48:21.259 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDFCH': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:48:21.919 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDFCHD': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:48:22.743 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDFCHDF': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
+2026-05-10 01:48:23.569 | WARNING  | app.api.routes.data:search_stocks:110 - Search failed for 'HDFCHDFC': Invalid variable type: value should be str, int or float, got True of type <class 'bool'>
