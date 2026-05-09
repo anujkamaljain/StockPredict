@@ -265,11 +265,20 @@ def train_deep_model(model, X_train_seq, y_train_seq, X_val_seq, y_val_seq,
     model.load_state_dict(torch.load(output_dir / f"{name}_best.pt", weights_only=True))
     print(f"  ✅ Best epoch: {best_epoch+1}, val_loss: {best_val_loss:.4f}")
 
-    # Get predictions for ensemble
+    # Get predictions for ensemble (batched to avoid OOM on shared GPUs)
     model.eval()
     with torch.no_grad():
-        train_pred = model(X_t)["direction_prob"].cpu().numpy()
-        val_pred = model(X_v)["direction_prob"].cpu().numpy()
+        train_preds = []
+        for i in range(0, len(X_t), batch_size):
+            out = model(X_t[i:i + batch_size])["direction_prob"].cpu()
+            train_preds.append(out)
+        train_pred = torch.cat(train_preds).numpy()
+
+        val_preds = []
+        for i in range(0, len(X_v), batch_size):
+            out = model(X_v[i:i + batch_size])["direction_prob"].cpu()
+            val_preds.append(out)
+        val_pred = torch.cat(val_preds).numpy()
 
     return model, train_pred, val_pred, history
 
@@ -318,7 +327,11 @@ def main():
     lstm.eval()
     with torch.no_grad():
         X_test_t = torch.FloatTensor(X_test_seq).to(device)
-        ensemble_test_preds["lstm"] = lstm(X_test_t)["direction_prob"].cpu().numpy()
+        test_preds = []
+        for i in range(0, len(X_test_t), args.batch_size):
+            out = lstm(X_test_t[i:i + args.batch_size])["direction_prob"].cpu()
+            test_preds.append(out)
+        ensemble_test_preds["lstm"] = torch.cat(test_preds).numpy()
     results["lstm"] = {"val_loss": min(lstm_hist["val_loss"])}
 
     # ---- STEP 5: Train Transformer ----
@@ -333,7 +346,11 @@ def main():
     )
     tft.eval()
     with torch.no_grad():
-        ensemble_test_preds["transformer"] = tft(X_test_t)["direction_prob"].cpu().numpy()
+        test_preds = []
+        for i in range(0, len(X_test_t), args.batch_size):
+            out = tft(X_test_t[i:i + args.batch_size])["direction_prob"].cpu()
+            test_preds.append(out)
+        ensemble_test_preds["transformer"] = torch.cat(test_preds).numpy()
     results["transformer"] = {"val_loss": min(tft_hist["val_loss"])}
 
     # ---- STEP 6: Train CNN ----
@@ -344,7 +361,11 @@ def main():
     )
     cnn.eval()
     with torch.no_grad():
-        ensemble_test_preds["cnn"] = cnn(X_test_t)["direction_prob"].cpu().numpy()
+        test_preds = []
+        for i in range(0, len(X_test_t), args.batch_size):
+            out = cnn(X_test_t[i:i + args.batch_size])["direction_prob"].cpu()
+            test_preds.append(out)
+        ensemble_test_preds["cnn"] = torch.cat(test_preds).numpy()
     results["cnn"] = {"val_loss": min(cnn_hist["val_loss"])}
 
     # ---- STEP 7: Train tree models ----
