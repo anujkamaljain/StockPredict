@@ -2585,3 +2585,979 @@
 2026-05-13 01:10:37.567 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
 2026-05-13 01:10:37.783 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
 2026-05-13 01:10:37.799 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:23:48.207 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching RELIANCE.NS data from Alpha Vantage (primary)...
+2026-05-13 01:23:49.227 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for RELIANCE.NS
+2026-05-13 01:23:49.227 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for RELIANCE.NS...
+2026-05-13 01:23:49.227 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for RELIANCE.NS
+2026-05-13 01:23:49.476 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for RELIANCE.NS
+2026-05-13 01:23:49.481 | INFO     | app.data.validation:clean:210 - [RELIANCE.NS] Winsorizing 10 extreme returns
+2026-05-13 01:23:49.486 | INFO     | app.data.validation:clean:224 - [RELIANCE.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:23:49.486 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for RELIANCE.NS
+2026-05-13 01:23:50.596 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for RELIANCE.NS: 2804 raw rows
+2026-05-13 01:23:50.596 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:23:50.752 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:23:54.943 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:23:55.242 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:23:55.257 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:23:55.267 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for RELIANCE.NS: 2755 rows after feature engineering
+2026-05-13 01:23:55.428 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching TCS.NS data from Alpha Vantage (primary)...
+2026-05-13 01:23:56.009 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for TCS.NS
+2026-05-13 01:23:56.010 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for TCS.NS...
+2026-05-13 01:23:56.010 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for TCS.NS
+2026-05-13 01:23:56.259 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for TCS.NS
+2026-05-13 01:23:56.267 | INFO     | app.data.validation:clean:210 - [TCS.NS] Winsorizing 2 extreme returns
+2026-05-13 01:23:56.271 | INFO     | app.data.validation:clean:224 - [TCS.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:23:56.271 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for TCS.NS
+2026-05-13 01:23:57.042 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for TCS.NS: 2804 raw rows
+2026-05-13 01:23:57.042 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:23:57.197 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:24:01.442 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:24:01.740 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:24:01.754 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:24:01.763 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for TCS.NS: 2755 rows after feature engineering
+2026-05-13 01:24:01.795 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching INFY.NS data from Alpha Vantage (primary)...
+2026-05-13 01:24:02.399 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for INFY.NS
+2026-05-13 01:24:02.399 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for INFY.NS...
+2026-05-13 01:24:02.399 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for INFY.NS
+2026-05-13 01:24:02.627 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for INFY.NS
+2026-05-13 01:24:02.632 | INFO     | app.data.validation:clean:210 - [INFY.NS] Winsorizing 10 extreme returns
+2026-05-13 01:24:02.638 | INFO     | app.data.validation:clean:224 - [INFY.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:24:02.638 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for INFY.NS
+2026-05-13 01:24:03.521 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for INFY.NS: 2804 raw rows
+2026-05-13 01:24:03.521 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:24:03.674 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:24:07.959 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:24:08.265 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:24:08.280 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:24:08.288 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for INFY.NS: 2755 rows after feature engineering
+2026-05-13 01:24:08.318 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching HDFCBANK.NS data from Alpha Vantage (primary)...
+2026-05-13 01:24:09.046 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for HDFCBANK.NS
+2026-05-13 01:24:09.046 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for HDFCBANK.NS...
+2026-05-13 01:24:09.046 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for HDFCBANK.NS
+2026-05-13 01:24:09.408 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for HDFCBANK.NS
+2026-05-13 01:24:09.413 | INFO     | app.data.validation:clean:210 - [HDFCBANK.NS] Winsorizing 10 extreme returns
+2026-05-13 01:24:09.418 | INFO     | app.data.validation:clean:224 - [HDFCBANK.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:24:09.418 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for HDFCBANK.NS
+2026-05-13 01:24:10.679 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for HDFCBANK.NS: 2804 raw rows
+2026-05-13 01:24:10.679 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:24:10.832 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:24:15.133 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:24:15.437 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:24:15.453 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:24:15.463 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for HDFCBANK.NS: 2755 rows after feature engineering
+2026-05-13 01:24:15.497 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching ICICIBANK.NS data from Alpha Vantage (primary)...
+2026-05-13 01:24:16.194 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for ICICIBANK.NS
+2026-05-13 01:24:16.194 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for ICICIBANK.NS...
+2026-05-13 01:24:16.195 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for ICICIBANK.NS
+2026-05-13 01:24:16.648 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for ICICIBANK.NS
+2026-05-13 01:24:16.653 | INFO     | app.data.validation:clean:210 - [ICICIBANK.NS] Winsorizing 9 extreme returns
+2026-05-13 01:24:16.659 | INFO     | app.data.validation:clean:224 - [ICICIBANK.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:24:16.659 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for ICICIBANK.NS
+2026-05-13 01:24:17.457 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for ICICIBANK.NS: 2804 raw rows
+2026-05-13 01:24:17.457 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:24:17.621 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:24:22.168 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:24:22.481 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:24:22.496 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:24:22.512 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for ICICIBANK.NS: 2755 rows after feature engineering
+2026-05-13 01:24:22.552 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching BHARTIARTL.NS data from Alpha Vantage (primary)...
+2026-05-13 01:24:23.083 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for BHARTIARTL.NS
+2026-05-13 01:24:23.083 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for BHARTIARTL.NS...
+2026-05-13 01:24:23.084 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for BHARTIARTL.NS
+2026-05-13 01:24:23.294 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for BHARTIARTL.NS
+2026-05-13 01:24:23.300 | INFO     | app.data.validation:clean:210 - [BHARTIARTL.NS] Winsorizing 6 extreme returns
+2026-05-13 01:24:23.305 | INFO     | app.data.validation:clean:224 - [BHARTIARTL.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:24:23.306 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for BHARTIARTL.NS
+2026-05-13 01:24:24.095 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for BHARTIARTL.NS: 2804 raw rows
+2026-05-13 01:24:24.095 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:24:24.268 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:24:28.693 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:24:29.002 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:24:29.018 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:24:29.028 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for BHARTIARTL.NS: 2755 rows after feature engineering
+2026-05-13 01:24:29.061 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching ITC.NS data from Alpha Vantage (primary)...
+2026-05-13 01:24:30.241 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for ITC.NS
+2026-05-13 01:24:30.241 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for ITC.NS...
+2026-05-13 01:24:30.242 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for ITC.NS
+2026-05-13 01:24:30.632 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for ITC.NS
+2026-05-13 01:24:30.637 | INFO     | app.data.validation:clean:210 - [ITC.NS] Winsorizing 10 extreme returns
+2026-05-13 01:24:30.642 | INFO     | app.data.validation:clean:224 - [ITC.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:24:30.642 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for ITC.NS
+2026-05-13 01:24:31.751 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for ITC.NS: 2804 raw rows
+2026-05-13 01:24:31.751 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:24:31.908 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:24:36.227 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:24:36.547 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:24:36.562 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:24:36.572 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for ITC.NS: 2755 rows after feature engineering
+2026-05-13 01:24:36.611 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching SBIN.NS data from Alpha Vantage (primary)...
+2026-05-13 01:24:37.311 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for SBIN.NS
+2026-05-13 01:24:37.311 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for SBIN.NS...
+2026-05-13 01:24:37.312 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for SBIN.NS
+2026-05-13 01:24:37.664 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for SBIN.NS
+2026-05-13 01:24:37.668 | INFO     | app.data.validation:clean:210 - [SBIN.NS] Winsorizing 7 extreme returns
+2026-05-13 01:24:37.673 | INFO     | app.data.validation:clean:224 - [SBIN.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:24:37.673 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for SBIN.NS
+2026-05-13 01:24:38.611 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for SBIN.NS: 2804 raw rows
+2026-05-13 01:24:38.612 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:24:38.766 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:24:43.127 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:24:43.435 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:24:43.449 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:24:43.459 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for SBIN.NS: 2755 rows after feature engineering
+2026-05-13 01:24:43.492 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching LT.NS data from Alpha Vantage (primary)...
+2026-05-13 01:24:44.004 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for LT.NS
+2026-05-13 01:24:44.005 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for LT.NS...
+2026-05-13 01:24:44.005 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for LT.NS
+2026-05-13 01:24:44.216 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for LT.NS
+2026-05-13 01:24:44.221 | INFO     | app.data.validation:clean:210 - [LT.NS] Winsorizing 7 extreme returns
+2026-05-13 01:24:44.226 | INFO     | app.data.validation:clean:224 - [LT.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:24:44.226 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for LT.NS
+2026-05-13 01:24:44.952 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for LT.NS: 2804 raw rows
+2026-05-13 01:24:44.953 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:24:45.111 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:24:49.503 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:24:49.824 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:24:49.852 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:24:49.866 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for LT.NS: 2755 rows after feature engineering
+2026-05-13 01:24:49.904 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching KOTAKBANK.NS data from Alpha Vantage (primary)...
+2026-05-13 01:24:50.447 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for KOTAKBANK.NS
+2026-05-13 01:24:50.448 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for KOTAKBANK.NS...
+2026-05-13 01:24:50.448 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for KOTAKBANK.NS
+2026-05-13 01:24:50.658 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for KOTAKBANK.NS
+2026-05-13 01:24:50.664 | INFO     | app.data.validation:clean:210 - [KOTAKBANK.NS] Winsorizing 9 extreme returns
+2026-05-13 01:24:50.670 | INFO     | app.data.validation:clean:224 - [KOTAKBANK.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:24:50.670 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for KOTAKBANK.NS
+2026-05-13 01:24:51.521 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for KOTAKBANK.NS: 2804 raw rows
+2026-05-13 01:24:51.521 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:24:51.677 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:24:56.011 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:24:56.311 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:24:56.326 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:24:56.335 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for KOTAKBANK.NS: 2755 rows after feature engineering
+2026-05-13 01:24:56.367 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching HINDUNILVR.NS data from Alpha Vantage (primary)...
+2026-05-13 01:24:57.141 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for HINDUNILVR.NS
+2026-05-13 01:24:57.142 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for HINDUNILVR.NS...
+2026-05-13 01:24:57.142 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for HINDUNILVR.NS
+2026-05-13 01:24:57.370 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for HINDUNILVR.NS
+2026-05-13 01:24:57.375 | INFO     | app.data.validation:clean:210 - [HINDUNILVR.NS] Winsorizing 7 extreme returns
+2026-05-13 01:24:57.380 | INFO     | app.data.validation:clean:224 - [HINDUNILVR.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:24:57.380 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for HINDUNILVR.NS
+2026-05-13 01:24:58.123 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for HINDUNILVR.NS: 2804 raw rows
+2026-05-13 01:24:58.124 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:24:58.279 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:25:02.555 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:25:02.854 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:25:02.869 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:25:02.877 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for HINDUNILVR.NS: 2755 rows after feature engineering
+2026-05-13 01:25:02.909 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching BAJFINANCE.NS data from Alpha Vantage (primary)...
+2026-05-13 01:25:03.436 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for BAJFINANCE.NS
+2026-05-13 01:25:03.436 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for BAJFINANCE.NS...
+2026-05-13 01:25:03.436 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for BAJFINANCE.NS
+2026-05-13 01:25:03.654 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for BAJFINANCE.NS
+2026-05-13 01:25:03.660 | INFO     | app.data.validation:clean:210 - [BAJFINANCE.NS] Winsorizing 3 extreme returns
+2026-05-13 01:25:03.663 | INFO     | app.data.validation:clean:224 - [BAJFINANCE.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:25:03.663 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for BAJFINANCE.NS
+2026-05-13 01:25:04.961 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for BAJFINANCE.NS: 2804 raw rows
+2026-05-13 01:25:04.961 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:25:05.118 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:25:09.321 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:25:09.624 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:25:09.638 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:25:09.646 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for BAJFINANCE.NS: 2755 rows after feature engineering
+2026-05-13 01:25:09.679 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching MARUTI.NS data from Alpha Vantage (primary)...
+2026-05-13 01:25:10.328 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for MARUTI.NS
+2026-05-13 01:25:10.329 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for MARUTI.NS...
+2026-05-13 01:25:10.329 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for MARUTI.NS
+2026-05-13 01:25:10.822 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for MARUTI.NS
+2026-05-13 01:25:10.827 | INFO     | app.data.validation:clean:210 - [MARUTI.NS] Winsorizing 8 extreme returns
+2026-05-13 01:25:10.831 | INFO     | app.data.validation:clean:224 - [MARUTI.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:25:10.832 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for MARUTI.NS
+2026-05-13 01:25:12.000 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for MARUTI.NS: 2804 raw rows
+2026-05-13 01:25:12.000 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:25:12.154 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:25:16.448 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:25:16.760 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:25:16.779 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:25:16.789 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for MARUTI.NS: 2755 rows after feature engineering
+2026-05-13 01:25:16.824 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching WIPRO.NS data from Alpha Vantage (primary)...
+2026-05-13 01:25:17.439 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for WIPRO.NS
+2026-05-13 01:25:17.440 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for WIPRO.NS...
+2026-05-13 01:25:17.440 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for WIPRO.NS
+2026-05-13 01:25:17.760 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for WIPRO.NS
+2026-05-13 01:25:17.766 | INFO     | app.data.validation:clean:210 - [WIPRO.NS] Winsorizing 5 extreme returns
+2026-05-13 01:25:17.771 | INFO     | app.data.validation:clean:224 - [WIPRO.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:25:17.771 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for WIPRO.NS
+2026-05-13 01:25:19.268 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for WIPRO.NS: 2804 raw rows
+2026-05-13 01:25:19.268 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:25:19.427 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:25:23.746 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:25:24.052 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:25:24.068 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:25:24.077 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for WIPRO.NS: 2755 rows after feature engineering
+2026-05-13 01:25:24.110 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching MPHASIS.NS data from Alpha Vantage (primary)...
+2026-05-13 01:25:24.729 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for MPHASIS.NS
+2026-05-13 01:25:24.729 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for MPHASIS.NS...
+2026-05-13 01:25:24.729 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for MPHASIS.NS from 2015-01-01 to now
+2026-05-13 01:25:25.347 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for MPHASIS.NS
+2026-05-13 01:25:25.348 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for MPHASIS.NS
+2026-05-13 01:25:25.353 | INFO     | app.data.validation:clean:192 - [MPHASIS.NS] Forward-filled 4 missing values
+2026-05-13 01:25:25.354 | INFO     | app.data.validation:clean:210 - [MPHASIS.NS] Winsorizing 3 extreme returns
+2026-05-13 01:25:25.357 | INFO     | app.data.validation:clean:224 - [MPHASIS.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:25:25.358 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for MPHASIS.NS
+2026-05-13 01:25:27.565 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for MPHASIS.NS: 2804 raw rows
+2026-05-13 01:25:27.565 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:25:27.725 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:25:32.032 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:25:32.354 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:25:32.368 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:25:32.377 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for MPHASIS.NS: 2755 rows after feature engineering
+2026-05-13 01:25:32.409 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching COFORGE.NS data from Alpha Vantage (primary)...
+2026-05-13 01:25:34.130 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for COFORGE.NS
+2026-05-13 01:25:34.130 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for COFORGE.NS...
+2026-05-13 01:25:34.130 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for COFORGE.NS from 2015-01-01 to now
+2026-05-13 01:25:34.842 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for COFORGE.NS
+2026-05-13 01:25:34.842 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for COFORGE.NS
+2026-05-13 01:25:34.847 | INFO     | app.data.validation:clean:192 - [COFORGE.NS] Forward-filled 4 missing values
+2026-05-13 01:25:34.848 | INFO     | app.data.validation:clean:210 - [COFORGE.NS] Winsorizing 6 extreme returns
+2026-05-13 01:25:34.853 | INFO     | app.data.validation:clean:224 - [COFORGE.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:25:34.853 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for COFORGE.NS
+2026-05-13 01:25:36.462 | INFO     | app.api.routes.data:search_stocks:128 - Falling back to Yahoo Finance search for 'U'
+2026-05-13 01:25:36.939 | INFO     | app.api.routes.data:search_stocks:128 - Falling back to Yahoo Finance search for 'U'
+2026-05-13 01:25:37.082 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for COFORGE.NS: 2804 raw rows
+2026-05-13 01:25:37.082 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:25:37.242 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:25:41.598 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:25:41.899 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:25:41.915 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:25:41.925 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for COFORGE.NS: 2755 rows after feature engineering
+2026-05-13 01:25:41.961 | INFO     | app.api.routes.data:search_stocks:128 - Falling back to Yahoo Finance search for 'US'
+2026-05-13 01:25:42.162 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching TRENT.NS data from Alpha Vantage (primary)...
+2026-05-13 01:25:42.742 | WARNING  | app.api.routes.data:search_stocks:165 - Yahoo search also failed for 'U': 
+2026-05-13 01:25:42.815 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for TRENT.NS
+2026-05-13 01:25:42.816 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for TRENT.NS...
+2026-05-13 01:25:42.816 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for TRENT.NS
+2026-05-13 01:25:43.244 | INFO     | app.api.routes.data:search_stocks:128 - Falling back to Yahoo Finance search for 'EDELWEISS US '
+2026-05-13 01:25:43.260 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for TRENT.NS
+2026-05-13 01:25:43.265 | INFO     | app.data.validation:clean:210 - [TRENT.NS] Winsorizing 8 extreme returns
+2026-05-13 01:25:43.270 | INFO     | app.data.validation:clean:224 - [TRENT.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:25:43.271 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for TRENT.NS
+2026-05-13 01:25:43.390 | INFO     | app.api.routes.data:search_stocks:128 - Falling back to Yahoo Finance search for 'EDELWEISS US TE'
+2026-05-13 01:25:43.534 | INFO     | app.api.routes.data:search_stocks:128 - Falling back to Yahoo Finance search for 'E'
+2026-05-13 01:25:44.251 | INFO     | app.api.routes.data:search_stocks:128 - Falling back to Yahoo Finance search for 'EDELWEIS'
+2026-05-13 01:25:45.151 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for TRENT.NS: 2804 raw rows
+2026-05-13 01:25:45.151 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:25:45.315 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:25:49.731 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:25:50.035 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:25:50.051 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:25:50.061 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for TRENT.NS: 2755 rows after feature engineering
+2026-05-13 01:25:50.097 | INFO     | app.data.ingestion:fetch_stock_data:80 - Normalized Indian ticker: 0P0001J938.BO → 0P0001J938.NS
+2026-05-13 01:25:50.097 | INFO     | app.data.ingestion:fetch_stock_data:80 - Normalized Indian ticker: 0P0001J938.BO → 0P0001J938.NS
+2026-05-13 01:25:50.098 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching 0P0001J938.NS data from Alpha Vantage (primary)...
+2026-05-13 01:25:50.098 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching 0P0001J938.NS data from Alpha Vantage (primary)...
+2026-05-13 01:25:50.101 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching AUROPHARMA.NS data from Alpha Vantage (primary)...
+2026-05-13 01:25:50.636 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for 0P0001J938.NS
+2026-05-13 01:25:50.636 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for 0P0001J938.NS...
+2026-05-13 01:25:50.636 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for 0P0001J938.NS from 2015-01-01 to now
+2026-05-13 01:25:50.651 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for AUROPHARMA.NS
+2026-05-13 01:25:50.651 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for AUROPHARMA.NS...
+2026-05-13 01:25:50.652 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for AUROPHARMA.NS from 2015-01-01 to now
+2026-05-13 01:25:50.901 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for 0P0001J938.NS
+2026-05-13 01:25:50.901 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for 0P0001J938.NS...
+2026-05-13 01:25:50.902 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for 0P0001J938.NS from 2015-01-01 to now
+2026-05-13 01:25:53.088 | WARNING  | app.data.providers.yahoo:fetch_ohlcv:95 - No data returned for 0P0001J938.NS
+2026-05-13 01:25:53.088 | ERROR    | app.data.ingestion:fetch_stock_data:131 - All data sources exhausted for 0P0001J938.NS
+2026-05-13 01:25:53.804 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2803 rows for AUROPHARMA.NS
+2026-05-13 01:25:53.804 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2803 rows for AUROPHARMA.NS
+2026-05-13 01:25:53.811 | INFO     | app.data.validation:clean:192 - [AUROPHARMA.NS] Forward-filled 4 missing values
+2026-05-13 01:25:53.813 | INFO     | app.data.validation:clean:210 - [AUROPHARMA.NS] Winsorizing 10 extreme returns
+2026-05-13 01:25:53.818 | INFO     | app.data.validation:clean:224 - [AUROPHARMA.NS] Cleaned data: 2803 rows remaining
+2026-05-13 01:25:53.818 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for AUROPHARMA.NS
+2026-05-13 01:25:55.356 | WARNING  | app.data.providers.yahoo:fetch_ohlcv:95 - No data returned for 0P0001J938.NS
+2026-05-13 01:25:55.356 | ERROR    | app.data.ingestion:fetch_stock_data:131 - All data sources exhausted for 0P0001J938.NS
+2026-05-13 01:25:56.346 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for AUROPHARMA.NS: 2803 raw rows
+2026-05-13 01:25:56.347 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2803 rows...
+2026-05-13 01:25:56.511 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:26:00.825 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:26:01.131 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:26:01.145 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:26:01.155 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for AUROPHARMA.NS: 2754 rows after feature engineering
+2026-05-13 01:26:01.187 | INFO     | app.data.ingestion:fetch_stock_data:80 - Normalized Indian ticker: 0P0001J938.BO → 0P0001J938.NS
+2026-05-13 01:26:01.188 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching 0P0001J938.NS data from Alpha Vantage (primary)...
+2026-05-13 01:26:01.188 | INFO     | app.data.ingestion:fetch_stock_data:80 - Normalized Indian ticker: 0P0001J938.BO → 0P0001J938.NS
+2026-05-13 01:26:01.189 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching 0P0001J938.NS data from Alpha Vantage (primary)...
+2026-05-13 01:26:01.190 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching JUBLFOOD.NS data from Alpha Vantage (primary)...
+2026-05-13 01:26:01.920 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for JUBLFOOD.NS
+2026-05-13 01:26:01.920 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for JUBLFOOD.NS...
+2026-05-13 01:26:01.921 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for JUBLFOOD.NS
+2026-05-13 01:26:02.130 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for JUBLFOOD.NS
+2026-05-13 01:26:02.135 | INFO     | app.data.validation:clean:210 - [JUBLFOOD.NS] Winsorizing 5 extreme returns
+2026-05-13 01:26:02.139 | INFO     | app.data.validation:clean:224 - [JUBLFOOD.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:26:02.139 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for JUBLFOOD.NS
+2026-05-13 01:26:02.436 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for 0P0001J938.NS
+2026-05-13 01:26:02.437 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for 0P0001J938.NS
+2026-05-13 01:26:02.437 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for 0P0001J938.NS...
+2026-05-13 01:26:02.437 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for 0P0001J938.NS...
+2026-05-13 01:26:02.438 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for 0P0001J938.NS from 2015-01-01 to now
+2026-05-13 01:26:02.438 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for 0P0001J938.NS from 2015-01-01 to now
+2026-05-13 01:26:02.837 | WARNING  | app.data.providers.yahoo:fetch_ohlcv:95 - No data returned for 0P0001J938.NS
+2026-05-13 01:26:02.837 | ERROR    | app.data.ingestion:fetch_stock_data:131 - All data sources exhausted for 0P0001J938.NS
+2026-05-13 01:26:02.851 | WARNING  | app.data.providers.yahoo:fetch_ohlcv:95 - No data returned for 0P0001J938.NS
+2026-05-13 01:26:02.852 | ERROR    | app.data.ingestion:fetch_stock_data:131 - All data sources exhausted for 0P0001J938.NS
+2026-05-13 01:26:04.662 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for JUBLFOOD.NS: 2804 raw rows
+2026-05-13 01:26:04.662 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:26:04.822 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:26:09.075 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:26:09.384 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:26:09.400 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:26:09.409 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for JUBLFOOD.NS: 2755 rows after feature engineering
+2026-05-13 01:26:09.441 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching FEDERALBNK.NS data from Alpha Vantage (primary)...
+2026-05-13 01:26:10.071 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for FEDERALBNK.NS
+2026-05-13 01:26:10.071 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for FEDERALBNK.NS...
+2026-05-13 01:26:10.071 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for FEDERALBNK.NS from 2015-01-01 to now
+2026-05-13 01:26:10.729 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for FEDERALBNK.NS
+2026-05-13 01:26:10.729 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for FEDERALBNK.NS
+2026-05-13 01:26:10.734 | INFO     | app.data.validation:clean:192 - [FEDERALBNK.NS] Forward-filled 4 missing values
+2026-05-13 01:26:10.735 | INFO     | app.data.validation:clean:210 - [FEDERALBNK.NS] Winsorizing 7 extreme returns
+2026-05-13 01:26:10.739 | INFO     | app.data.validation:clean:224 - [FEDERALBNK.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:26:10.740 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for FEDERALBNK.NS
+2026-05-13 01:26:12.428 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for FEDERALBNK.NS: 2804 raw rows
+2026-05-13 01:26:12.428 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:26:12.582 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:26:16.891 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:26:17.204 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:26:17.218 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:26:17.227 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for FEDERALBNK.NS: 2755 rows after feature engineering
+2026-05-13 01:26:17.258 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching VOLTAS.NS data from Alpha Vantage (primary)...
+2026-05-13 01:26:18.816 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for VOLTAS.NS
+2026-05-13 01:26:18.817 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for VOLTAS.NS...
+2026-05-13 01:26:18.817 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for VOLTAS.NS from 2015-01-01 to now
+2026-05-13 01:26:19.585 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for VOLTAS.NS
+2026-05-13 01:26:19.585 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for VOLTAS.NS
+2026-05-13 01:26:19.590 | INFO     | app.data.validation:clean:192 - [VOLTAS.NS] Forward-filled 4 missing values
+2026-05-13 01:26:19.591 | INFO     | app.data.validation:clean:210 - [VOLTAS.NS] Winsorizing 6 extreme returns
+2026-05-13 01:26:19.595 | INFO     | app.data.validation:clean:224 - [VOLTAS.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:26:19.596 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for VOLTAS.NS
+2026-05-13 01:26:20.926 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for VOLTAS.NS: 2804 raw rows
+2026-05-13 01:26:20.927 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:26:21.083 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:26:25.392 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:26:25.694 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:26:25.708 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:26:25.718 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for VOLTAS.NS: 2755 rows after feature engineering
+2026-05-13 01:26:25.750 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching TATAELXSI.NS data from Alpha Vantage (primary)...
+2026-05-13 01:26:26.380 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for TATAELXSI.NS
+2026-05-13 01:26:26.380 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for TATAELXSI.NS...
+2026-05-13 01:26:26.380 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for TATAELXSI.NS from 2015-01-01 to now
+2026-05-13 01:26:27.097 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for TATAELXSI.NS
+2026-05-13 01:26:27.097 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for TATAELXSI.NS
+2026-05-13 01:26:27.103 | INFO     | app.data.validation:clean:192 - [TATAELXSI.NS] Forward-filled 4 missing values
+2026-05-13 01:26:27.104 | INFO     | app.data.validation:clean:210 - [TATAELXSI.NS] Winsorizing 8 extreme returns
+2026-05-13 01:26:27.110 | INFO     | app.data.validation:clean:224 - [TATAELXSI.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:26:27.110 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for TATAELXSI.NS
+2026-05-13 01:26:28.261 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for TATAELXSI.NS: 2804 raw rows
+2026-05-13 01:26:28.261 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:26:28.425 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:26:32.659 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:26:32.965 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:26:32.980 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:26:32.988 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for TATAELXSI.NS: 2755 rows after feature engineering
+2026-05-13 01:26:33.020 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching PERSISTENT.NS data from Alpha Vantage (primary)...
+2026-05-13 01:26:34.906 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for PERSISTENT.NS
+2026-05-13 01:26:34.906 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for PERSISTENT.NS...
+2026-05-13 01:26:34.906 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for PERSISTENT.NS
+2026-05-13 01:26:35.103 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for PERSISTENT.NS
+2026-05-13 01:26:35.108 | INFO     | app.data.validation:clean:210 - [PERSISTENT.NS] Winsorizing 6 extreme returns
+2026-05-13 01:26:35.112 | INFO     | app.data.validation:clean:224 - [PERSISTENT.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:26:35.112 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for PERSISTENT.NS
+2026-05-13 01:26:35.814 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for PERSISTENT.NS: 2804 raw rows
+2026-05-13 01:26:35.814 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:26:35.968 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:26:40.212 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:26:40.513 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:26:40.529 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:26:40.537 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for PERSISTENT.NS: 2755 rows after feature engineering
+2026-05-13 01:26:40.567 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching CDSL.NS data from Alpha Vantage (primary)...
+2026-05-13 01:26:41.331 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for CDSL.NS
+2026-05-13 01:26:41.331 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for CDSL.NS...
+2026-05-13 01:26:41.331 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for CDSL.NS
+2026-05-13 01:26:41.711 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2190 rows for CDSL.NS
+2026-05-13 01:26:41.716 | INFO     | app.data.validation:clean:210 - [CDSL.NS] Winsorizing 5 extreme returns
+2026-05-13 01:26:41.720 | INFO     | app.data.validation:clean:224 - [CDSL.NS] Cleaned data: 2190 rows remaining
+2026-05-13 01:26:41.721 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for CDSL.NS
+2026-05-13 01:26:42.719 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for CDSL.NS: 2190 raw rows
+2026-05-13 01:26:42.720 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2190 rows...
+2026-05-13 01:26:42.852 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:26:46.175 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:26:46.416 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:26:46.430 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:26:46.437 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for CDSL.NS: 2141 rows after feature engineering
+2026-05-13 01:26:46.467 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching DEEPAKNTR.NS data from Alpha Vantage (primary)...
+2026-05-13 01:26:49.217 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for DEEPAKNTR.NS
+2026-05-13 01:26:49.218 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for DEEPAKNTR.NS...
+2026-05-13 01:26:49.218 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for DEEPAKNTR.NS from 2015-01-01 to now
+2026-05-13 01:26:49.924 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2803 rows for DEEPAKNTR.NS
+2026-05-13 01:26:49.924 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2803 rows for DEEPAKNTR.NS
+2026-05-13 01:26:49.930 | INFO     | app.data.validation:clean:192 - [DEEPAKNTR.NS] Forward-filled 4 missing values
+2026-05-13 01:26:49.930 | INFO     | app.data.validation:clean:210 - [DEEPAKNTR.NS] Winsorizing 8 extreme returns
+2026-05-13 01:26:49.935 | INFO     | app.data.validation:clean:224 - [DEEPAKNTR.NS] Cleaned data: 2803 rows remaining
+2026-05-13 01:26:49.936 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for DEEPAKNTR.NS
+2026-05-13 01:26:51.009 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for DEEPAKNTR.NS: 2803 raw rows
+2026-05-13 01:26:51.009 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2803 rows...
+2026-05-13 01:26:51.168 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:26:55.396 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:26:55.694 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:26:55.709 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:26:55.717 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for DEEPAKNTR.NS: 2754 rows after feature engineering
+2026-05-13 01:26:55.752 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching KPITTECH.NS data from Alpha Vantage (primary)...
+2026-05-13 01:26:56.408 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for KPITTECH.NS
+2026-05-13 01:26:56.409 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for KPITTECH.NS...
+2026-05-13 01:26:56.409 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for KPITTECH.NS
+2026-05-13 01:26:56.860 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 1745 rows for KPITTECH.NS
+2026-05-13 01:26:56.865 | INFO     | app.data.validation:clean:210 - [KPITTECH.NS] Winsorizing 3 extreme returns
+2026-05-13 01:26:56.868 | INFO     | app.data.validation:clean:224 - [KPITTECH.NS] Cleaned data: 1745 rows remaining
+2026-05-13 01:26:56.868 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for KPITTECH.NS
+2026-05-13 01:26:57.888 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for KPITTECH.NS: 1745 raw rows
+2026-05-13 01:26:57.888 | INFO     | app.features.engineering:compute_features:51 - Computing features for 1745 rows...
+2026-05-13 01:26:58.001 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:27:00.631 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:27:00.812 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:27:00.826 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:27:00.833 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for KPITTECH.NS: 1696 rows after feature engineering
+2026-05-13 01:27:00.863 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching ATUL.NS data from Alpha Vantage (primary)...
+2026-05-13 01:27:02.787 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for ATUL.NS
+2026-05-13 01:27:02.787 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for ATUL.NS...
+2026-05-13 01:27:02.787 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for ATUL.NS from 2015-01-01 to now
+2026-05-13 01:27:03.425 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for ATUL.NS
+2026-05-13 01:27:03.425 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for ATUL.NS
+2026-05-13 01:27:03.431 | INFO     | app.data.validation:clean:192 - [ATUL.NS] Forward-filled 4 missing values
+2026-05-13 01:27:03.431 | INFO     | app.data.validation:clean:210 - [ATUL.NS] Winsorizing 5 extreme returns
+2026-05-13 01:27:03.435 | INFO     | app.data.validation:clean:224 - [ATUL.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:27:03.436 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for ATUL.NS
+2026-05-13 01:27:04.243 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for ATUL.NS: 2804 raw rows
+2026-05-13 01:27:04.244 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:27:04.399 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:27:08.695 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:27:09.005 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:27:09.020 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:27:09.028 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for ATUL.NS: 2755 rows after feature engineering
+2026-05-13 01:27:09.058 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching RATNAMANI.NS data from Alpha Vantage (primary)...
+2026-05-13 01:27:10.732 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for RATNAMANI.NS
+2026-05-13 01:27:10.732 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for RATNAMANI.NS...
+2026-05-13 01:27:10.733 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for RATNAMANI.NS from 2015-01-01 to now
+2026-05-13 01:27:11.522 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2803 rows for RATNAMANI.NS
+2026-05-13 01:27:11.522 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2803 rows for RATNAMANI.NS
+2026-05-13 01:27:11.527 | INFO     | app.data.validation:clean:192 - [RATNAMANI.NS] Forward-filled 4 missing values
+2026-05-13 01:27:11.528 | INFO     | app.data.validation:clean:210 - [RATNAMANI.NS] Winsorizing 8 extreme returns
+2026-05-13 01:27:11.532 | INFO     | app.data.validation:clean:224 - [RATNAMANI.NS] Cleaned data: 2803 rows remaining
+2026-05-13 01:27:11.533 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for RATNAMANI.NS
+2026-05-13 01:27:12.639 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for RATNAMANI.NS: 2803 raw rows
+2026-05-13 01:27:12.639 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2803 rows...
+2026-05-13 01:27:12.802 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:27:17.106 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:27:17.409 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:27:17.424 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:27:17.432 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for RATNAMANI.NS: 2754 rows after feature engineering
+2026-05-13 01:27:17.463 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching NIFTYBEES.NS data from Alpha Vantage (primary)...
+2026-05-13 01:27:18.158 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for NIFTYBEES.NS
+2026-05-13 01:27:18.158 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for NIFTYBEES.NS...
+2026-05-13 01:27:18.158 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for NIFTYBEES.NS from 2015-01-01 to now
+2026-05-13 01:27:18.845 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for NIFTYBEES.NS
+2026-05-13 01:27:18.845 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for NIFTYBEES.NS
+2026-05-13 01:27:18.851 | INFO     | app.data.validation:clean:192 - [NIFTYBEES.NS] Forward-filled 4 missing values
+2026-05-13 01:27:18.852 | INFO     | app.data.validation:clean:210 - [NIFTYBEES.NS] Winsorizing 2 extreme returns
+2026-05-13 01:27:18.856 | INFO     | app.data.validation:clean:224 - [NIFTYBEES.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:27:18.856 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for NIFTYBEES.NS
+2026-05-13 01:27:19.890 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for NIFTYBEES.NS: 2804 raw rows
+2026-05-13 01:27:19.890 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:27:20.045 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:27:24.414 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:27:24.718 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:27:24.735 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:27:24.744 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for NIFTYBEES.NS: 2755 rows after feature engineering
+2026-05-13 01:27:24.778 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching BANKBEES.NS data from Alpha Vantage (primary)...
+2026-05-13 01:27:26.252 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for BANKBEES.NS
+2026-05-13 01:27:26.253 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for BANKBEES.NS...
+2026-05-13 01:27:26.253 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for BANKBEES.NS from 2015-01-01 to now
+2026-05-13 01:27:26.849 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for BANKBEES.NS
+2026-05-13 01:27:26.849 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for BANKBEES.NS
+2026-05-13 01:27:26.854 | INFO     | app.data.validation:clean:192 - [BANKBEES.NS] Forward-filled 4 missing values
+2026-05-13 01:27:26.855 | INFO     | app.data.validation:clean:210 - [BANKBEES.NS] Winsorizing 2 extreme returns
+2026-05-13 01:27:26.859 | INFO     | app.data.validation:clean:224 - [BANKBEES.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:27:26.859 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for BANKBEES.NS
+2026-05-13 01:27:28.115 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for BANKBEES.NS: 2804 raw rows
+2026-05-13 01:27:28.115 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:27:28.273 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:27:32.926 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:27:33.382 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:27:33.404 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:27:33.417 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for BANKBEES.NS: 2755 rows after feature engineering
+2026-05-13 01:27:33.474 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching GOLDBEES.NS data from Alpha Vantage (primary)...
+2026-05-13 01:27:34.274 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for GOLDBEES.NS
+2026-05-13 01:27:34.275 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for GOLDBEES.NS...
+2026-05-13 01:27:34.275 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for GOLDBEES.NS from 2015-01-01 to now
+2026-05-13 01:27:35.165 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2803 rows for GOLDBEES.NS
+2026-05-13 01:27:35.165 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2803 rows for GOLDBEES.NS
+2026-05-13 01:27:35.176 | INFO     | app.data.validation:clean:192 - [GOLDBEES.NS] Forward-filled 4 missing values
+2026-05-13 01:27:35.178 | INFO     | app.data.validation:clean:210 - [GOLDBEES.NS] Winsorizing 1 extreme returns
+2026-05-13 01:27:35.187 | INFO     | app.data.validation:clean:224 - [GOLDBEES.NS] Cleaned data: 2803 rows remaining
+2026-05-13 01:27:35.187 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for GOLDBEES.NS
+2026-05-13 01:27:36.346 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for GOLDBEES.NS: 2803 raw rows
+2026-05-13 01:27:36.347 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2803 rows...
+2026-05-13 01:27:36.761 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:27:42.542 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:27:42.849 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:27:42.864 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:27:42.874 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for GOLDBEES.NS: 2754 rows after feature engineering
+2026-05-13 01:27:42.928 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching TATAMOTORS.NS data from Alpha Vantage (primary)...
+2026-05-13 01:27:44.061 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for TATAMOTORS.NS
+2026-05-13 01:27:44.062 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for TATAMOTORS.NS...
+2026-05-13 01:27:44.062 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for TATAMOTORS.NS from 2015-01-01 to now
+2026-05-13 01:27:44.731 | WARNING  | app.data.providers.yahoo:fetch_ohlcv:95 - No data returned for TATAMOTORS.NS
+2026-05-13 01:27:44.731 | ERROR    | app.data.ingestion:fetch_stock_data:131 - All data sources exhausted for TATAMOTORS.NS
+2026-05-13 01:27:44.761 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching HCLTECH.NS data from Alpha Vantage (primary)...
+2026-05-13 01:27:45.223 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for HCLTECH.NS
+2026-05-13 01:27:45.223 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for HCLTECH.NS...
+2026-05-13 01:27:45.224 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for HCLTECH.NS from 2015-01-01 to now
+2026-05-13 01:27:45.891 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for HCLTECH.NS
+2026-05-13 01:27:45.892 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for HCLTECH.NS
+2026-05-13 01:27:45.897 | INFO     | app.data.validation:clean:192 - [HCLTECH.NS] Forward-filled 4 missing values
+2026-05-13 01:27:45.898 | INFO     | app.data.validation:clean:210 - [HCLTECH.NS] Winsorizing 8 extreme returns
+2026-05-13 01:27:45.903 | INFO     | app.data.validation:clean:224 - [HCLTECH.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:27:45.904 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for HCLTECH.NS
+2026-05-13 01:27:48.039 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for HCLTECH.NS: 2804 raw rows
+2026-05-13 01:27:48.039 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:27:48.192 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:27:52.488 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:27:52.791 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:27:52.806 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:27:52.816 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for HCLTECH.NS: 2755 rows after feature engineering
+2026-05-13 01:27:52.852 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching SUNPHARMA.NS data from Alpha Vantage (primary)...
+2026-05-13 01:27:53.496 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for SUNPHARMA.NS
+2026-05-13 01:27:53.496 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for SUNPHARMA.NS...
+2026-05-13 01:27:53.496 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for SUNPHARMA.NS from 2015-01-01 to now
+2026-05-13 01:27:54.035 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for SUNPHARMA.NS
+2026-05-13 01:27:54.036 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for SUNPHARMA.NS
+2026-05-13 01:27:54.041 | INFO     | app.data.validation:clean:192 - [SUNPHARMA.NS] Forward-filled 4 missing values
+2026-05-13 01:27:54.042 | INFO     | app.data.validation:clean:210 - [SUNPHARMA.NS] Winsorizing 8 extreme returns
+2026-05-13 01:27:54.047 | INFO     | app.data.validation:clean:224 - [SUNPHARMA.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:27:54.047 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for SUNPHARMA.NS
+2026-05-13 01:27:56.140 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for SUNPHARMA.NS: 2804 raw rows
+2026-05-13 01:27:56.140 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:27:56.294 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:28:00.575 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:28:00.880 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:28:00.897 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:28:00.906 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for SUNPHARMA.NS: 2755 rows after feature engineering
+2026-05-13 01:28:00.941 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching TITAN.NS data from Alpha Vantage (primary)...
+2026-05-13 01:28:01.510 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for TITAN.NS
+2026-05-13 01:28:01.510 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for TITAN.NS...
+2026-05-13 01:28:01.510 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for TITAN.NS from 2015-01-01 to now
+2026-05-13 01:28:02.269 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for TITAN.NS
+2026-05-13 01:28:02.269 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for TITAN.NS
+2026-05-13 01:28:02.274 | INFO     | app.data.validation:clean:192 - [TITAN.NS] Forward-filled 4 missing values
+2026-05-13 01:28:02.275 | INFO     | app.data.validation:clean:210 - [TITAN.NS] Winsorizing 11 extreme returns
+2026-05-13 01:28:02.281 | INFO     | app.data.validation:clean:224 - [TITAN.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:28:02.281 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for TITAN.NS
+2026-05-13 01:28:04.261 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for TITAN.NS: 2804 raw rows
+2026-05-13 01:28:04.261 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:28:04.419 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:28:08.685 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:28:08.986 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:28:09.001 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:28:09.010 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for TITAN.NS: 2755 rows after feature engineering
+2026-05-13 01:28:09.042 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching ADANIENT.NS data from Alpha Vantage (primary)...
+2026-05-13 01:28:10.318 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for ADANIENT.NS
+2026-05-13 01:28:10.318 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for ADANIENT.NS...
+2026-05-13 01:28:10.318 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for ADANIENT.NS from 2015-01-01 to now
+2026-05-13 01:28:12.188 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for ADANIENT.NS
+2026-05-13 01:28:12.188 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for ADANIENT.NS
+2026-05-13 01:28:12.193 | INFO     | app.data.validation:clean:192 - [ADANIENT.NS] Forward-filled 4 missing values
+2026-05-13 01:28:12.194 | INFO     | app.data.validation:clean:210 - [ADANIENT.NS] Winsorizing 16 extreme returns
+2026-05-13 01:28:12.200 | INFO     | app.data.validation:clean:224 - [ADANIENT.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:28:12.201 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for ADANIENT.NS
+2026-05-13 01:28:14.825 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for ADANIENT.NS: 2804 raw rows
+2026-05-13 01:28:14.825 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:28:14.989 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:28:19.320 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:28:19.621 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:28:19.636 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:28:19.645 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for ADANIENT.NS: 2755 rows after feature engineering
+2026-05-13 01:28:19.676 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching POWERGRID.NS data from Alpha Vantage (primary)...
+2026-05-13 01:28:22.605 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for POWERGRID.NS
+2026-05-13 01:28:22.606 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for POWERGRID.NS...
+2026-05-13 01:28:22.606 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for POWERGRID.NS from 2015-01-01 to now
+2026-05-13 01:28:24.447 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for POWERGRID.NS
+2026-05-13 01:28:24.447 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for POWERGRID.NS
+2026-05-13 01:28:24.453 | INFO     | app.data.validation:clean:192 - [POWERGRID.NS] Forward-filled 4 missing values
+2026-05-13 01:28:24.454 | INFO     | app.data.validation:clean:210 - [POWERGRID.NS] Winsorizing 5 extreme returns
+2026-05-13 01:28:24.458 | INFO     | app.data.validation:clean:224 - [POWERGRID.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:28:24.458 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for POWERGRID.NS
+2026-05-13 01:28:27.371 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for POWERGRID.NS: 2804 raw rows
+2026-05-13 01:28:27.371 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:28:27.526 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:28:31.758 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:28:32.062 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:28:32.077 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:28:32.087 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for POWERGRID.NS: 2755 rows after feature engineering
+2026-05-13 01:28:32.119 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching NTPC.NS data from Alpha Vantage (primary)...
+2026-05-13 01:28:32.696 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for NTPC.NS
+2026-05-13 01:28:32.696 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for NTPC.NS...
+2026-05-13 01:28:32.696 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for NTPC.NS from 2015-01-01 to now
+2026-05-13 01:28:34.613 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for NTPC.NS
+2026-05-13 01:28:34.613 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for NTPC.NS
+2026-05-13 01:28:34.619 | INFO     | app.data.validation:clean:192 - [NTPC.NS] Forward-filled 4 missing values
+2026-05-13 01:28:34.620 | INFO     | app.data.validation:clean:210 - [NTPC.NS] Winsorizing 4 extreme returns
+2026-05-13 01:28:34.624 | INFO     | app.data.validation:clean:224 - [NTPC.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:28:34.625 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for NTPC.NS
+2026-05-13 01:28:37.598 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for NTPC.NS: 2804 raw rows
+2026-05-13 01:28:37.599 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:28:37.751 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:28:42.052 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:28:42.355 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:28:42.370 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:28:42.380 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for NTPC.NS: 2755 rows after feature engineering
+2026-05-13 01:28:42.416 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching COALINDIA.NS data from Alpha Vantage (primary)...
+2026-05-13 01:28:43.369 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for COALINDIA.NS
+2026-05-13 01:28:43.369 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for COALINDIA.NS...
+2026-05-13 01:28:43.369 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for COALINDIA.NS from 2015-01-01 to now
+2026-05-13 01:28:44.080 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for COALINDIA.NS
+2026-05-13 01:28:44.081 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for COALINDIA.NS
+2026-05-13 01:28:44.086 | INFO     | app.data.validation:clean:192 - [COALINDIA.NS] Forward-filled 4 missing values
+2026-05-13 01:28:44.087 | INFO     | app.data.validation:clean:210 - [COALINDIA.NS] Winsorizing 1 extreme returns
+2026-05-13 01:28:44.090 | INFO     | app.data.validation:clean:224 - [COALINDIA.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:28:44.090 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for COALINDIA.NS
+2026-05-13 01:28:44.944 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for COALINDIA.NS: 2804 raw rows
+2026-05-13 01:28:44.945 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:28:45.103 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:28:49.473 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:28:49.781 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:28:49.802 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:28:49.816 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for COALINDIA.NS: 2755 rows after feature engineering
+2026-05-13 01:28:49.854 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching ONGC.NS data from Alpha Vantage (primary)...
+2026-05-13 01:28:50.354 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for ONGC.NS
+2026-05-13 01:28:50.354 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for ONGC.NS...
+2026-05-13 01:28:50.354 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for ONGC.NS from 2015-01-01 to now
+2026-05-13 01:28:50.896 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for ONGC.NS
+2026-05-13 01:28:50.896 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for ONGC.NS
+2026-05-13 01:28:50.901 | INFO     | app.data.validation:clean:192 - [ONGC.NS] Forward-filled 4 missing values
+2026-05-13 01:28:50.902 | INFO     | app.data.validation:clean:210 - [ONGC.NS] Winsorizing 12 extreme returns
+2026-05-13 01:28:50.908 | INFO     | app.data.validation:clean:224 - [ONGC.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:28:50.908 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for ONGC.NS
+2026-05-13 01:28:51.962 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for ONGC.NS: 2804 raw rows
+2026-05-13 01:28:51.962 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:28:52.122 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:28:56.349 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:28:56.672 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:28:56.686 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:28:56.696 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for ONGC.NS: 2755 rows after feature engineering
+2026-05-13 01:28:56.730 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching BPCL.NS data from Alpha Vantage (primary)...
+2026-05-13 01:28:57.383 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for BPCL.NS
+2026-05-13 01:28:57.383 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for BPCL.NS...
+2026-05-13 01:28:57.383 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for BPCL.NS from 2015-01-01 to now
+2026-05-13 01:28:58.137 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for BPCL.NS
+2026-05-13 01:28:58.137 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for BPCL.NS
+2026-05-13 01:28:58.143 | INFO     | app.data.validation:clean:192 - [BPCL.NS] Forward-filled 4 missing values
+2026-05-13 01:28:58.143 | INFO     | app.data.validation:clean:210 - [BPCL.NS] Winsorizing 9 extreme returns
+2026-05-13 01:28:58.149 | INFO     | app.data.validation:clean:224 - [BPCL.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:28:58.149 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for BPCL.NS
+2026-05-13 01:28:59.486 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for BPCL.NS: 2804 raw rows
+2026-05-13 01:28:59.486 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:28:59.645 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:29:03.906 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:29:04.204 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:29:04.219 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:29:04.231 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for BPCL.NS: 2755 rows after feature engineering
+2026-05-13 01:29:04.267 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching GAIL.NS data from Alpha Vantage (primary)...
+2026-05-13 01:29:04.852 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for GAIL.NS
+2026-05-13 01:29:04.852 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for GAIL.NS...
+2026-05-13 01:29:04.853 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for GAIL.NS from 2015-01-01 to now
+2026-05-13 01:29:05.527 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for GAIL.NS
+2026-05-13 01:29:05.527 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for GAIL.NS
+2026-05-13 01:29:05.532 | INFO     | app.data.validation:clean:192 - [GAIL.NS] Forward-filled 4 missing values
+2026-05-13 01:29:05.533 | INFO     | app.data.validation:clean:210 - [GAIL.NS] Winsorizing 6 extreme returns
+2026-05-13 01:29:05.537 | INFO     | app.data.validation:clean:224 - [GAIL.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:29:05.538 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for GAIL.NS
+2026-05-13 01:29:06.562 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for GAIL.NS: 2804 raw rows
+2026-05-13 01:29:06.562 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:29:06.725 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:29:10.988 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:29:11.291 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:29:11.306 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:29:11.318 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for GAIL.NS: 2755 rows after feature engineering
+2026-05-13 01:29:11.350 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching DRREDDY.NS data from Alpha Vantage (primary)...
+2026-05-13 01:29:11.961 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for DRREDDY.NS
+2026-05-13 01:29:11.961 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for DRREDDY.NS...
+2026-05-13 01:29:11.962 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for DRREDDY.NS from 2015-01-01 to now
+2026-05-13 01:29:13.512 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for DRREDDY.NS
+2026-05-13 01:29:13.512 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for DRREDDY.NS
+2026-05-13 01:29:13.517 | INFO     | app.data.validation:clean:192 - [DRREDDY.NS] Forward-filled 4 missing values
+2026-05-13 01:29:13.518 | INFO     | app.data.validation:clean:210 - [DRREDDY.NS] Winsorizing 10 extreme returns
+2026-05-13 01:29:13.524 | INFO     | app.data.validation:clean:224 - [DRREDDY.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:29:13.524 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for DRREDDY.NS
+2026-05-13 01:29:14.428 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for DRREDDY.NS: 2804 raw rows
+2026-05-13 01:29:14.428 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:29:14.582 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:29:18.950 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:29:19.249 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:29:19.264 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:29:19.274 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for DRREDDY.NS: 2755 rows after feature engineering
+2026-05-13 01:29:19.307 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching CIPLA.NS data from Alpha Vantage (primary)...
+2026-05-13 01:29:19.984 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for CIPLA.NS
+2026-05-13 01:29:19.984 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for CIPLA.NS...
+2026-05-13 01:29:19.984 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for CIPLA.NS from 2015-01-01 to now
+2026-05-13 01:29:20.815 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for CIPLA.NS
+2026-05-13 01:29:20.815 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for CIPLA.NS
+2026-05-13 01:29:20.820 | INFO     | app.data.validation:clean:192 - [CIPLA.NS] Forward-filled 4 missing values
+2026-05-13 01:29:20.821 | INFO     | app.data.validation:clean:210 - [CIPLA.NS] Winsorizing 7 extreme returns
+2026-05-13 01:29:20.826 | INFO     | app.data.validation:clean:224 - [CIPLA.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:29:20.826 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for CIPLA.NS
+2026-05-13 01:29:21.903 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for CIPLA.NS: 2804 raw rows
+2026-05-13 01:29:21.904 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:29:22.074 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:29:26.299 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:29:26.598 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:29:26.613 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:29:26.623 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for CIPLA.NS: 2755 rows after feature engineering
+2026-05-13 01:29:26.655 | INFO     | app.data.ingestion:fetch_stock_data:95 - Fetching APOLLOHOSP.NS data from Alpha Vantage (primary)...
+2026-05-13 01:29:27.158 | WARNING  | app.data.ingestion:fetch_stock_data:102 - Alpha Vantage returned empty data for APOLLOHOSP.NS
+2026-05-13 01:29:27.158 | INFO     | app.data.ingestion:fetch_stock_data:113 - Falling back to Yahoo Finance for APOLLOHOSP.NS...
+2026-05-13 01:29:27.158 | INFO     | app.data.providers.yahoo:fetch_ohlcv:91 - Fetching OHLCV data for APOLLOHOSP.NS from 2015-01-01 to now
+2026-05-13 01:29:27.633 | INFO     | app.data.providers.yahoo:fetch_ohlcv:109 - Fetched 2804 rows for APOLLOHOSP.NS
+2026-05-13 01:29:27.633 | INFO     | app.data.ingestion:fetch_stock_data:117 - Yahoo Finance returned 2804 rows for APOLLOHOSP.NS
+2026-05-13 01:29:27.638 | INFO     | app.data.validation:clean:192 - [APOLLOHOSP.NS] Forward-filled 4 missing values
+2026-05-13 01:29:27.639 | INFO     | app.data.validation:clean:210 - [APOLLOHOSP.NS] Winsorizing 8 extreme returns
+2026-05-13 01:29:27.643 | INFO     | app.data.validation:clean:224 - [APOLLOHOSP.NS] Cleaned data: 2804 rows remaining
+2026-05-13 01:29:27.643 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for APOLLOHOSP.NS
+2026-05-13 01:29:28.498 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for APOLLOHOSP.NS: 2804 raw rows
+2026-05-13 01:29:28.498 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2804 rows...
+2026-05-13 01:29:28.650 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:29:32.946 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:29:33.248 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:29:33.263 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:29:33.273 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for APOLLOHOSP.NS: 2755 rows after feature engineering
+2026-05-13 01:33:15.129 | INFO     | app.main:_on_startup:82 - CORS allow-list: ['http://localhost:3000', 'http://127.0.0.1:3000']
+2026-05-13 01:33:16.790 | INFO     | app.models.ensemble:load:260 - Ensemble loaded from F:\Coding\StockMarketPredectior\backend\data\models
+2026-05-13 01:33:16.791 | INFO     | app.models.inference:_try_load:252 - ModelInferencer ready: 120 features, seq_length=60, models=['LSTM', 'TFT', 'CNN', 'XGB', 'LGB', 'CAT'], thresholds={'buy': 0.51, 'sell': 0.49}, gates_passed=False
+2026-05-13 01:33:16.791 | INFO     | app.main:_on_startup:88 - Trained models loaded: [lstm, transformer, cnn, xgboost, lightgbm, catboost] (n_features=120, seq_length=60, gates_passed=False)
+2026-05-13 01:33:16.797 | INFO     | app.data.ingestion:fetch_stock_data:104 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-13 01:33:16.802 | INFO     | app.data.ingestion:fetch_stock_data:104 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-13 01:33:17.806 | WARNING  | app.data.ingestion:fetch_stock_data:111 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-13 01:33:17.806 | INFO     | app.data.ingestion:fetch_stock_data:122 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-13 01:33:17.806 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-13 01:33:19.331 | WARNING  | app.data.ingestion:fetch_stock_data:111 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-13 01:33:19.331 | INFO     | app.data.ingestion:fetch_stock_data:122 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-13 01:33:19.331 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-13 01:33:19.651 | INFO     | app.data.ingestion:fetch_stock_data:126 - Yahoo Finance returned 1455 rows for 0P0001J938.BO
+2026-05-13 01:33:19.658 | WARNING  | app.data.ingestion:fetch_stock_data:153 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1455 rows (100.0%)']
+2026-05-13 01:33:19.663 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1455 rows remaining
+2026-05-13 01:33:19.664 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-13 01:33:19.666 | INFO     | app.data.ingestion:fetch_stock_data:126 - Yahoo Finance returned 1455 rows for 0P0001J938.BO
+2026-05-13 01:33:19.670 | WARNING  | app.data.ingestion:fetch_stock_data:153 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1455 rows (100.0%)']
+2026-05-13 01:33:19.674 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1455 rows remaining
+2026-05-13 01:33:19.674 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-13 01:33:21.643 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for 0P0001J938.BO: 1455 raw rows
+2026-05-13 01:33:21.643 | INFO     | app.features.engineering:compute_features:51 - Computing features for 1455 rows...
+2026-05-13 01:33:21.744 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:33:24.036 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:33:24.191 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:33:24.207 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:33:24.216 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for 0P0001J938.BO: 1406 rows after feature engineering
+2026-05-13 01:33:25.708 | INFO     | app.data.ingestion:fetch_stock_data:104 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-13 01:33:26.295 | WARNING  | app.data.ingestion:fetch_stock_data:111 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-13 01:33:26.295 | INFO     | app.data.ingestion:fetch_stock_data:122 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-13 01:33:26.296 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-13 01:33:26.315 | INFO     | app.data.ingestion:fetch_stock_data:126 - Yahoo Finance returned 1455 rows for 0P0001J938.BO
+2026-05-13 01:33:26.320 | WARNING  | app.data.ingestion:fetch_stock_data:153 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1455 rows (100.0%)']
+2026-05-13 01:33:26.324 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1455 rows remaining
+2026-05-13 01:33:26.324 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-13 01:33:28.043 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for 0P0001J938.BO: 1455 raw rows
+2026-05-13 01:33:28.043 | INFO     | app.features.engineering:compute_features:51 - Computing features for 1455 rows...
+2026-05-13 01:33:28.140 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:33:30.336 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:33:30.487 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:33:30.501 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:33:30.509 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for 0P0001J938.BO: 1406 rows after feature engineering
+2026-05-13 01:33:39.033 | INFO     | app.data.ingestion:fetch_stock_data:104 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-13 01:33:39.532 | WARNING  | app.data.ingestion:fetch_stock_data:111 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-13 01:33:39.533 | INFO     | app.data.ingestion:fetch_stock_data:122 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-13 01:33:39.533 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-13 01:33:39.551 | INFO     | app.data.ingestion:fetch_stock_data:126 - Yahoo Finance returned 312 rows for 0P0001J938.BO
+2026-05-13 01:33:39.555 | WARNING  | app.data.ingestion:fetch_stock_data:153 - Validation issues for 0P0001J938.BO: ['Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 312 rows (100.0%)']
+2026-05-13 01:33:39.558 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 312 rows remaining
+2026-05-13 01:33:39.558 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-13 01:35:04.311 | INFO     | app.data.ingestion:fetch_stock_data:104 - Fetching 0P0001J938.BO data from Alpha Vantage (primary)...
+2026-05-13 01:35:05.323 | WARNING  | app.data.ingestion:fetch_stock_data:111 - Alpha Vantage returned empty data for 0P0001J938.BO
+2026-05-13 01:35:05.324 | INFO     | app.data.ingestion:fetch_stock_data:122 - Falling back to Yahoo Finance for 0P0001J938.BO...
+2026-05-13 01:35:05.324 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for 0P0001J938.BO
+2026-05-13 01:35:05.345 | INFO     | app.data.ingestion:fetch_stock_data:126 - Yahoo Finance returned 1455 rows for 0P0001J938.BO
+2026-05-13 01:35:05.351 | WARNING  | app.data.ingestion:fetch_stock_data:153 - Validation issues for 0P0001J938.BO: ['Data gap from 2020-04-09 to 2020-04-15', 'Data gap from 2022-04-13 to 2022-04-19', 'Data gap from 2025-12-23 to 2025-12-29', 'Zero volume in 1455 rows (100.0%)']
+2026-05-13 01:35:05.355 | INFO     | app.data.validation:clean:224 - [0P0001J938.BO] Cleaned data: 1455 rows remaining
+2026-05-13 01:35:05.355 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for 0P0001J938.BO
+2026-05-13 01:35:06.140 | INFO     | app.features.engineering:compute_features:51 - Computing features for 1455 rows...
+2026-05-13 01:35:06.235 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:35:08.404 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:35:08.552 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:35:08.567 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:35:30.217 | INFO     | app.main:_on_startup:82 - CORS allow-list: ['http://localhost:3000', 'http://127.0.0.1:3000']
+2026-05-13 01:35:31.609 | INFO     | app.models.ensemble:load:260 - Ensemble loaded from F:\Coding\StockMarketPredectior\backend\data\models
+2026-05-13 01:35:31.609 | INFO     | app.models.inference:_try_load:252 - ModelInferencer ready: 120 features, seq_length=60, models=['LSTM', 'TFT', 'CNN', 'XGB', 'LGB', 'CAT'], thresholds={'buy': 0.51, 'sell': 0.49}, gates_passed=False
+2026-05-13 01:35:31.609 | INFO     | app.main:_on_startup:88 - Trained models loaded: [lstm, transformer, cnn, xgboost, lightgbm, catboost] (n_features=120, seq_length=60, gates_passed=False)
+2026-05-13 01:36:07.986 | INFO     | app.data.ingestion:fetch_stock_data:101 - Fetching AMZN data from Alpha Vantage (primary)...
+2026-05-13 01:36:07.991 | INFO     | app.data.ingestion:fetch_stock_data:101 - Fetching AMZN data from Alpha Vantage (primary)...
+2026-05-13 01:36:09.126 | WARNING  | app.data.ingestion:fetch_stock_data:108 - Alpha Vantage returned empty data for AMZN
+2026-05-13 01:36:09.127 | WARNING  | app.data.ingestion:fetch_stock_data:108 - Alpha Vantage returned empty data for AMZN
+2026-05-13 01:36:09.127 | INFO     | app.data.ingestion:fetch_stock_data:119 - Falling back to Yahoo Finance for AMZN...
+2026-05-13 01:36:09.127 | INFO     | app.data.ingestion:fetch_stock_data:119 - Falling back to Yahoo Finance for AMZN...
+2026-05-13 01:36:09.127 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for AMZN
+2026-05-13 01:36:09.127 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for AMZN
+2026-05-13 01:36:11.077 | INFO     | app.data.ingestion:fetch_stock_data:123 - Yahoo Finance returned 2856 rows for AMZN
+2026-05-13 01:36:11.084 | INFO     | app.data.validation:clean:210 - [AMZN] Winsorizing 7 extreme returns
+2026-05-13 01:36:11.089 | INFO     | app.data.validation:clean:224 - [AMZN] Cleaned data: 2856 rows remaining
+2026-05-13 01:36:11.089 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for AMZN
+2026-05-13 01:36:11.694 | INFO     | app.data.ingestion:fetch_stock_data:123 - Yahoo Finance returned 2856 rows for AMZN
+2026-05-13 01:36:11.700 | INFO     | app.data.validation:clean:210 - [AMZN] Winsorizing 7 extreme returns
+2026-05-13 01:36:11.706 | INFO     | app.data.validation:clean:224 - [AMZN] Cleaned data: 2856 rows remaining
+2026-05-13 01:36:11.707 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for AMZN
+2026-05-13 01:36:12.161 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for AMZN: 2856 raw rows
+2026-05-13 01:36:12.162 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2856 rows...
+2026-05-13 01:36:12.322 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:36:16.720 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:36:17.025 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:36:17.039 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:36:17.049 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for AMZN: 2807 rows after feature engineering
+2026-05-13 01:36:18.568 | INFO     | app.data.ingestion:fetch_stock_data:101 - Fetching AMZN data from Alpha Vantage (primary)...
+2026-05-13 01:36:19.175 | WARNING  | app.data.ingestion:fetch_stock_data:108 - Alpha Vantage returned empty data for AMZN
+2026-05-13 01:36:19.175 | INFO     | app.data.ingestion:fetch_stock_data:119 - Falling back to Yahoo Finance for AMZN...
+2026-05-13 01:36:19.175 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for AMZN
+2026-05-13 01:36:20.005 | INFO     | app.data.ingestion:fetch_stock_data:123 - Yahoo Finance returned 2856 rows for AMZN
+2026-05-13 01:36:20.012 | INFO     | app.data.validation:clean:210 - [AMZN] Winsorizing 7 extreme returns
+2026-05-13 01:36:20.017 | INFO     | app.data.validation:clean:224 - [AMZN] Cleaned data: 2856 rows remaining
+2026-05-13 01:36:20.017 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for AMZN
+2026-05-13 01:36:20.778 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for AMZN: 2856 raw rows
+2026-05-13 01:36:20.778 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2856 rows...
+2026-05-13 01:36:20.938 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:36:25.324 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:36:25.636 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:36:25.663 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:36:25.674 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for AMZN: 2807 rows after feature engineering
+2026-05-13 01:36:31.034 | INFO     | app.data.ingestion:fetch_stock_data:101 - Fetching AMZN data from Alpha Vantage (primary)...
+2026-05-13 01:36:31.650 | WARNING  | app.data.ingestion:fetch_stock_data:108 - Alpha Vantage returned empty data for AMZN
+2026-05-13 01:36:31.650 | INFO     | app.data.ingestion:fetch_stock_data:119 - Falling back to Yahoo Finance for AMZN...
+2026-05-13 01:36:31.650 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for AMZN
+2026-05-13 01:36:32.396 | INFO     | app.data.ingestion:fetch_stock_data:123 - Yahoo Finance returned 2101 rows for AMZN
+2026-05-13 01:36:32.401 | INFO     | app.data.validation:clean:210 - [AMZN] Winsorizing 4 extreme returns
+2026-05-13 01:36:32.405 | INFO     | app.data.validation:clean:224 - [AMZN] Cleaned data: 2101 rows remaining
+2026-05-13 01:36:32.405 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for AMZN
+2026-05-13 01:36:32.796 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2101 rows...
+2026-05-13 01:36:32.927 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:36:36.061 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:36:36.283 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:36:36.299 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:36:55.268 | INFO     | app.data.ingestion:fetch_stock_data:101 - Fetching NVDA data from Alpha Vantage (primary)...
+2026-05-13 01:36:55.269 | INFO     | app.data.ingestion:fetch_stock_data:101 - Fetching NVDA data from Alpha Vantage (primary)...
+2026-05-13 01:36:56.063 | WARNING  | app.data.ingestion:fetch_stock_data:108 - Alpha Vantage returned empty data for NVDA
+2026-05-13 01:36:56.063 | INFO     | app.data.ingestion:fetch_stock_data:119 - Falling back to Yahoo Finance for NVDA...
+2026-05-13 01:36:56.063 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for NVDA
+2026-05-13 01:36:56.091 | WARNING  | app.data.ingestion:fetch_stock_data:108 - Alpha Vantage returned empty data for NVDA
+2026-05-13 01:36:56.091 | INFO     | app.data.ingestion:fetch_stock_data:119 - Falling back to Yahoo Finance for NVDA...
+2026-05-13 01:36:56.091 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for NVDA
+2026-05-13 01:36:56.831 | INFO     | app.data.ingestion:fetch_stock_data:123 - Yahoo Finance returned 2856 rows for NVDA
+2026-05-13 01:36:56.839 | INFO     | app.data.validation:clean:210 - [NVDA] Winsorizing 9 extreme returns
+2026-05-13 01:36:56.847 | INFO     | app.data.validation:clean:224 - [NVDA] Cleaned data: 2856 rows remaining
+2026-05-13 01:36:56.847 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for NVDA
+2026-05-13 01:36:57.512 | INFO     | app.data.ingestion:fetch_stock_data:123 - Yahoo Finance returned 2856 rows for NVDA
+2026-05-13 01:36:57.519 | INFO     | app.data.validation:clean:210 - [NVDA] Winsorizing 9 extreme returns
+2026-05-13 01:36:57.525 | INFO     | app.data.validation:clean:224 - [NVDA] Cleaned data: 2856 rows remaining
+2026-05-13 01:36:57.526 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for NVDA
+2026-05-13 01:36:57.884 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for NVDA: 2856 raw rows
+2026-05-13 01:36:57.885 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2856 rows...
+2026-05-13 01:36:58.050 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:37:02.660 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:37:02.972 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:37:02.987 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:37:02.999 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for NVDA: 2807 rows after feature engineering
+2026-05-13 01:37:03.099 | INFO     | app.data.ingestion:fetch_stock_data:101 - Fetching NVDA data from Alpha Vantage (primary)...
+2026-05-13 01:37:03.916 | WARNING  | app.data.ingestion:fetch_stock_data:108 - Alpha Vantage returned empty data for NVDA
+2026-05-13 01:37:03.916 | INFO     | app.data.ingestion:fetch_stock_data:119 - Falling back to Yahoo Finance for NVDA...
+2026-05-13 01:37:03.916 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for NVDA
+2026-05-13 01:37:04.775 | INFO     | app.data.ingestion:fetch_stock_data:123 - Yahoo Finance returned 2856 rows for NVDA
+2026-05-13 01:37:04.780 | INFO     | app.data.validation:clean:210 - [NVDA] Winsorizing 9 extreme returns
+2026-05-13 01:37:04.785 | INFO     | app.data.validation:clean:224 - [NVDA] Cleaned data: 2856 rows remaining
+2026-05-13 01:37:04.786 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for NVDA
+2026-05-13 01:37:05.359 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for NVDA: 2856 raw rows
+2026-05-13 01:37:05.359 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2856 rows...
+2026-05-13 01:37:05.518 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:37:09.859 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:37:10.164 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:37:10.178 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:37:10.190 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for NVDA: 2807 rows after feature engineering
+2026-05-13 01:37:10.260 | INFO     | app.data.ingestion:fetch_stock_data:101 - Fetching NVDA data from Alpha Vantage (primary)...
+2026-05-13 01:37:11.183 | WARNING  | app.data.ingestion:fetch_stock_data:108 - Alpha Vantage returned empty data for NVDA
+2026-05-13 01:37:11.183 | INFO     | app.data.ingestion:fetch_stock_data:119 - Falling back to Yahoo Finance for NVDA...
+2026-05-13 01:37:11.183 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for NVDA
+2026-05-13 01:37:11.993 | INFO     | app.data.ingestion:fetch_stock_data:123 - Yahoo Finance returned 2101 rows for NVDA
+2026-05-13 01:37:11.998 | INFO     | app.data.validation:clean:210 - [NVDA] Winsorizing 7 extreme returns
+2026-05-13 01:37:12.002 | INFO     | app.data.validation:clean:224 - [NVDA] Cleaned data: 2101 rows remaining
+2026-05-13 01:37:12.002 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for NVDA
+2026-05-13 01:37:12.360 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2101 rows...
+2026-05-13 01:37:12.488 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:37:15.682 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:37:15.902 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:37:15.917 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:37:52.699 | INFO     | app.data.ingestion:fetch_stock_data:101 - Fetching JPM data from Alpha Vantage (primary)...
+2026-05-13 01:37:52.700 | INFO     | app.data.ingestion:fetch_stock_data:101 - Fetching JPM data from Alpha Vantage (primary)...
+2026-05-13 01:37:53.377 | WARNING  | app.data.ingestion:fetch_stock_data:108 - Alpha Vantage returned empty data for JPM
+2026-05-13 01:37:53.378 | WARNING  | app.data.ingestion:fetch_stock_data:108 - Alpha Vantage returned empty data for JPM
+2026-05-13 01:37:53.378 | INFO     | app.data.ingestion:fetch_stock_data:119 - Falling back to Yahoo Finance for JPM...
+2026-05-13 01:37:53.378 | INFO     | app.data.ingestion:fetch_stock_data:119 - Falling back to Yahoo Finance for JPM...
+2026-05-13 01:37:53.378 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for JPM
+2026-05-13 01:37:53.378 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for JPM
+2026-05-13 01:37:54.145 | INFO     | app.data.ingestion:fetch_stock_data:123 - Yahoo Finance returned 2856 rows for JPM
+2026-05-13 01:37:54.154 | WARNING  | app.data.ingestion:fetch_stock_data:150 - Validation issues for JPM: ['Found 9 return outliers (>5.0σ)', 'High < max(O,C,L) in 1 rows']
+2026-05-13 01:37:54.156 | INFO     | app.data.validation:clean:210 - [JPM] Winsorizing 9 extreme returns
+2026-05-13 01:37:54.164 | INFO     | app.data.validation:clean:224 - [JPM] Cleaned data: 2856 rows remaining
+2026-05-13 01:37:54.164 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for JPM
+2026-05-13 01:37:54.994 | INFO     | app.data.ingestion:fetch_stock_data:123 - Yahoo Finance returned 2856 rows for JPM
+2026-05-13 01:37:55.001 | WARNING  | app.data.ingestion:fetch_stock_data:150 - Validation issues for JPM: ['Found 9 return outliers (>5.0σ)', 'High < max(O,C,L) in 1 rows']
+2026-05-13 01:37:55.002 | INFO     | app.data.validation:clean:210 - [JPM] Winsorizing 9 extreme returns
+2026-05-13 01:37:55.008 | INFO     | app.data.validation:clean:224 - [JPM] Cleaned data: 2856 rows remaining
+2026-05-13 01:37:55.008 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for JPM
+2026-05-13 01:37:55.339 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for JPM: 2856 raw rows
+2026-05-13 01:37:55.340 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2856 rows...
+2026-05-13 01:37:55.494 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:37:59.788 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:38:00.111 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:38:00.126 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:38:00.139 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for JPM: 2807 rows after feature engineering
+2026-05-13 01:38:00.255 | INFO     | app.data.ingestion:fetch_stock_data:101 - Fetching JPM data from Alpha Vantage (primary)...
+2026-05-13 01:38:00.733 | WARNING  | app.data.ingestion:fetch_stock_data:108 - Alpha Vantage returned empty data for JPM
+2026-05-13 01:38:00.733 | INFO     | app.data.ingestion:fetch_stock_data:119 - Falling back to Yahoo Finance for JPM...
+2026-05-13 01:38:00.733 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for JPM
+2026-05-13 01:38:01.304 | INFO     | app.data.ingestion:fetch_stock_data:123 - Yahoo Finance returned 2856 rows for JPM
+2026-05-13 01:38:01.309 | WARNING  | app.data.ingestion:fetch_stock_data:150 - Validation issues for JPM: ['Found 9 return outliers (>5.0σ)', 'High < max(O,C,L) in 1 rows']
+2026-05-13 01:38:01.310 | INFO     | app.data.validation:clean:210 - [JPM] Winsorizing 9 extreme returns
+2026-05-13 01:38:01.316 | INFO     | app.data.validation:clean:224 - [JPM] Cleaned data: 2856 rows remaining
+2026-05-13 01:38:01.316 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for JPM
+2026-05-13 01:38:01.860 | INFO     | app.api.routes.signals:generate_signal:47 - Signal generation for JPM: 2856 raw rows
+2026-05-13 01:38:01.860 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2856 rows...
+2026-05-13 01:38:02.019 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:38:06.404 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:38:06.718 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:38:06.734 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
+2026-05-13 01:38:06.747 | INFO     | app.api.routes.signals:generate_signal:73 - Signal generation for JPM: 2807 rows after feature engineering
+2026-05-13 01:38:15.795 | INFO     | app.data.ingestion:fetch_stock_data:101 - Fetching JPM data from Alpha Vantage (primary)...
+2026-05-13 01:38:16.351 | WARNING  | app.data.ingestion:fetch_stock_data:108 - Alpha Vantage returned empty data for JPM
+2026-05-13 01:38:16.352 | INFO     | app.data.ingestion:fetch_stock_data:119 - Falling back to Yahoo Finance for JPM...
+2026-05-13 01:38:16.352 | INFO     | app.data.providers.yahoo:fetch_ohlcv:65 - Loading cached OHLCV data for JPM
+2026-05-13 01:38:17.497 | INFO     | app.data.ingestion:fetch_stock_data:123 - Yahoo Finance returned 2856 rows for JPM
+2026-05-13 01:38:17.501 | WARNING  | app.data.ingestion:fetch_stock_data:150 - Validation issues for JPM: ['Found 9 return outliers (>5.0σ)', 'High < max(O,C,L) in 1 rows']
+2026-05-13 01:38:17.502 | INFO     | app.data.validation:clean:210 - [JPM] Winsorizing 9 extreme returns
+2026-05-13 01:38:17.507 | INFO     | app.data.validation:clean:224 - [JPM] Cleaned data: 2856 rows remaining
+2026-05-13 01:38:17.507 | INFO     | app.data.providers.yahoo:fetch_fundamentals:122 - Fetching fundamentals for JPM
+2026-05-13 01:38:17.842 | INFO     | app.features.engineering:compute_features:51 - Computing features for 2856 rows...
+2026-05-13 01:38:17.996 | INFO     | app.features.technical:compute_all:210 - Computed 66 technical indicators
+2026-05-13 01:38:22.335 | INFO     | app.features.statistical:compute_all:83 - Computed statistical features, total columns: 137
+2026-05-13 01:38:22.645 | INFO     | app.features.regime:compute_regime_features:63 - Computed regime features
+2026-05-13 01:38:22.661 | INFO     | app.features.engineering:compute_features:79 - Total features computed: 173
