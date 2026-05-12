@@ -19,20 +19,26 @@ from app.config import config
 
 def _normalize_indian_ticker(ticker: str) -> str:
     """
-    Normalize Indian stock ticker formats for Yahoo Finance compatibility.
+    Lightly normalize Indian stock ticker formats for Yahoo Finance.
 
-    Yahoo Finance uses .NS (NSE) for Indian stocks. This converts:
-      - RELIANCE.BSE  → RELIANCE.NS
-      - RELIANCE.NSE  → RELIANCE.NS
-      - RELIANCE.BO   → RELIANCE.NS  (BSE's Yahoo code, often broken)
-      - RELIANCE.NS   → RELIANCE.NS  (unchanged)
-      - AAPL          → AAPL         (non-Indian, unchanged)
+    Only converts suffixes that Yahoo CANNOT handle:
+      - .BSE  → .NS   (Yahoo has no .BSE suffix)
+      - .NSE  → .NS   (Yahoo uses .NS, not .NSE)
+
+    Keeps valid Yahoo suffixes as-is:
+      - .BO   → .BO   (BSE data — Yahoo supports this)
+      - .NS   → .NS   (NSE data — unchanged)
+      - AAPL  → AAPL  (non-Indian, unchanged)
+      - 0P... → 0P... (Morningstar fund IDs, unchanged)
     """
     upper = ticker.upper().strip()
-    for suffix in (".BSE", ".NSE", ".BO"):
-        if upper.endswith(suffix):
-            base = upper[: -len(suffix)]
-            return f"{base}.NS"
+
+    # Only convert suffixes Yahoo doesn't understand
+    for bad_suffix, good_suffix in ((".BSE", ".NS"), (".NSE", ".NS")):
+        if upper.endswith(bad_suffix):
+            base = upper[: -len(bad_suffix)]
+            return f"{base}{good_suffix}"
+
     return ticker
 
 
@@ -74,7 +80,7 @@ class DataIngestionService:
         Returns:
             Dict with 'ohlcv', 'fundamentals', 'validation_report'
         """
-        # Normalize Indian tickers (.BSE/.NSE/.BO → .NS)
+        # Lightly normalize Indian tickers (only .BSE/.NSE → .NS; keep .BO)
         normalized = _normalize_indian_ticker(ticker)
         if normalized != ticker:
             logger.info(f"Normalized Indian ticker: {ticker} → {normalized}")

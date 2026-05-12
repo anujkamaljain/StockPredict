@@ -350,7 +350,7 @@ export function BacktestPanel({
                       <td className="py-2.5 pr-4">{currency}{Number(t.entry_price).toFixed(2)}</td>
                       <td className="py-2.5 pr-4">{currency}{Number(t.exit_price).toFixed(2)}</td>
                       <td className={`py-2.5 pr-4 font-bold ${Number(t.pnl) >= 0 ? "text-[var(--accent-green)]" : "text-[var(--accent-red)]"}`}>
-                        {Number(t.pnl) >= 0 ? "+" : ""}{currency}{Math.abs(Number(t.pnl)).toFixed(0)}
+                        {Number(t.pnl) >= 0 ? "+" : "-"}{currency}{Math.abs(Number(t.pnl)).toFixed(0)}
                       </td>
                       <td className={`py-2.5 pr-4 ${Number(t.return_pct) >= 0 ? "text-[var(--accent-green)]" : "text-[var(--accent-red)]"}`}>
                         {(Number(t.return_pct) * 100).toFixed(1)}%
