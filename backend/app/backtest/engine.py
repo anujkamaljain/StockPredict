@@ -76,20 +76,50 @@ class BacktestEngine:
             Dict with equity curve, trades, and performance metrics
         """
         n = len(prices)
+        if n == 0:
+            return {
+                "equity_curve": {}, "trades": [], "metrics": {},
+                "buy_hold_metrics": {}, "initial_capital": self.initial_capital,
+                "final_capital": self.initial_capital,
+            }
+
         if dates is None:
             dates = pd.date_range(start="2020-01-01", periods=n, freq="B")
 
-        prices = np.array(prices, dtype=float)
-        signals = np.array(signals, dtype=int)
+        # NaN/Inf safety on prices. Forward-fill within the array, then replace
+        # any leading NaN with the first finite value to keep the simulation
+        # numerically sound. Use np.array (copy) so the buffer is writable.
+        prices_arr = np.array(prices, dtype=float, copy=True)
+        if not np.all(np.isfinite(prices_arr)):
+            mask = np.isfinite(prices_arr)
+            if not mask.any():
+                logger.warning("All prices are NaN/Inf — returning empty backtest.")
+                return {
+                    "equity_curve": {}, "trades": [], "metrics": {},
+                    "buy_hold_metrics": {}, "initial_capital": self.initial_capital,
+                    "final_capital": self.initial_capital,
+                }
+            # Forward-fill then back-fill
+            first_finite = prices_arr[mask][0]
+            for i in range(n):
+                if not np.isfinite(prices_arr[i]):
+                    prices_arr[i] = prices_arr[i - 1] if i > 0 else first_finite
+        prices = prices_arr
 
+        signals = np.asarray(signals, dtype=int)
         if confidence is None:
-            confidence = np.ones(n) * 0.5
+            confidence = np.full(n, 0.5)
+        else:
+            confidence = np.nan_to_num(np.asarray(confidence, dtype=float),
+                                       nan=0.5, posinf=1.0, neginf=0.0)
+            confidence = np.clip(confidence, 0.0, 1.0)
 
         # State tracking
-        capital = self.initial_capital
-        shares = 0.0
+        capital = float(self.initial_capital)
+        shares = 0
         position = 0  # 0 = flat, 1 = long
         entry_price = 0.0
+        entry_cost_total = 0.0  # Total paid to acquire the position
         stop_loss_price = 0.0
 
         # Results
@@ -97,91 +127,84 @@ class BacktestEngine:
         trades: List[Trade] = []
         entry_date_idx = 0
 
+        def _close_position(i: int, exit_reason: str) -> None:
+            """Close the currently open long position at price prices[i]."""
+            nonlocal capital, shares, position, entry_price, entry_cost_total
+            exit_price = prices[i] * (1 - self.slippage_pct)
+            proceeds = shares * exit_price
+            exit_cost = proceeds * self.transaction_cost_pct
+            net_proceeds = proceeds - exit_cost
+            # PnL = net proceeds out - net cost paid in (which is in entry_cost_total)
+            pnl = net_proceeds - entry_cost_total
+            capital += net_proceeds
+
+            trades.append(Trade(
+                ticker=ticker,
+                entry_date=str(dates[entry_date_idx]),
+                exit_date=str(dates[i]),
+                entry_price=entry_price,
+                exit_price=exit_price,
+                shares=shares,
+                direction="LONG",
+                pnl=pnl,
+                return_pct=(exit_price / entry_price - 1) if entry_price > 0 else 0.0,
+                holding_days=i - entry_date_idx,
+                exit_reason=exit_reason,
+            ))
+            shares = 0
+            position = 0
+            entry_price = 0.0
+            entry_cost_total = 0.0
+
         for i in range(n):
             current_price = prices[i]
 
-            # Check stop-loss
+            # Stop-loss check
             if position == 1 and current_price <= stop_loss_price:
-                # Execute stop-loss
-                exit_price = current_price * (1 - self.slippage_pct)
-                proceeds = shares * exit_price
-                cost = proceeds * self.transaction_cost_pct
-                pnl = proceeds - cost - (shares * entry_price)
-                capital += proceeds - cost
-
-                trades.append(Trade(
-                    ticker=ticker,
-                    entry_date=str(dates[entry_date_idx]),
-                    exit_date=str(dates[i]),
-                    entry_price=entry_price,
-                    exit_price=exit_price,
-                    shares=shares,
-                    direction="LONG",
-                    pnl=pnl,
-                    return_pct=(exit_price / entry_price - 1),
-                    holding_days=i - entry_date_idx,
-                    exit_reason="STOP_LOSS",
-                ))
-
-                shares = 0
-                position = 0
+                _close_position(i, "STOP_LOSS")
 
             # Process signals
             if signals[i] == 1 and position == 0:
                 # BUY
                 position_size = capital * self.max_position_pct * confidence[i]
                 buy_price = current_price * (1 + self.slippage_pct)
-                shares = int(position_size / buy_price)
-
-                if shares > 0:
-                    cost = shares * buy_price * (1 + self.transaction_cost_pct)
-                    capital -= cost
-                    entry_price = buy_price
-                    stop_loss_price = buy_price * (1 - self.stop_loss_pct)
-                    entry_date_idx = i
-                    position = 1
+                if buy_price <= 0:
+                    continue
+                shares_to_buy = int(position_size / buy_price)
+                if shares_to_buy > 0:
+                    gross = shares_to_buy * buy_price
+                    fee = gross * self.transaction_cost_pct
+                    total_cost = gross + fee
+                    if total_cost <= capital:
+                        capital -= total_cost
+                        shares = shares_to_buy
+                        entry_price = buy_price
+                        entry_cost_total = total_cost
+                        stop_loss_price = buy_price * (1 - self.stop_loss_pct)
+                        entry_date_idx = i
+                        position = 1
 
             elif signals[i] == -1 and position == 1:
-                # SELL
-                exit_price = current_price * (1 - self.slippage_pct)
-                proceeds = shares * exit_price
-                cost = proceeds * self.transaction_cost_pct
-                pnl = proceeds - cost - (shares * entry_price)
-                capital += proceeds - cost
+                _close_position(i, "SIGNAL")
 
-                trades.append(Trade(
-                    ticker=ticker,
-                    entry_date=str(dates[entry_date_idx]),
-                    exit_date=str(dates[i]),
-                    entry_price=entry_price,
-                    exit_price=exit_price,
-                    shares=shares,
-                    direction="LONG",
-                    pnl=pnl,
-                    return_pct=(exit_price / entry_price - 1),
-                    holding_days=i - entry_date_idx,
-                    exit_reason="SIGNAL",
-                ))
+            # Mark-to-market equity each timestep
+            equity_curve[i] = capital + (shares * current_price if position == 1 else 0.0)
 
-                shares = 0
-                position = 0
-
-            # Track equity
-            equity_curve[i] = capital + (shares * current_price if position == 1 else 0)
-
-        # Close any open position
+        # Close any open position at the final bar — and record it as a trade
+        # so trade history is complete and win_rate reflects all positions.
         if position == 1:
-            exit_price = prices[-1] * (1 - self.slippage_pct)
-            proceeds = shares * exit_price
-            capital += proceeds * (1 - self.transaction_cost_pct)
+            _close_position(n - 1, "END_OF_PERIOD")
+            equity_curve[-1] = capital
 
         # Compute metrics
         equity_series = pd.Series(equity_curve, index=dates)
         metrics = self._compute_metrics(equity_series, trades)
 
-        # Buy and hold comparison
-        bh_shares = int(self.initial_capital / prices[0])
-        bh_equity = bh_shares * prices
+        # Buy-and-hold comparison (integer shares, same fractional logic as strategy)
+        first_price = prices[0]
+        bh_shares = int(self.initial_capital / first_price) if first_price > 0 else 0
+        bh_residual_cash = self.initial_capital - bh_shares * first_price
+        bh_equity = bh_shares * prices + bh_residual_cash
         bh_series = pd.Series(bh_equity, index=dates)
         bh_metrics = self._compute_metrics(bh_series, [])
 
@@ -191,7 +214,7 @@ class BacktestEngine:
             "metrics": metrics,
             "buy_hold_metrics": bh_metrics,
             "initial_capital": self.initial_capital,
-            "final_capital": equity_curve[-1] if len(equity_curve) > 0 else self.initial_capital,
+            "final_capital": float(equity_curve[-1]) if len(equity_curve) > 0 else self.initial_capital,
         }
 
     def _compute_metrics(

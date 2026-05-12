@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Header } from "@/components/Header";
 import { StockSearch } from "@/components/StockSearch";
 import { SignalPanel } from "@/components/SignalPanel";
@@ -9,7 +9,7 @@ import { BacktestPanel } from "@/components/BacktestPanel";
 import { PortfolioSettings } from "@/components/PortfolioSettings";
 import { FeatureRadar } from "@/components/FeatureRadar";
 import { MetricsGrid } from "@/components/MetricsGrid";
-import type { SignalResponse, BacktestResult, StockData } from "@/lib/api";
+import { api, type SignalResponse, type BacktestResult, type StockData } from "@/lib/api";
 
 export default function Home() {
   const [selectedTicker, setSelectedTicker] = useState<string>("");
@@ -19,6 +19,36 @@ export default function Home() {
   const [riskTolerance, setRiskTolerance] = useState("medium");
   const [capital, setCapital] = useState(100000);
   const [activeTab, setActiveTab] = useState<"signals" | "backtest" | "settings">("signals");
+
+  // Auto-refresh signal whenever the user changes risk tolerance after a
+  // ticker is selected. Without this the displayed BUY/SELL/HOLD action
+  // can be inconsistent with the current risk setting.
+  // We skip the very first render and abort any in-flight refresh request
+  // when riskTolerance changes again rapidly.
+  const isInitialRiskRender = useRef(true);
+  useEffect(() => {
+    if (isInitialRiskRender.current) {
+      isInitialRiskRender.current = false;
+      return;
+    }
+    if (!selectedTicker) return;
+    const controller = new AbortController();
+    (async () => {
+      try {
+        const sig = await api.getSignal(selectedTicker, riskTolerance, controller.signal);
+        if (!controller.signal.aborted) {
+          setSignal(sig);
+          // Stale backtest result is meaningful under the new threshold too
+          setBacktestResult(null);
+        }
+      } catch (err) {
+        if ((err as Error).name !== "AbortError") {
+          console.warn("Signal refresh failed:", err);
+        }
+      }
+    })();
+    return () => controller.abort();
+  }, [riskTolerance, selectedTicker]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -91,6 +121,7 @@ export default function Home() {
               result={backtestResult}
               onRunBacktest={setBacktestResult}
               capital={capital}
+              setCapital={setCapital}
               riskTolerance={riskTolerance}
             />
           </div>
@@ -103,6 +134,7 @@ export default function Home() {
               setCapital={setCapital}
               riskTolerance={riskTolerance}
               setRiskTolerance={setRiskTolerance}
+              selectedTicker={selectedTicker}
             />
           </div>
         )}

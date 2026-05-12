@@ -1,15 +1,26 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Settings, DollarSign, Shield, Clock } from "lucide-react";
+import { getCurrencySymbol } from "@/lib/currency";
 
 interface Props {
   capital: number;
   setCapital: (v: number) => void;
   riskTolerance: string;
   setRiskTolerance: (v: string) => void;
+  /** Optional: ticker selected in main view — used for currency display. */
+  selectedTicker?: string;
 }
 
-export function PortfolioSettings({ capital, setCapital, riskTolerance, setRiskTolerance }: Props) {
+export function PortfolioSettings({
+  capital,
+  setCapital,
+  riskTolerance,
+  setRiskTolerance,
+  selectedTicker = "",
+}: Props) {
+  const currency = getCurrencySymbol(selectedTicker);
   const riskOptions = [
     { value: "low", label: "Conservative", desc: "Lower risk, fewer signals, wider thresholds", color: "var(--accent-green)" },
     { value: "medium", label: "Balanced", desc: "Moderate risk, standard thresholds", color: "var(--accent-yellow)" },
@@ -17,6 +28,21 @@ export function PortfolioSettings({ capital, setCapital, riskTolerance, setRiskT
   ];
 
   const capitalPresets = [10000, 50000, 100000, 500000, 1000000];
+
+  // Local string buffer so typing doesn't fight with parent state.
+  const [capitalInput, setCapitalInput] = useState(String(capital));
+  useEffect(() => {
+    setCapitalInput(String(capital));
+  }, [capital]);
+
+  const handleCapitalChange = (raw: string) => {
+    const cleaned = raw.replace(/[^0-9]/g, "");
+    setCapitalInput(cleaned);
+    const parsed = parseInt(cleaned, 10);
+    if (!Number.isNaN(parsed) && parsed > 0) {
+      setCapital(parsed);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -37,12 +63,30 @@ export function PortfolioSettings({ capital, setCapital, riskTolerance, setRiskT
             <DollarSign className="w-4 h-4 text-[var(--accent-green)]" />
             <label className="text-sm font-semibold">Initial Capital</label>
           </div>
-          <input
-            type="number"
-            value={capital}
-            onChange={(e) => setCapital(Number(e.target.value) || 0)}
-            className="input-dark mb-3 text-lg font-bold"
-          />
+          <div className="relative mb-3">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-base text-[var(--text-muted)] pointer-events-none select-none font-bold">
+              {currency}
+            </span>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={
+                capitalInput === ""
+                  ? ""
+                  : Number(capitalInput).toLocaleString()
+              }
+              onChange={(e) => handleCapitalChange(e.target.value)}
+              onBlur={() => {
+                if (capitalInput === "" || Number(capitalInput) <= 0) {
+                  setCapitalInput(String(capital || 100000));
+                  if (capital <= 0) setCapital(100000);
+                }
+              }}
+              placeholder="100000"
+              className="input-dark text-lg font-bold pl-9"
+              aria-label="Initial capital"
+            />
+          </div>
           <div className="flex flex-wrap gap-2">
             {capitalPresets.map((v) => (
               <button
@@ -54,7 +98,8 @@ export function PortfolioSettings({ capital, setCapital, riskTolerance, setRiskT
                     : "border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--accent-blue)]"
                 }`}
               >
-                ${v.toLocaleString()}
+                {currency}
+                {v.toLocaleString()}
               </button>
             ))}
           </div>

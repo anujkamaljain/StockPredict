@@ -1,1 +1,36 @@
+# Backend-specific .gitignore (supplements repo-root .gitignore)
+
+# Secrets
 .env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Virtual environments
+venv/
+.venv/
+
+# Local data caches (regenerated on demand)
+data/cache/**
+data/raw/**
+data/processed/**
+data/logs/**
+data/*.db
+
+# Trained models (downloaded from cloud training output)
+data/models/*
+!data/models/.gitkeep
+
+# train_cloud.py output directories
+trained_models/
+trained_models_*/
+
+# CatBoost auto-generated training side-files
+catboost_info/
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/

@@ -1,5 +1,9 @@
 """
 Signal API routes — generate and retrieve ML-based trading signals.
+
+If trained models are present in data/models/, the route uses the trained
+ensemble. Otherwise it falls back to a calibrated statistical heuristic so
+the API is still useful (clearly indicated via `signal_source` field).
 """
 
 from fastapi import APIRouter, Query, HTTPException
@@ -11,6 +15,7 @@ import pandas as pd
 from app.data.ingestion import DataIngestionService
 from app.features.engineering import FeatureEngineer
 from app.signals.generator import SignalGenerator
+from app.models.inference import get_inferencer, reload_inferencer
 from app.config import config
 
 router = APIRouter()
@@ -89,16 +94,24 @@ async def generate_signal(
                 except (ValueError, TypeError):
                     pass
 
-        # Generate signal using statistical features (model-based when trained)
-        # For now, use a calibrated statistical approach until models are trained
+        # ---- Inference: trained ML ensemble first, statistical fallback if not ----
         signal_gen = SignalGenerator(risk_tolerance=risk_tolerance)
+        inferencer = get_inferencer()
+        ml_result = inferencer.predict_latest(featured_df)
 
-        # Compute ensemble probability from available indicators
-        proba = _compute_statistical_signal(latest)
+        if ml_result is not None:
+            proba = ml_result["ensemble_proba"]
+            individual_predictions = ml_result["individual_predictions"]
+            signal_source = "ml_ensemble"
+        else:
+            proba = _compute_statistical_signal(latest)
+            individual_predictions = None
+            signal_source = "statistical_fallback"
 
         signal = signal_gen.generate_signal(
             ticker=ticker,
             ensemble_proba=proba,
+            individual_predictions=individual_predictions,
             current_features=feature_dict,
             volatility=float(latest.get("ann_vol_20", 0.2)) if "ann_vol_20" in latest.index else None,
         )
@@ -124,6 +137,8 @@ async def generate_signal(
                 "data_points": len(featured_df),
                 "latest_date": str(featured_df.index[-1].date()),
                 "risk_tolerance": risk_tolerance,
+                "signal_source": signal_source,
+                "individual_predictions": individual_predictions,
             },
         }
 
@@ -157,6 +172,33 @@ async def batch_signals(
     results.sort(key=lambda x: x.get("signal", {}).get("confidence", 0), reverse=True)
 
     return {"signals": results, "count": len(results)}
+
+
+@router.get("/model-info")
+async def model_info():
+    """
+    Inspect which trained models are currently loaded.
+
+    Returns 'available': false if no trained models found — signals are
+    using the statistical fallback in that case.
+    """
+    return get_inferencer().info()
+
+
+@router.post("/reload-models")
+async def reload_models():
+    """
+    Hot-reload trained models from data/models/.
+
+    Call after dropping a fresh `trained_models/` payload from cloud training
+    so the API picks them up without restarting the server.
+    """
+    available = reload_inferencer()
+    return {
+        "reloaded": True,
+        "available": available,
+        "info": get_inferencer().info(),
+    }
 
 
 def _compute_statistical_signal(features: 'pd.Series') -> float:

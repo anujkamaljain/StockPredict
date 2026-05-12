@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Loader2, Play } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { Loader2, Play, Brain, Sigma, AlertCircle } from "lucide-react";
 import {
   LineChart,
   Line,
@@ -18,16 +18,51 @@ import { getCurrencySymbol } from "@/lib/currency";
 interface Props {
   ticker: string;
   result: BacktestResult | null;
-  onRunBacktest: (result: BacktestResult) => void;
+  onRunBacktest: (result: BacktestResult | null) => void;
   capital: number;
+  setCapital: (v: number) => void;
   riskTolerance: string;
 }
 
-export function BacktestPanel({ ticker, result, onRunBacktest, capital, riskTolerance }: Props) {
+export function BacktestPanel({
+  ticker,
+  result,
+  onRunBacktest,
+  capital,
+  setCapital,
+  riskTolerance,
+}: Props) {
   const currency = getCurrencySymbol(ticker);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [startDate, setStartDate] = useState("2018-01-01");
+  // Local string buffer so the user can clear / type freely without state
+  // flickering back to a formatted value mid-edit.
+  const [capitalInput, setCapitalInput] = useState(String(capital));
+
+  // Keep the buffer in sync if the parent capital changes (e.g. from
+  // Portfolio Settings tab).
+  useEffect(() => {
+    setCapitalInput(String(capital));
+  }, [capital]);
+
+  // Track the inputs used for the currently-displayed result so we can
+  // show a "settings changed" warning + clear stale chart data.
+  const [lastRun, setLastRun] = useState<{ start: string; capital: number; risk: string } | null>(null);
+  const inputsChanged =
+    !!result &&
+    !!lastRun &&
+    (lastRun.start !== startDate ||
+      lastRun.capital !== capital ||
+      lastRun.risk !== riskTolerance);
+
+  // The moment any input differs from the last run, drop the stale result
+  // so the chart and metrics can't mislead the user.
+  useEffect(() => {
+    if (inputsChanged) {
+      onRunBacktest(null);
+    }
+  }, [inputsChanged, onRunBacktest]);
 
   const handleRun = async () => {
     setLoading(true);
@@ -39,6 +74,7 @@ export function BacktestPanel({ ticker, result, onRunBacktest, capital, riskTole
         risk_tolerance: riskTolerance,
       });
       onRunBacktest(res);
+      setLastRun({ start: startDate, capital, risk: riskTolerance });
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Backtest failed");
     } finally {
@@ -46,15 +82,54 @@ export function BacktestPanel({ ticker, result, onRunBacktest, capital, riskTole
     }
   };
 
+  const handleCapitalChange = (raw: string) => {
+    // Allow empty / partial input while typing; strip everything except digits.
+    const cleaned = raw.replace(/[^0-9]/g, "");
+    setCapitalInput(cleaned);
+    const parsed = parseInt(cleaned, 10);
+    if (!Number.isNaN(parsed) && parsed > 0) {
+      setCapital(parsed);
+    }
+  };
+
+  const capitalPresets = [10000, 50000, 100000, 500000, 1000000];
+
   const chartData = useMemo(() => {
     if (!result) return [];
-    return Object.entries(result.equity_curve)
-      .filter((_,i) => i % 5 === 0) // Sample every 5 days for performance
+    // Keep FULL date as the dataKey so Recharts identifies each point uniquely.
+    // Truncating to MM-DD (the previous behavior) caused two different years'
+    // entries to collide → hover would always show the earliest matching year.
+    const entries = Object.entries(result.equity_curve).sort(
+      ([a], [b]) => a.localeCompare(b),
+    );
+    // Downsample to ~250 points for chart performance while preserving recency.
+    const step = Math.max(1, Math.ceil(entries.length / 250));
+    return entries
+      .filter((_, i) => i % step === 0 || i === entries.length - 1)
       .map(([date, value]) => ({
-        date: date.slice(5, 10),
+        date,
         strategy: Number(value),
       }));
   }, [result]);
+
+  // Format full ISO date as "MMM 'YY" for compact x-axis ticks.
+  const formatTick = (iso: string) => {
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso.slice(0, 10);
+    const m = d.toLocaleString("en", { month: "short" });
+    const y = String(d.getFullYear()).slice(2);
+    return `${m} '${y}`;
+  };
+
+  // Format full ISO date as "DD MMM YYYY" for tooltip header.
+  const formatTooltipLabel = (label: React.ReactNode): string => {
+    const iso = String(label ?? "");
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso.slice(0, 10);
+    const day = String(d.getDate()).padStart(2, "0");
+    const m = d.toLocaleString("en", { month: "short" });
+    return `${day} ${m} ${d.getFullYear()}`;
+  };
 
   return (
     <div className="space-y-6">
@@ -68,21 +143,40 @@ export function BacktestPanel({ ticker, result, onRunBacktest, capital, riskTole
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
+              max={new Date().toISOString().slice(0, 10)}
               className="input-dark w-44"
             />
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1.5">Capital</label>
-            <input
-              type="text"
-              value={`${currency}${capital.toLocaleString()}`}
-              readOnly
-              className="input-dark w-36 opacity-60"
-            />
+            <label className="block text-xs text-[var(--text-muted)] mb-1.5">
+              Capital
+            </label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[var(--text-muted)] pointer-events-none select-none">
+                {currency}
+              </span>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={
+                  capitalInput === ""
+                    ? ""
+                    : Number(capitalInput).toLocaleString()
+                }
+                onChange={(e) => handleCapitalChange(e.target.value)}
+                onBlur={() => {
+                  // If left empty, restore the parent's current capital.
+                  if (capitalInput === "") setCapitalInput(String(capital));
+                }}
+                placeholder="100000"
+                className="input-dark w-44 pl-7"
+                aria-label="Initial capital"
+              />
+            </div>
           </div>
           <button
             onClick={handleRun}
-            disabled={loading}
+            disabled={loading || capital <= 0}
             className="btn-primary h-[42px] flex items-center gap-2"
           >
             {loading ? (
@@ -93,12 +187,68 @@ export function BacktestPanel({ ticker, result, onRunBacktest, capital, riskTole
             Run Backtest
           </button>
         </div>
-        {error && <p className="mt-3 text-sm text-[var(--accent-red)]">{error}</p>}
+
+        {/* Capital quick-presets */}
+        <div className="flex flex-wrap gap-2 mt-4">
+          {capitalPresets.map((v) => (
+            <button
+              key={v}
+              type="button"
+              onClick={() => setCapital(v)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+                capital === v
+                  ? "border-[var(--accent-blue)] bg-[var(--accent-blue)]/10 text-white"
+                  : "border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--accent-blue)]"
+              }`}
+            >
+              {currency}
+              {v.toLocaleString()}
+            </button>
+          ))}
+        </div>
+
+        {error && (
+          <p className="mt-3 text-sm text-[var(--accent-red)] flex items-center gap-2">
+            <AlertCircle className="w-4 h-4" />
+            {error}
+          </p>
+        )}
+
+        {/* Inputs differ from the last run — clear hint */}
+        {inputsChanged && (
+          <p className="mt-3 text-sm text-[var(--accent-yellow)] flex items-center gap-2">
+            <AlertCircle className="w-4 h-4" />
+            Inputs changed — click <b>Run Backtest</b> to refresh results.
+          </p>
+        )}
       </div>
 
       {/* Results */}
       {result && (
         <>
+          {/* Signal source badge */}
+          {result.signal_source && (
+            (() => {
+              const isML = result.signal_source === "ml_ensemble";
+              const Icon = isML ? Brain : Sigma;
+              const color = isML ? "var(--accent-blue)" : "var(--accent-yellow)";
+              const label = isML ? "Powered by ML Ensemble" : "Statistical Fallback";
+              return (
+                <div
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold w-fit fade-in"
+                  style={{
+                    background: `${color}15`,
+                    color,
+                    border: `1px solid ${color}30`,
+                  }}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {label}
+                </div>
+              );
+            })()
+          )}
+
           {/* Metrics comparison */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 fade-in">
             {[
@@ -133,7 +283,9 @@ export function BacktestPanel({ ticker, result, onRunBacktest, capital, riskTole
                     axisLine={false}
                     tickLine={false}
                     tick={{ fill: "#5a6580", fontSize: 11 }}
-                    interval={Math.floor(chartData.length / 8)}
+                    interval={Math.max(1, Math.floor(chartData.length / 8))}
+                    tickFormatter={formatTick}
+                    minTickGap={20}
                   />
                   <YAxis
                     axisLine={false}
@@ -141,6 +293,7 @@ export function BacktestPanel({ ticker, result, onRunBacktest, capital, riskTole
                     tick={{ fill: "#5a6580", fontSize: 11 }}
                     tickFormatter={(v) => `${currency}${(v / 1000).toFixed(0)}K`}
                     width={65}
+                    domain={["auto", "auto"]}
                   />
                   <Tooltip
                     contentStyle={{
@@ -150,7 +303,11 @@ export function BacktestPanel({ ticker, result, onRunBacktest, capital, riskTole
                       color: "#f0f2f8",
                       fontSize: "13px",
                     }}
-                    formatter={(value) => [`${currency}${Number(value).toFixed(0)}`, "Portfolio"]}
+                    labelFormatter={formatTooltipLabel}
+                    formatter={(value) => [
+                      `${currency}${Number(value).toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
+                      "Portfolio",
+                    ]}
                   />
                   <Legend />
                   <Line
@@ -160,7 +317,7 @@ export function BacktestPanel({ ticker, result, onRunBacktest, capital, riskTole
                     stroke="#4f6bff"
                     strokeWidth={2}
                     dot={false}
-                    animationDuration={1500}
+                    isAnimationActive={false}
                   />
                 </LineChart>
               </ResponsiveContainer>

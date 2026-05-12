@@ -1,600 +1,581 @@
-# 🚀 Deployment Guide — Vercel + GCP Cloud Run
+# Deployment Guide — Vercel (Frontend) + GCP Cloud Run (Backend)
 
-> Deploy the frontend on **Vercel** (free) and the backend on **GCP Cloud Run** (serverless, pay-per-use).
+> **Read this whole guide once before starting.** It's written so a newbie can
+> follow every step. After deployment your app will be live on the public
+> internet with HTTPS, and the trained ML models will drive the signals.
+>
+> **Prerequisite:** You have already followed `cloud_training_guide.md` and
+> your `backend/data/models/` folder contains 11 trained model files with
+> `training_report.json` showing `acceptance_gates.passed: true`.
 
 ---
 
-## 📐 Architecture Overview
+## What you need before starting
+
+### 1. Accounts (all free to start)
+
+| Account | Purpose | Free Tier |
+|---------|---------|-----------|
+| [GitHub](https://github.com) | Source code hosting | Free unlimited public repos |
+| [Vercel](https://vercel.com/signup) | Frontend hosting | Hobby tier free; sign in with GitHub |
+| [Google Cloud](https://cloud.google.com) | Backend hosting | $300 free credit for new accounts; Cloud Run free tier covers personal use |
+
+### 2. Local tools
+
+| Tool | Purpose | Install |
+|------|---------|---------|
+| Git | Push code to GitHub | <https://git-scm.com/download/win> |
+| gcloud CLI | Deploy to Cloud Run | <https://cloud.google.com/sdk/docs/install> |
+| Docker Desktop *(optional)* | Build images locally; you can skip and use Cloud Build instead | <https://www.docker.com/products/docker-desktop> |
+| curl or PowerShell *(already on Windows)* | Test endpoints | Built-in |
+
+### 3. Verify trained models are ready
+
+```powershell
+Get-ChildItem F:\Coding\StockMarketPredectior\backend\data\models\ |
+  Where-Object Name -ne ".gitkeep" |
+  Measure-Object | Select-Object -ExpandProperty Count
+```
+
+Output should be **11**. If less, go back to `cloud_training_guide.md`.
+
+Also verify gates passed:
+
+```powershell
+Get-Content F:\Coding\StockMarketPredectior\backend\data\models\training_report.json |
+  ConvertFrom-Json |
+  Select-Object -ExpandProperty acceptance_gates |
+  Select-Object passed
+```
+
+Output must be `passed : True`. **Do not deploy a failed model.**
+
+---
+
+## Architecture overview
 
 ```
-┌──────────────┐         ┌──────────────────────┐         ┌──────────────┐
-│   Users       │────────▶│   Vercel (Frontend)   │────────▶│  GCP Cloud   │
-│   Browser     │◀────────│   Next.js SSR/SSG     │◀────────│  Run (API)   │
-└──────────────┘         └──────────────────────┘         └──────────────┘
-                                                                  │
-                                                           ┌──────┴──────┐
-                                                           │ Alpha Vantage│
-                                                           │ Yahoo Finance│
-                                                           │ FRED API     │
-                                                           └─────────────┘
+┌──────────────┐      ┌───────────────────────┐      ┌────────────────────┐
+│ Users        │─────▶│ Vercel (Frontend)     │─────▶│ GCP Cloud Run      │
+│ Browser      │◀─────│ Next.js SSR/SSG (free)│◀─────│ FastAPI + ML       │
+│              │      │                       │      │ (~$0-5/mo)         │
+└──────────────┘      └───────────────────────┘      └────────────────────┘
+                                                              │
+                                                       ┌──────┴──────┐
+                                                       │ AlphaVantage│
+                                                       │ YahooFinance│
+                                                       │ FRED        │
+                                                       └─────────────┘
 ```
 
 | Component | Platform | Tier | Cost |
 |-----------|----------|------|------|
 | Frontend | Vercel | Free (Hobby) | $0/mo |
-| Backend | GCP Cloud Run | Free tier | $0-5/mo |
-| Domain | Any registrar | Optional | ~$12/yr |
+| Backend | GCP Cloud Run | Free tier | $0–5/mo |
+| Domain *(optional)* | Any registrar | — | ~$12/yr |
+
+The trained model files are **baked into the Docker image** so the backend
+loads them at startup and uses them on every request — no external storage,
+no extra latency.
 
 ---
 
-## 🎨 Part 1: Deploy Frontend on Vercel
+# Part 1 — Push your code to GitHub
 
-### Prerequisites
+Skip this if your code is already on GitHub.
 
-- [Vercel account](https://vercel.com/signup) (sign up with GitHub)
-- Project pushed to GitHub
-
-### Step 1: Push Frontend to GitHub
-
-If not already pushed:
+### 1.1 — Initialize a repo
 
 ```powershell
 cd F:\Coding\StockMarketPredectior
+git init
 git add .
-git commit -m "Ready for deployment"
-git push origin main
+git commit -m "Initial commit with trained models"
 ```
 
-### Step 2: Import Project on Vercel
+> The trained model files in `backend/data/models/` are **not** ignored by
+> `.gitignore` if you intentionally want them in git. **Better practice:**
+> the included `.gitignore` excludes them — copy them out of band (via the
+> Docker build context, see below) and keep the repo lean. The repo's
+> `.gitignore` already does this for you.
 
-1. Go to → [https://vercel.com/new](https://vercel.com/new)
-2. Click **"Import Git Repository"**
-3. Select your `StockMarketPredectior` repository
-4. Configure:
+### 1.2 — Create a GitHub repo
+
+1. Go to <https://github.com/new>
+2. Repository name: `StockMarketPredectior` (or your choice)
+3. Choose **Private** (recommended) or Public
+4. Click **Create repository** — do NOT add README/license (you have one)
+
+GitHub shows commands to push existing repo. Copy them or use this template:
+
+```powershell
+git remote add origin https://github.com/YOUR_USERNAME/StockMarketPredectior.git
+git branch -M main
+git push -u origin main
+```
+
+You will be prompted for GitHub username + a personal access token (not your password). Create one at <https://github.com/settings/tokens> if you don't have it.
+
+---
+
+# Part 2 — Deploy the frontend on Vercel
+
+### 2.1 — Import the project
+
+1. Go to <https://vercel.com/new>
+2. Click **Import** next to your GitHub repo (you may need to grant Vercel access to your repos first)
+3. Configure:
 
 | Setting | Value |
 |---------|-------|
 | **Framework Preset** | Next.js |
 | **Root Directory** | `frontend` |
-| **Build Command** | `npm run build` |
-| **Output Directory** | `.next` |
-| **Install Command** | `npm install` |
+| **Build Command** | *leave default* (`npm run build`) |
+| **Output Directory** | *leave default* (`.next`) |
+| **Install Command** | *leave default* (`npm install`) |
 
-### Step 3: Set Environment Variables
+### 2.2 — Add environment variable (placeholder for now)
 
-In Vercel project settings → **Environment Variables**:
+In the **Environment Variables** section:
 
 | Key | Value | Notes |
 |-----|-------|-------|
-| `NEXT_PUBLIC_API_URL` | `https://your-backend-url.run.app` | Set after Cloud Run deploy |
+| `NEXT_PUBLIC_API_URL` | `https://placeholder.run.app` | We'll update this in Part 3.7 after Cloud Run is live |
 
-> [!IMPORTANT]
-> You'll set the actual backend URL after deploying Cloud Run in Part 2.
-> For now, set a placeholder and update it later.
+### 2.3 — Deploy
 
-### Step 4: Deploy
+Click **Deploy**. Vercel builds and deploys automatically. After ~1 minute, you'll get a URL like `https://stockmarketpredectior.vercel.app`.
 
-Click **"Deploy"** — Vercel will build and deploy automatically.
+**Save this URL** — you'll need it in Part 3.6.
 
-Your frontend will be live at: `https://your-project.vercel.app`
-
-### Step 5: Custom Domain (Optional)
-
-1. Go to your project **Settings** → **Domains**
-2. Add your domain (e.g., `stockml.yourdomain.com`)
-3. Update DNS records as instructed by Vercel
+The site will be live but will throw network errors (it can't reach the placeholder backend). That's expected — we fix it next.
 
 ---
 
-## ⚙️ Part 2: Deploy Backend on GCP Cloud Run
+# Part 3 — Deploy the backend on GCP Cloud Run
 
-### Prerequisites
+### 3.1 — Authenticate gcloud
 
-- [Google Cloud account](https://cloud.google.com/) (free $300 credit for new users)
-- [Google Cloud CLI (gcloud)](https://cloud.google.com/sdk/docs/install) installed
-- Docker installed (for building the container image)
+After installing the gcloud CLI:
 
-### Step 1: Create a GCP Project
-
-```bash
-# Login
+```powershell
 gcloud auth login
+gcloud auth configure-docker     # only needed if you build images locally
+```
 
-# Create project (or use existing)
-gcloud projects create stockml-backend --name="StockML Backend"
-gcloud config set project stockml-backend
+A browser will open — sign in with your Google account.
 
-# Enable required APIs
+### 3.2 — Create a GCP project
+
+```powershell
+$PROJECT_ID = "stockml-backend"     # change if taken
+gcloud projects create $PROJECT_ID --name="StockML Backend"
+gcloud config set project $PROJECT_ID
+```
+
+If you get "billing required", link a billing account at <https://console.cloud.google.com/billing> (the $300 free credit means you won't actually be charged for personal use).
+
+### 3.3 — Enable required APIs
+
+```powershell
 gcloud services enable run.googleapis.com
 gcloud services enable cloudbuild.googleapis.com
 gcloud services enable artifactregistry.googleapis.com
 ```
 
-### Step 2: Create Dockerfile
+This takes ~30 seconds.
+
+### 3.4 — Create the Dockerfile and .dockerignore
+
+> If these files already exist in your `backend/` folder from earlier
+> versions of this guide, **replace them** with the contents below — they
+> have been updated for the trained-model workflow.
 
 Create `backend/Dockerfile`:
 
 ```dockerfile
 # ============================================================
 # Stock Market ML Backend — Production Dockerfile
+# Trained models are baked into the image so the API runs offline.
 # ============================================================
 FROM python:3.11-slim
 
-# Set environment
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PORT=8080
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PORT=8080 \
+    PIP_NO_CACHE_DIR=1
 
 WORKDIR /app
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
+    build-essential curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Install Python deps (production uses backend/requirements.txt)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
 # Copy application code
 COPY app/ ./app/
-COPY data/models/ ./data/models/ 2>/dev/null || true
 
-# Create data directories
-RUN mkdir -p data/cache data/raw data/processed data/models data/logs
+# Bake trained models into the image so Cloud Run runs offline.
+# (These must already exist locally — see cloud_training_guide.md.)
+COPY data/models/ ./data/models/
 
-# Expose port
+# Ensure runtime data subdirs exist (caches, logs)
+RUN mkdir -p data/cache data/raw data/processed data/logs
+
 EXPOSE 8080
 
-# Health check
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
+    CMD curl -fs http://localhost:8080/health || exit 1
 
-# Start server
-CMD uvicorn app.main:app \
-    --host 0.0.0.0 \
-    --port ${PORT} \
-    --workers 2 \
-    --timeout-keep-alive 30
+# 2 workers fits comfortably in 2 GiB; AMP is irrelevant on CPU.
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT} --workers 2 --timeout-keep-alive 30"]
 ```
-
-### Step 3: Create .dockerignore
 
 Create `backend/.dockerignore`:
 
 ```
 venv/
+.venv/
 __pycache__/
 *.pyc
+*.pyo
 .env
-data/cache/*
-data/raw/*
-data/logs/*
+.env.*
+.gitignore
+data/cache/**
+data/raw/**
+data/processed/**
+data/logs/**
+data/*.db
 .git
 *.parquet
+trained_models/
+trained_models_*/
+catboost_info/
+requirements_dgx.txt
+train_cloud.py
 ```
 
-### Step 4: Update CORS for Production
+> The `.dockerignore` deliberately excludes `train_cloud.py` and
+> `requirements_dgx.txt` — they're training-only artifacts not needed at
+> serving time. `data/models/` is **not** excluded — those files must be in
+> the image.
 
-Update `backend/app/main.py` to accept your Vercel domain:
+### 3.5 — Build and push the image
 
-```python
-# CORS for frontend
-import os
+You have two options.
 
-FRONTEND_URLS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    os.getenv("FRONTEND_URL", ""),          # Production Vercel URL
-]
-# Filter out empty strings
-FRONTEND_URLS = [u for u in FRONTEND_URLS if u]
+**Option A — Cloud Build (no local Docker needed, recommended):**
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=FRONTEND_URLS,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-```
-
-### Step 5: Build & Push Docker Image
-
-```bash
+```powershell
 cd F:\Coding\StockMarketPredectior\backend
-
-# Build the image
-docker build -t stockml-backend .
-
-# Tag for Google Artifact Registry
-docker tag stockml-backend gcr.io/stockml-backend/api:latest
-
-# Push to GCR
-docker push gcr.io/stockml-backend/api:latest
+gcloud builds submit --tag gcr.io/$PROJECT_ID/api:v1 .
 ```
 
-**Or use Cloud Build (no local Docker needed):**
+This uploads your `backend/` folder to GCP, builds the image in the cloud, and pushes it to GCR. Takes 3–5 minutes.
 
-```bash
-gcloud builds submit --tag gcr.io/stockml-backend/api:latest .
+**Option B — Local Docker:**
+
+```powershell
+cd F:\Coding\StockMarketPredectior\backend
+docker build -t gcr.io/$PROJECT_ID/api:v1 .
+docker push gcr.io/$PROJECT_ID/api:v1
 ```
 
-### Step 6: Deploy to Cloud Run
+### 3.6 — Deploy to Cloud Run
 
-```bash
-gcloud run deploy stockml-api \
-    --image gcr.io/stockml-backend/api:latest \
-    --region us-central1 \
-    --platform managed \
-    --allow-unauthenticated \
-    --memory 2Gi \
-    --cpu 2 \
-    --min-instances 0 \
-    --max-instances 3 \
-    --timeout 300 \
-    --concurrency 80 \
-    --set-env-vars "ALPHA_VANTAGE_API_KEY=YOUR_KEY_HERE" \
-    --set-env-vars "FRED_API_KEY=YOUR_KEY_HERE" \
-    --set-env-vars "FRONTEND_URL=https://your-project.vercel.app" \
-    --set-env-vars "DEVICE=cpu" \
-    --set-env-vars "API_HOST=0.0.0.0" \
-    --set-env-vars "API_PORT=8080"
+> Replace `YOUR_ALPHA_VANTAGE_KEY` and `YOUR_FRED_KEY` with your actual keys.
+> Replace `https://your-app.vercel.app` with the Vercel URL from Part 2.3.
+
+```powershell
+$AV_KEY = "YOUR_ALPHA_VANTAGE_KEY"
+$FRED_KEY = "YOUR_FRED_KEY"
+$FRONTEND_URL = "https://stockmarketpredectior.vercel.app"
+
+gcloud run deploy stockml-api `
+    --image gcr.io/$PROJECT_ID/api:v1 `
+    --region us-central1 `
+    --platform managed `
+    --allow-unauthenticated `
+    --memory 2Gi `
+    --cpu 2 `
+    --min-instances 0 `
+    --max-instances 3 `
+    --timeout 300 `
+    --concurrency 80 `
+    --set-env-vars "ALPHA_VANTAGE_API_KEY=$AV_KEY,FRED_API_KEY=$FRED_KEY,FRONTEND_URL=$FRONTEND_URL,DEVICE=cpu,LOG_LEVEL=INFO"
 ```
 
-After deployment, you'll get a URL like:
+After ~30 seconds, gcloud prints a URL like:
+
 ```
-https://stockml-api-xxxxx-uc.a.run.app
+Service URL: https://stockml-api-xxxxx-uc.a.run.app
 ```
 
-> [!TIP]
-> **Use GCP Secret Manager for API keys** instead of plain env vars:
-> ```bash
-> # Create secret
-> echo -n "YOUR_ALPHA_VANTAGE_KEY" | gcloud secrets create alpha-vantage-key --data-file=-
->
-> # Use in Cloud Run
-> gcloud run deploy stockml-api \
->     --set-secrets "ALPHA_VANTAGE_API_KEY=alpha-vantage-key:latest"
-> ```
+**Save this URL.** This is your production backend.
 
-### Step 7: Update Vercel Environment Variable
+### 3.7 — Verify the backend is live
 
-Now that you have the Cloud Run URL:
+```powershell
+$BACKEND_URL = "https://stockml-api-xxxxx-uc.a.run.app"
 
-1. Go to Vercel → Project Settings → Environment Variables
-2. Update `NEXT_PUBLIC_API_URL` to `https://stockml-api-xxxxx-uc.a.run.app`
-3. Redeploy the frontend
+# Health check — should show models_loaded: true and gates_passed: true
+curl "$BACKEND_URL/health"
 
-### Step 8: Verify Deployment
+# Sanity check — should return a real signal with signal_source: "ml_ensemble"
+curl "$BACKEND_URL/api/signals/generate/AAPL"
 
-```bash
-# Health check
-curl https://stockml-api-xxxxx-uc.a.run.app/health
-
-# Test data fetch
-curl https://stockml-api-xxxxx-uc.a.run.app/api/data/fetch/AAPL
-
-# Test search
-curl "https://stockml-api-xxxxx-uc.a.run.app/api/data/search?q=apple"
-
-# Test signal
-curl https://stockml-api-xxxxx-uc.a.run.app/api/signals/generate/AAPL
+# Model info — confirms which trained models loaded
+curl "$BACKEND_URL/api/signals/model-info"
 ```
+
+Expected `/health` response:
+```json
+{
+  "status": "healthy",
+  "models_loaded": true,
+  "loaded_models": ["lstm","transformer","cnn","xgboost","lightgbm","catboost"],
+  "gates_passed": true
+}
+```
+
+> If `models_loaded: false`, the trained files weren't included in the
+> image. Re-check Part 3.5 (the Cloud Build output should mention
+> `COPY data/models/` — look for files like `lstm_best.pt` in the build log).
+
+### 3.8 — Connect Vercel to the new backend
+
+Back in Vercel:
+1. Open your project → **Settings** → **Environment Variables**
+2. Find `NEXT_PUBLIC_API_URL`
+3. Click the three-dot menu → **Edit**
+4. Replace the placeholder with `https://stockml-api-xxxxx-uc.a.run.app` (your real Cloud Run URL)
+5. Save
+6. Go to **Deployments** tab → click the three-dot menu on the latest deployment → **Redeploy**
+
+After redeploy (~1 minute), open your Vercel site. The frontend now talks to the live backend. Search for AAPL → you should see a real signal with the **"ML Ensemble"** badge.
 
 ---
 
-## 🔁 Part 3: CI/CD with GitHub Actions
+# Part 4 — Use Secret Manager for API keys (production best practice)
 
-### Auto-deploy Backend on Push
+Setting API keys as env vars in `gcloud run deploy` is fine for prototypes,
+but for anything public-facing, use Secret Manager.
 
-Create `.github/workflows/deploy-backend.yml`:
+### 4.1 — Create secrets
 
-```yaml
-name: Deploy Backend to Cloud Run
-
-on:
-  push:
-    branches: [main]
-    paths:
-      - 'backend/**'
-
-env:
-  PROJECT_ID: stockml-backend
-  SERVICE: stockml-api
-  REGION: us-central1
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      id-token: write
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Authenticate to GCP
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-      - name: Setup Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-
-      - name: Build & Push
-        run: |
-          cd backend
-          gcloud builds submit --tag gcr.io/$PROJECT_ID/$SERVICE:${{ github.sha }}
-
-      - name: Deploy to Cloud Run
-        run: |
-          gcloud run deploy $SERVICE \
-            --image gcr.io/$PROJECT_ID/$SERVICE:${{ github.sha }} \
-            --region $REGION \
-            --platform managed \
-            --allow-unauthenticated
+```powershell
+echo "YOUR_ALPHA_VANTAGE_KEY" | gcloud secrets create av-api-key --data-file=-
+echo "YOUR_FRED_KEY" | gcloud secrets create fred-api-key --data-file=-
 ```
 
-### Auto-deploy Frontend on Push
+### 4.2 — Grant the Cloud Run service account access
 
-Vercel handles this automatically when connected to GitHub.
-Every push to `main` triggers a new deployment.
+```powershell
+$PROJECT_NUMBER = gcloud projects describe $PROJECT_ID --format="value(projectNumber)"
+$SA = "$PROJECT_NUMBER-compute@developer.gserviceaccount.com"
 
-### GitHub Secrets to Configure
+gcloud secrets add-iam-policy-binding av-api-key `
+    --member="serviceAccount:$SA" `
+    --role="roles/secretmanager.secretAccessor"
 
-| Secret | Value | Where to Get |
-|--------|-------|-------------|
-| `GCP_SA_KEY` | Service account JSON key | GCP Console → IAM → Service Accounts |
-
----
-
-## 💰 Part 4: Cost Estimation
-
-### Vercel (Frontend)
-
-| Feature | Hobby (Free) | Pro ($20/mo) |
-|---------|-------------|--------------|
-| Deployments | Unlimited | Unlimited |
-| Bandwidth | 100 GB/mo | 1 TB/mo |
-| Serverless functions | 100 GB-hrs | 1000 GB-hrs |
-| Custom domains | ✅ | ✅ |
-
-**For personal use**: Free tier is more than sufficient.
-
-### GCP Cloud Run (Backend)
-
-| Resource | Free Tier (per month) | Your Expected Usage |
-|----------|----------------------|---------------------|
-| CPU | 180,000 vCPU-seconds | ~5,000 (well within) |
-| Memory | 360,000 GiB-seconds | ~10,000 (well within) |
-| Requests | 2 million | ~1,000 (well within) |
-| Networking | 1 GB egress | ~500 MB (well within) |
-
-**Estimated cost**: **$0 — $5/month** for personal use.
-
-> [!NOTE]
-> Cloud Run scales to zero when idle — you only pay when requests come in.
-> With `--min-instances 0`, there's no cost when you're not using it.
-
-### External APIs
-
-| API | Free Tier | Cost if Exceeded |
-|-----|-----------|-----------------|
-| Alpha Vantage | 25 req/day | $49.99/mo for 120/min |
-| FRED | 120 req/min | Free (gov service) |
-| Yahoo Finance | Unlimited (scraped) | Free |
-
----
-
-## 🛡️ Part 5: Security Hardening
-
-### 1. API Key Security
-
-**Never hardcode API keys**. Use environment variables or GCP Secret Manager:
-
-```bash
-# Create secrets
-echo -n "YOUR_AV_KEY" | gcloud secrets create av-api-key --data-file=-
-echo -n "YOUR_FRED_KEY" | gcloud secrets create fred-api-key --data-file=-
-
-# Grant Cloud Run access
-gcloud secrets add-iam-policy-binding av-api-key \
-    --member="serviceAccount:YOUR_SA@YOUR_PROJECT.iam.gserviceaccount.com" \
+gcloud secrets add-iam-policy-binding fred-api-key `
+    --member="serviceAccount:$SA" `
     --role="roles/secretmanager.secretAccessor"
 ```
 
-### 2. CORS Configuration
+### 4.3 — Redeploy referencing secrets
 
-Only allow your Vercel domain:
-
-```python
-allow_origins=[
-    "https://your-project.vercel.app",
-    "https://stockml.yourdomain.com",  # custom domain
-]
+```powershell
+gcloud run deploy stockml-api `
+    --image gcr.io/$PROJECT_ID/api:v1 `
+    --region us-central1 `
+    --set-secrets "ALPHA_VANTAGE_API_KEY=av-api-key:latest,FRED_API_KEY=fred-api-key:latest" `
+    --set-env-vars "FRONTEND_URL=$FRONTEND_URL,DEVICE=cpu,LOG_LEVEL=INFO"
 ```
 
-### 3. Rate Limiting (Optional)
-
-Add rate limiting middleware to protect your API:
-
-```python
-# pip install slowapi
-from slowapi import Limiter
-from slowapi.util import get_remote_address
-
-limiter = Limiter(key_func=get_remote_address)
-app.state.limiter = limiter
-
-@app.get("/api/signals/generate/{ticker}")
-@limiter.limit("30/minute")
-async def generate_signal(request: Request, ticker: str):
-    ...
-```
-
-### 4. HTTPS
-
-- **Vercel**: HTTPS enabled by default ✅
-- **Cloud Run**: HTTPS enabled by default ✅
+This removes the plain-text keys from the service definition.
 
 ---
 
-## 📊 Part 6: Monitoring & Logging
+# Part 5 — Updating deployments
 
-### GCP Cloud Run Monitoring
+### 5.1 — Update backend code (no new training)
 
-1. Go to → [GCP Console](https://console.cloud.google.com/run) → Cloud Run → your service
-2. **Metrics tab**: Request count, latency, error rate, CPU/memory
-3. **Logs tab**: Application logs (loguru output)
-
-### Set Up Alerts
-
-```bash
-# Alert if error rate > 5%
-gcloud alpha monitoring policies create \
-    --display-name="High Error Rate" \
-    --condition-display-name="Error Rate > 5%" \
-    --condition-filter='resource.type="cloud_run_revision" AND metric.type="run.googleapis.com/request_count" AND metric.labels.response_code_class="5xx"'
-```
-
-### Uptime Checks
-
-```bash
-# Check if backend is healthy every 5 minutes
-gcloud monitoring uptime-check-configs create \
-    --display-name="StockML API Health" \
-    --resource-type=uptime-url \
-    --hostname=stockml-api-xxxxx-uc.a.run.app \
-    --path=/health \
-    --check-interval=300s
-```
-
----
-
-## 🔄 Part 7: Updating Deployments
-
-### Update Backend
-
-```bash
-cd backend
-
-# Build new image
-gcloud builds submit --tag gcr.io/stockml-backend/api:v2
-
-# Deploy new version
-gcloud run deploy stockml-api \
-    --image gcr.io/stockml-backend/api:v2 \
+```powershell
+cd F:\Coding\StockMarketPredectior\backend
+gcloud builds submit --tag gcr.io/$PROJECT_ID/api:v2 .
+gcloud run deploy stockml-api `
+    --image gcr.io/$PROJECT_ID/api:v2 `
     --region us-central1
 ```
 
-### Update Frontend
+### 5.2 — Update trained models (most common refresh)
 
-Just push to GitHub — Vercel auto-deploys:
+This is the cycle you'll repeat every month or after major market events:
 
-```bash
+1. Open `cloud_training_guide.md`, follow it end-to-end to produce a new `trained_models/`
+2. Verify `acceptance_gates.passed: true` in `training_report.json`
+3. Replace `backend/data/models/` contents with the new files
+4. Build and deploy a fresh image:
+   ```powershell
+   cd F:\Coding\StockMarketPredectior\backend
+   gcloud builds submit --tag gcr.io/$PROJECT_ID/api:v3 .
+   gcloud run deploy stockml-api `
+       --image gcr.io/$PROJECT_ID/api:v3 `
+       --region us-central1
+   ```
+5. Verify with `curl $BACKEND_URL/health` — `gates_passed` should reflect the new training.
+
+### 5.3 — Update frontend code
+
+Just push to GitHub. Vercel auto-deploys:
+
+```powershell
 git add frontend/
 git commit -m "Update frontend"
 git push origin main
 ```
 
-### Update Trained Models
+---
 
-1. Retrain on Colab (see Cloud Training Guide)
-2. Download new model files
-3. Rebuild Docker image with new models:
-   ```bash
-   # Copy models to backend/data/models/
-   # Rebuild & deploy
-   gcloud builds submit --tag gcr.io/stockml-backend/api:v3
-   gcloud run deploy stockml-api --image gcr.io/stockml-backend/api:v3 --region us-central1
-   ```
+# Part 6 — Monitoring
+
+### 6.1 — Cloud Run console
+
+<https://console.cloud.google.com/run> → click your service → tabs:
+- **Metrics**: request count, latency, error rate, CPU/memory
+- **Logs**: application logs (loguru output)
+- **Revisions**: rollback to a previous deployment if needed
+
+### 6.2 — Health endpoint as uptime probe
+
+Any uptime monitor (e.g. UptimeRobot, GCP Uptime Checks) can hit:
+```
+https://stockml-api-xxxxx-uc.a.run.app/health
+```
+Expect HTTP 200 with `models_loaded: true`.
+
+### 6.3 — Live signal source check
+
+Visit your Vercel site, search a ticker, and look at the badge above the
+signal:
+- **"ML Ensemble"** (blue, brain icon) = trained models active
+- **"Statistical Fallback"** (yellow, sigma icon) = models missing or broken; check `/health`
 
 ---
 
-## 🌐 Part 8: Alternative Backend Hosts
+# Part 7 — Cost estimation
 
-If you prefer simpler alternatives to GCP Cloud Run:
+### Vercel (frontend)
 
-### Railway.app (Simplest)
+| Feature | Hobby (Free) | Pro ($20/mo) |
+|---------|-------------|--------------|
+| Deployments | Unlimited | Unlimited |
+| Bandwidth | 100 GB/mo | 1 TB/mo |
+| Custom domains | yes | yes |
 
-```bash
-# Install Railway CLI
-npm install -g @railway/cli
+For personal use: **free tier is fine.**
 
-# Login & deploy
-cd backend
-railway login
-railway init
-railway up
-```
+### GCP Cloud Run (backend)
 
-- **Free tier**: $5/mo credit, 500 hours
-- **Pros**: Zero config, GitHub integration
-- **Cons**: Less control than Cloud Run
+| Resource | Free tier (per month) | Your expected usage |
+|----------|----------------------|---------------------|
+| CPU | 180,000 vCPU-seconds | ~5,000 |
+| Memory | 360,000 GiB-seconds | ~10,000 |
+| Requests | 2 million | ~1,000 |
+| Networking | 1 GB egress | ~500 MB |
 
-### Fly.io
+**Estimated cost: $0–5/month** for personal use. Cloud Run scales to zero
+when idle (`--min-instances 0`), so you pay nothing when no one is using
+the app.
 
-```bash
-# Install flyctl
-curl -L https://fly.io/install.sh | sh
+### External APIs
 
-cd backend
-fly launch
-fly deploy
-```
+| API | Free tier | Cost if exceeded |
+|-----|-----------|-----------------|
+| Alpha Vantage | 25 req/day | $49.99/mo for 120/min |
+| FRED | 120 req/min | Free (government service) |
+| Yahoo Finance | Unlimited (scraped) | Free |
 
-- **Free tier**: 3 shared VMs, 160 GB bandwidth
-- **Pros**: Global edge deployment
-- **Cons**: More complex networking
-
-### Render.com
-
-1. Connect GitHub repo
-2. Select `backend/` as root
-3. Set build command: `pip install -r requirements.txt`
-4. Set start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-
-- **Free tier**: 750 hours/mo
-- **Pros**: Dead simple, free tier
-- **Cons**: Spins down after 15 min inactivity (cold starts)
+The app uses Yahoo Finance as automatic fallback, so Alpha Vantage rate
+limits never break the app.
 
 ---
 
-## ✅ Deployment Checklist
+# Part 8 — Security checklist
 
 ```
-Pre-deployment:
-  □ All API keys configured in .env
-  □ Trained models in backend/data/models/
-  □ Frontend builds successfully (npm run build)
-  □ Backend runs locally without errors
-  □ All tests pass
-
-Backend (Cloud Run):
-  □ Dockerfile created and tested locally
-  □ .dockerignore configured
-  □ CORS updated for production domain
-  □ API keys set via env vars or Secret Manager
-  □ Image built and pushed to GCR
-  □ Cloud Run service deployed
-  □ Health check returns 200
-  □ API endpoints respond correctly
-
-Frontend (Vercel):
-  □ GitHub repo connected to Vercel
-  □ Root directory set to 'frontend'
-  □ NEXT_PUBLIC_API_URL set to Cloud Run URL
-  □ Build succeeds on Vercel
-  □ Site loads and search works
-  □ Signals generate correctly
-
-Post-deployment:
-  □ Custom domain configured (optional)
-  □ HTTPS verified on both frontend and backend
-  □ Monitoring alerts set up
-  □ CI/CD pipeline configured
-  □ README updated with production URLs
+☐ API keys live in GCP Secret Manager, not in env vars
+☐ CORS whitelist (FRONTEND_URL) only includes your Vercel domain
+☐ /docs and /redoc are accessible (or disabled — comment out in main.py)
+☐ Vercel custom domain has HTTPS (automatic)
+☐ Cloud Run service has HTTPS (automatic)
+☐ Source repo is private OR contains no secrets
+☐ training_report.json is fine to ship (no secrets)
+☐ .env is in .gitignore (already done)
 ```
+
+Optional hardening (rate limiting via `slowapi`):
+
+```python
+# In backend/app/main.py, after creating `app`:
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+
+# Then on hot endpoints:
+@router.get("/generate/{ticker}")
+@limiter.limit("30/minute")
+async def generate_signal(...): ...
+```
+
+---
+
+# Part 9 — Troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| `curl /health` returns `models_loaded: false` | Trained files not in image. Re-run Part 3.5; check Cloud Build log shows `data/models/` files |
+| Frontend shows "Statistical Fallback" everywhere | Same as above — backend has no models |
+| `gcloud run deploy` fails with permission errors | Run `gcloud auth login` again; verify project is selected with `gcloud config get-value project` |
+| Build fails: `No such file or directory: data/models/` | `data/models/` is empty. Train first (see `cloud_training_guide.md`) |
+| CORS error in browser console | `FRONTEND_URL` env var on Cloud Run doesn't match your actual Vercel domain. Redeploy with the right URL |
+| Cloud Run cold start ~10s | Normal. Use `--min-instances 1` to keep warm (costs $5–10/mo) |
+| `502 Bad Gateway` | Container crashed on startup. Check Logs tab in Cloud Run console |
+| Alpha Vantage rate limit (25/day) | Expected. Yahoo Finance fallback handles it transparently |
+| Vercel build fails: `NEXT_PUBLIC_API_URL is undefined` | You forgot Part 2.2. Add the env var and redeploy |
+| Latency > 2 seconds | First request after cold start is slow. Increase `--min-instances` or accept the cold start |
+
+---
+
+# Final checklist before announcing your app
+
+```
+☐ Trained models in production (curl /health → models_loaded: true)
+☐ Acceptance gates passed (curl /health → gates_passed: true)
+☐ Live signal returns "ml_ensemble" source (curl /api/signals/generate/AAPL)
+☐ Frontend loads without console errors
+☐ Search bar works (try "apple")
+☐ Signal panel shows ML Ensemble badge
+☐ Backtest tab runs and shows powered-by-ML badge
+☐ Equity curve tooltip shows the correct date and value at hover position
+☐ Per-model probabilities visible in signal panel
+☐ HTTPS green padlock on both Vercel and Cloud Run URLs
+☐ Keys are in Secret Manager (Part 4 done)
+☐ You have monitoring set up (Part 6)
+☐ You know how to retrain monthly (Part 5.2)
+```
+
+---
+
+# What's next
+
+- **Retraining cadence**: every 4 weeks (see `cloud_training_guide.md` retraining schedule)
+- **Custom domain**: Vercel → Settings → Domains → Add → follow DNS instructions
+- **Cost alerts**: GCP Console → Billing → Budgets & alerts → set $10/mo alert
+- **Backups**: keep the previous `trained_models/` folder until the new one is verified live for 1 week

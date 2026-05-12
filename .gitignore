@@ -1,0 +1,69 @@
+# =============================================================================
+# Repo-wide .gitignore
+# =============================================================================
+
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+
+# Editor / IDE
+.vscode/
+.idea/
+*.iml
+.cursor/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Trained model artifacts (regenerated from cloud training)
+backend/data/models/*
+!backend/data/models/.gitkeep
+
+# Local data caches
+backend/data/cache/**
+backend/data/raw/**
+backend/data/processed/**
+backend/data/logs/**
+backend/data/*.db
+*.parquet
+
+# Training outputs from train_cloud.py
+backend/trained_models/
+backend/trained_models_*/
+
+# CatBoost auto-generated training side-files
+backend/catboost_info/
+catboost_info/
+
+# Build artifacts
+build/
+dist/

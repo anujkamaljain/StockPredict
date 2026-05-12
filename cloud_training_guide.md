@@ -1,98 +1,162 @@
-# ☁️ Cloud Training Guide — Train on GPU, Run Locally
+# Cloud Training Guide — Train on GPU, Run Locally
 
-> You don't have a local GPU — this guide shows you how to train all models on
-> **Google Colab (free T4 GPU)** and use the trained weights on your local CPU machine.
-
----
-
-## 🎯 The Workflow
-
-```
-┌─────────────────┐     ┌────────────────────┐     ┌──────────────────┐
-│  Your Local PC   │────▶│  Google Colab (GPU) │────▶│  Your Local PC   │
-│  Upload backend/ │     │  Train all 6 models │     │  Download models │
-│                  │     │  ~45 min on T4 GPU  │     │  Place in data/  │
-│                  │     │                      │     │  Restart FastAPI │
-└─────────────────┘     └────────────────────┘     └──────────────────┘
-```
-
-**Total output**: ~36 MB of model files → easy to download.
+> **Read this whole guide once before starting.** It's written for a newbie:
+> every step is copy-paste, with screenshots-describable hints and a
+> troubleshooting section at the bottom.
+>
+> You don't have a local GPU. You will train on **Google Colab (free T4 GPU)**
+> *or* on your **college shared DGX node**, then download the trained files
+> and drop them into your local project for inference.
 
 ---
 
-## 📦 What Gets Trained
+## What you need before starting
 
-| Model | File | Size | Description |
-|-------|------|------|-------------|
-| LSTM | `lstm_best.pt` | ~5 MB | Bidirectional LSTM with attention |
-| Transformer | `transformer_best.pt` | ~15 MB | Temporal Fusion Transformer |
-| CNN | `cnn_best.pt` | ~8 MB | Multi-scale 1D CNN |
-| XGBoost | `xgboost_model.json` | ~2 MB | Gradient boosted trees |
-| LightGBM | `lightgbm_model.pkl` | ~1 MB | Fast gradient boosting |
-| CatBoost | `catboost_model.cbm` | ~3 MB | Categorical boosting |
-| Ensemble | `ensemble_model.pkl` | ~1 MB | Meta-learner (stacking) |
-| Scaler | `scaler.pkl` | ~1 MB | Feature normalizer |
-| Feature list | `feature_names.json` | ~5 KB | Feature column names |
-| Report | `training_report.json` | ~2 KB | Training metrics |
+### 1. An Alpha Vantage API key (free, ~30 seconds)
+
+- Go to <https://www.alphavantage.co/support/#api-key>
+- Enter any name and email → **Get Free API Key** button
+- Copy the 16-character key (looks like `XH582O310WG11HT2`)
+- This gives you 25 requests/day. If you hit the limit, the system auto-falls back to Yahoo Finance — so you can still train, just slower for the first run.
+
+### 2. A way to upload `backend/` to the cloud
+
+Either:
+- **Push to GitHub** (recommended — easiest re-use): `git init && git add . && git commit -m "init" && git push`
+- **Zip it locally**: right-click `backend/` folder → *Send to* → *Compressed (zipped) folder* → upload the ZIP
+
+### 3. Pick your training environment
+
+| You have… | Use… | Time | Cost |
+|---|---|---|---|
+| Just a laptop | **Path A — Google Colab** (free T4 GPU) | 30–90 min | $0 |
+| SSH access to a college DGX | **Path B — DGX node** (V100 / A100) | 10–50 min | $0 |
+
+Both paths produce the same trained files. Pick one.
 
 ---
 
-## 🚀 Method 1: Google Colab (Recommended — FREE)
+## The complete workflow at a glance
 
-### Step 1: Open Google Colab
-
-1. Go to → [https://colab.research.google.com](https://colab.research.google.com)
-2. Click **"New Notebook"**
-3. **Enable GPU**: `Runtime` → `Change runtime type` → **T4 GPU** → Save
-
-> [!TIP]
-> Google Colab gives you **~12 hours** of free GPU time per session.
-> Training all 6 models on 5 tickers takes **~30-45 minutes** on T4.
-
-### Step 2: Upload Your Backend Code
-
-**Option A — Upload from local (simplest):**
-
-In the first cell, run:
-
-```python
-# Mount Google Drive (optional but recommended for persistence)
-from google.colab import drive
-drive.mount('/content/drive')
+```
+┌──────────────┐   ┌────────────────────────┐   ┌────────────────────┐
+│ Your laptop  │──▶│ Colab T4  OR  DGX node │──▶│ Your laptop        │
+│ Upload code  │   │ Run train_cloud.py     │   │ Drop trained files │
+│              │   │ Verify gates pass      │   │ in data/models/    │
+└──────────────┘   └────────────────────────┘   └────────────────────┘
+       │                                                  │
+       └──── Then proceed to deployment_guide.md ─────────┘
 ```
 
-Then upload your `backend/` folder:
-1. Click the **📁 folder icon** on the left sidebar
-2. Right-click → **Upload folder**
-3. Select your `backend/` folder
+You only have to do **two things**:
+1. Read this guide → train your models (this file).
+2. Read `deployment_guide.md` → deploy.
 
-**Option B — Clone from GitHub (if you have a repo):**
+---
+
+## What the training script produces
+
+Every successful training writes these 11 files into `trained_models/`. You will
+copy them later into `backend/data/models/`.
+
+| File | Size | Purpose |
+|------|------|---------|
+| `lstm_best.pt` | ~3 MB | Bidirectional LSTM with attention |
+| `transformer_best.pt` | ~4 MB | Temporal Fusion Transformer |
+| `cnn_best.pt` | ~4 MB | Multi-scale 1D CNN |
+| `xgboost_model.json` | ~2 MB | XGBoost classifier |
+| `lightgbm_model.pkl` | ~1 MB | LightGBM classifier |
+| `catboost_model.cbm` | ~3 MB | CatBoost classifier |
+| `ensemble_model.pkl` | ~10 KB | Stacking meta-learner + isotonic calibration |
+| `scaler.pkl` | ~2 KB | RobustScaler (fit on TRAIN only) |
+| `feature_names.json` | ~1 KB | Selected feature names |
+| `selected_feature_indices.npy` | ~500 B | Indices of selected features |
+| `training_report.json` | ~10 KB | All metrics, gate results, training histories |
+
+> **The training_report.json is your proof that the model is good.** Check
+> `acceptance_gates.passed == true` before deploying. If it is `false`, the
+> training script also exits with non-zero status — don't skip this check.
+
+---
+
+## Robustness features built into `train_cloud.py`
+
+| Feature | Why it matters |
+|---|---|
+| Per-ticker sequence construction | Prevents cross-ticker contamination in 60-day windows |
+| Aligned tree + deep predictions | Prevents off-by-`seq_length` ensemble bugs |
+| Reproducibility seed (`--seed`) | Same input = same model every time |
+| Feature selection on TRAIN only | No test leakage |
+| Label smoothing | Better-calibrated probabilities |
+| Purged gap between train/val/test | Prevents rolling-window leakage at split boundaries |
+| Early stopping on validation **AUC** | Robust model selection |
+| LR warmup + cosine annealing | Stable optimization |
+| Gradient clipping + AdamW + weight decay | No exploding gradients |
+| Mixed precision (`--use_amp`) | Faster training, lower VRAM on GPU |
+| Cross-validated isotonic calibration | Well-calibrated final probabilities |
+| Threshold optimization on validation | Picks optimal trading thresholds |
+| Permutation-importance sanity check | Confirms model uses real signal |
+| **Mandatory acceptance gates** | Training **fails loudly** on bad models |
+
+### Acceptance gates the script enforces
+
+Training will exit with **non-zero status** (and `acceptance_gates.passed = false`) unless:
+
+- Test AUC ≥ **0.52** (better than coin flip)
+- Test accuracy ≥ **0.51**
+- Test Brier ≤ **0.26** (better than uniform)
+- Train–Test AUC gap ≤ **0.10** (no severe overfitting)
+- Each individual model has test AUC ≥ **0.50**
+- Ensemble AUC ≥ best individual − 0.005 (the ensemble actually adds value)
+- Permutation-importance AUC drop ≥ **0.005** (model uses real signal, not noise)
+
+Override only with `--force_accept` (**not recommended**).
+
+---
+
+## Path A — Google Colab (free T4 GPU)
+
+### A.1 — Open Colab and enable GPU
+
+1. Go to <https://colab.research.google.com>
+2. Click **New Notebook**
+3. Top menu: **Runtime** → **Change runtime type** → set **Hardware accelerator: T4 GPU** → **Save**
+4. Free tier gives you ~12 hours of GPU/session. A 10-ticker 150-epoch run takes ~1 hour, well within budget.
+
+### A.2 — Upload the `backend/` folder
+
+Pick whichever upload method is easiest:
+
+**Option A — Drag-and-drop (simplest):**
+1. Click the **folder icon** on the left sidebar
+2. Right-click in the file explorer → *Upload folder*
+3. Select your local `backend/` folder
+
+**Option B — Clone from GitHub:**
 
 ```python
 !git clone https://github.com/YOUR_USERNAME/StockMarketPredectior.git
 %cd StockMarketPredectior/backend
 ```
 
-**Option C — Upload as ZIP:**
+**Option C — Upload a ZIP:**
 
 ```python
 from google.colab import files
-
-# Upload backend.zip from your local machine
-uploaded = files.upload()
-
-# Unzip
-!unzip backend.zip -d /content/
+uploaded = files.upload()      # pick your backend.zip
+!unzip -q backend.zip -d /content/
 %cd /content/backend
 ```
 
-### Step 3: Install Dependencies
+### A.3 — Install dependencies (modern stack)
 
 ```python
-# Install all dependencies
-!pip install -r requirements.txt
+!pip install -q -r requirements.txt
+```
 
-# Verify GPU is available
+Verify the GPU is visible:
+
+```python
 import torch
 print(f"GPU available: {torch.cuda.is_available()}")
 if torch.cuda.is_available():
@@ -100,282 +164,412 @@ if torch.cuda.is_available():
     print(f"Memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB")
 ```
 
-Expected output:
+Expected:
 ```
 GPU available: True
 GPU: Tesla T4
 Memory: 15.1 GB
 ```
 
-### Step 4: Set Your Alpha Vantage API Key
+If `GPU available: False`, you forgot step A.1 — go back and enable T4 GPU.
 
-```python
-import os
-os.environ["ALPHA_VANTAGE_API_KEY"] = "YOUR_ALPHA_VANTAGE_KEY_HERE"
-```
+### A.4 — Run training (copy-paste this entire block)
 
-> [!IMPORTANT]
-> Alpha Vantage free tier = 25 requests/day. If training on 5+ tickers, the system
-> will automatically fall back to Yahoo Finance after hitting the limit.
-> **Tip**: Fetch data locally first, cache it, then upload the cache to Colab.
-
-### Step 5: Run Training
-
-```python
-# Basic training — 5 core US stocks
-!python train_cloud.py \
-    --tickers AAPL,MSFT,GOOGL,AMZN,NVDA \
-    --epochs 100 \
-    --batch_size 64 \
-    --seq_length 60 \
-    --start 2012-01-01 \
-    --alpha_vantage_key YOUR_ALPHA_VANTAGE_KEY_HERE
-```
-
-**Expanded training** (more tickers for better generalization):
+> Replace `YOUR_ALPHA_VANTAGE_KEY_HERE` with the key you got at the top of this guide.
 
 ```python
 !python train_cloud.py \
-    --tickers AAPL,MSFT,GOOGL,AMZN,NVDA,META,TSLA,JPM,JNJ,V,PG,UNH,HD,MA,DIS \
-    --epochs 150 \
-    --batch_size 64 \
-    --seq_length 60 \
+    --tickers AAPL,MSFT,GOOGL,AMZN,NVDA,META,JPM,JNJ,V,PG \
     --start 2010-01-01 \
-    --patience 20 \
+    --epochs 150 \
+    --patience 25 \
+    --seq_length 60 \
+    --max_features 80 \
+    --batch_size 64 \
+    --lr 0.0005 \
+    --label_smoothing 0.05 \
+    --gap 5 \
+    --seed 42 \
+    --use_amp \
+    --device auto \
     --alpha_vantage_key YOUR_ALPHA_VANTAGE_KEY_HERE
 ```
 
-**Indian stocks:**
-
-```python
-!python train_cloud.py \
-    --tickers RELIANCE.NS,TCS.NS,HDFCBANK.NS,INFY.NS,ICICIBANK.NS \
-    --epochs 100 \
-    --start 2015-01-01 \
-    --alpha_vantage_key YOUR_ALPHA_VANTAGE_KEY_HERE
-```
-
-> [!NOTE]
-> **Indian stocks with Alpha Vantage**: Use BSE symbols (e.g., `RELIANCE.BSE`).
-> For NSE, Yahoo Finance fallback (`RELIANCE.NS`) handles these well.
-
-### Step 6: Monitor Training
-
-You'll see output like:
+You will see output like:
 
 ```
-🎯 Training on: ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA']
+======================================================================
+ ROBUST CLOUD TRAINING — STOCK MARKET PREDICTOR
+======================================================================
+Tickers       : ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'META', 'JPM', 'JNJ', 'V', 'PG']
+...
+Device        : cuda
+Mixed prec.   : True
+======================================================================
 
-📊 STEP 1: Fetching data...
-   🥇 Primary: Alpha Vantage | 🥈 Fallback: Yahoo Finance
-   ✅ Alpha Vantage API key configured
-  Fetching AAPL... [AV: 3200 rows] ✅ 3140 samples, 107 features
-  Fetching MSFT... [AV: 3200 rows] ✅ 3140 samples, 107 features
+--- STEP 1: Fetching data ---
+  Fetching AAPL... [Yahoo: 3650 rows] OK - 3450 samples
+  Fetching MSFT... [Yahoo: 3650 rows] OK - 3450 samples
   ...
-
-📦 Combined dataset: 15700 samples, 107 features
-   Class balance: 52.3% positive
-
 ============================================================
   Training lstm
 ============================================================
-  Epoch  10/100: train=0.6823  val=0.6891
-  Epoch  20/100: train=0.6654  val=0.6745
+  Epoch   5/150: train=0.6823  val=0.6712  val_AUC=0.5621  lr=0.000500  [OK] (best)
   ...
-  ✅ Best epoch: 67, val_loss: 0.6412
-
-============================================================
-  Training transformer
-============================================================
-  ...
-
-  ✅ TRAINING COMPLETE
-  Models saved to: /content/backend/trained_models
+  Best epoch: 67, val_loss: 0.6412, val_AUC: 0.6021
 ```
 
-### Step 7: Download Trained Models
+### A.5 — Verify gates passed
 
-**Option A — Direct download:**
+The last block of output will look like one of these:
+
+**Success:**
+```
+======================================================================
+  ALL ACCEPTANCE GATES PASSED. Model is ready.
+======================================================================
+```
+
+**Failure (and what to do):**
+```
+======================================================================
+  ACCEPTANCE GATES FAILED:
+======================================================================
+  1. Test AUC 0.5048 < min 0.5200 — model is no better than random.
+  2. Train-Test AUC gap 0.1543 > max 0.1000 — overfitting.
+
+  Recommendations:
+    - Add more tickers / longer history (--tickers / --start)
+    - Increase --epochs and --patience
+    - Try a different --seq_length (30, 90, 120)
+    - Adjust --max_features (try 40 or 120)
+```
+
+> **If gates failed: try the recommendations and re-run. Do not deploy.**
+
+### A.6 — Download `trained_models/` to your laptop
 
 ```python
-# Zip the trained models
-!zip -r /content/trained_models.zip /content/backend/trained_models/
-
-# Download to your local machine
+!zip -qr /content/trained_models.zip /content/backend/trained_models/
 from google.colab import files
 files.download('/content/trained_models.zip')
 ```
 
-**Option B — Save to Google Drive (persistent):**
+A "trained_models.zip" will be downloaded to your computer's Downloads folder.
+
+(Optional, if your Colab session might die before downloading) Save to Drive:
 
 ```python
+from google.colab import drive
+drive.mount('/content/drive')
 !cp -r /content/backend/trained_models /content/drive/MyDrive/StockML_Models/
 ```
 
-### Step 8: Deploy Models Locally
-
-1. **Unzip** `trained_models.zip` on your local machine
-2. **Copy** all files to:
-   ```
-   F:\Coding\StockMarketPredectior\backend\data\models\
-   ```
-3. **Verify** the files are there:
-   ```powershell
-   ls F:\Coding\StockMarketPredectior\backend\data\models\
-   ```
-   Expected:
-   ```
-   lstm_best.pt
-   transformer_best.pt
-   cnn_best.pt
-   xgboost_model.json
-   lightgbm_model.pkl
-   catboost_model.cbm
-   ensemble_model.pkl
-   scaler.pkl
-   feature_names.json
-   training_report.json
-   ```
-4. **Restart** your local FastAPI server:
-   ```powershell
-   cd F:\Coding\StockMarketPredectior\backend
-   .\venv\Scripts\Activate.ps1
-   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-   ```
-5. **Test** — signals now use trained models:
-   ```powershell
-   curl http://localhost:8000/api/signals/generate/AAPL
-   ```
+### A.7 — Now jump to "Deploy Trained Models Locally" below
 
 ---
 
-## 🔄 Method 2: Kaggle Notebooks (Alternative FREE)
+## Path B — College Shared DGX node (older Python / CUDA OK)
 
-Kaggle offers **30 hours/week** of free GPU (P100 or T4).
+DGX nodes typically run an older but stable software stack. Use
+`backend/requirements_dgx.txt` — it pins versions that have prebuilt wheels
+(no compiler, no CMake required).
 
-1. Go to → [https://www.kaggle.com](https://www.kaggle.com)
-2. **New Notebook** → Enable GPU accelerator
-3. Upload your `backend/` folder as a dataset
-4. Run the same training commands
-
-> [!TIP]
-> Kaggle keeps your notebook outputs for 30 days — useful for versioning models.
-
----
-
-## ☁️ Method 3: GCP Vertex AI (Paid, Production-grade)
-
-For production-level training with more control:
-
-### Setup
+### B.1 — Connect to the DGX
 
 ```bash
-# Install gcloud CLI
-# https://cloud.google.com/sdk/docs/install
-
-gcloud auth login
-gcloud config set project YOUR_PROJECT_ID
-
-# Create a custom training job
-gcloud ai custom-jobs create \
-    --region=us-central1 \
-    --display-name=stockml-training \
-    --worker-pool-spec=machine-type=n1-standard-4,accelerator-type=NVIDIA_TESLA_T4,accelerator-count=1,container-image-uri=gcr.io/YOUR_PROJECT/stockml-train:latest
+ssh your-user@dgx.your-college.edu
 ```
 
-### Dockerfile for GCP
-
-```dockerfile
-FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
-
-WORKDIR /app
-COPY backend/ .
-RUN pip install -r requirements.txt
-
-ENTRYPOINT ["python", "train_cloud.py"]
-```
-
-### Push & Run
+If the DGX uses Slurm, request an interactive GPU node first:
 
 ```bash
-docker build -t gcr.io/YOUR_PROJECT/stockml-train:latest .
-docker push gcr.io/YOUR_PROJECT/stockml-train:latest
+srun --partition=gpu --gres=gpu:1 --cpus-per-task=8 --mem=32G --time=04:00:00 --pty bash
+```
+
+### B.2 — Copy your `backend/` folder up
+
+Pick whichever fits your access:
+
+**Option A — `scp` from your laptop:**
+```bash
+scp -r F:\Coding\StockMarketPredectior\backend your-user@dgx.your-college.edu:~/stockml/
+```
+
+**Option B — Clone from GitHub on the DGX:**
+```bash
+git clone https://github.com/YOUR_USERNAME/StockMarketPredectior.git
+cd StockMarketPredectior/backend
+```
+
+### B.3 — Create a venv and install pinned deps
+
+```bash
+cd ~/stockml/backend          # or wherever you put it
+python3 -m venv venv
+source venv/bin/activate
+python -m pip install --upgrade pip
+
+# Use the DGX-friendly pinned requirements (prebuilt wheels only)
+pip install -r requirements_dgx.txt
+```
+
+If `torch.cuda.is_available()` is `False`, install the matching CUDA build for the DGX. Check the CUDA version with `nvidia-smi` first (e.g. `12.1`):
+
+```bash
+pip install torch==2.4.* --index-url https://download.pytorch.org/whl/cu121
+```
+
+### B.4 — Verify GPU is visible
+
+```bash
+nvidia-smi
+python -c "import torch; print('CUDA:', torch.cuda.is_available()); print('GPU:', torch.cuda.get_device_name(0))"
+```
+
+You should see your GPU name (V100 / A100 / H100).
+
+### B.5 — Run training (interactive)
+
+DGX GPUs are powerful — bump batch size and ticker count:
+
+```bash
+python train_cloud.py \
+    --tickers AAPL,MSFT,GOOGL,AMZN,NVDA,META,JPM,JNJ,V,PG,UNH,HD,MA,DIS,TSLA \
+    --start 2008-01-01 \
+    --epochs 200 \
+    --patience 30 \
+    --seq_length 60 \
+    --max_features 100 \
+    --batch_size 128 \
+    --lr 0.0005 \
+    --label_smoothing 0.05 \
+    --gap 5 \
+    --seed 42 \
+    --use_amp \
+    --device auto \
+    --alpha_vantage_key YOUR_ALPHA_VANTAGE_KEY_HERE \
+    --output_dir trained_models
+```
+
+### B.6 — Or submit as a Slurm batch job
+
+Create `train.sbatch`:
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=stockml-train
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=32G
+#SBATCH --time=04:00:00
+#SBATCH --output=train_%j.log
+
+cd $HOME/stockml/backend
+source venv/bin/activate
+
+python train_cloud.py \
+    --tickers AAPL,MSFT,GOOGL,AMZN,NVDA,META,JPM,JNJ,V,PG \
+    --start 2010-01-01 \
+    --epochs 150 \
+    --patience 25 \
+    --use_amp \
+    --alpha_vantage_key YOUR_ALPHA_VANTAGE_KEY_HERE
+```
+
+Submit and monitor:
+
+```bash
+sbatch train.sbatch
+squeue -u $USER
+tail -f train_*.log         # watch live
+```
+
+### B.7 — Verify gates passed
+
+Same as Path A.5: look for `ALL ACCEPTANCE GATES PASSED`. If not, fix and re-run.
+
+### B.8 — Copy `trained_models/` back to your laptop
+
+From your **laptop's** terminal (not the DGX):
+
+```bash
+scp -r your-user@dgx.your-college.edu:~/stockml/backend/trained_models .
 ```
 
 ---
 
-## 💡 Pro Tips
+## Deploy Trained Models Locally (both paths)
 
-### Maximize Free Colab Time
+This is the final step before you proceed to `deployment_guide.md`.
 
-1. **Don't leave Colab idle** — sessions timeout after ~30 min of inactivity
-2. **Save checkpoints to Drive** — in case the session dies
-3. **Use `compact` output size** for Alpha Vantage during testing (100 days vs 20+ years)
-4. **Pre-cache data locally** → upload cache to Colab to avoid API calls
+### Step 1 — Move the files into the project
 
-### Handle Alpha Vantage Rate Limits
+Open PowerShell on your laptop:
 
-```python
-# If you have lots of tickers, pre-fetch data:
-# Run this LOCALLY first (where rate limits don't matter as much):
-python -c "
-from app.data.providers.alpha_vantage import AlphaVantageProvider
-av = AlphaVantageProvider()
-for t in ['AAPL','MSFT','GOOGL','AMZN','NVDA']:
-    av.fetch_daily(t, use_cache=True)
-    print(f'Cached {t}')
-"
-# Then upload the cache/ folder to Colab
+```powershell
+# If the zip downloaded from Colab:
+Expand-Archive -Path "$env:USERPROFILE\Downloads\trained_models.zip" -DestinationPath F:\Coding\StockMarketPredectior\backend\data\models -Force
+
+# OR if you scp'd a folder from DGX:
+Move-Item .\trained_models\* F:\Coding\StockMarketPredectior\backend\data\models\
 ```
 
-### Retraining Schedule
+### Step 2 — Verify all 11 files are present
 
-| Frequency | When | Why |
-|-----------|------|-----|
-| **Monthly** | First weekend of each month | Market regimes shift |
-| **After major events** | Fed meetings, earnings season | Structural breaks |
-| **When performance drops** | Sharpe < 0.5 for 2+ weeks | Model decay |
-
-### Model Versioning
-
-Keep track of your trained models:
-
+```powershell
+Get-ChildItem F:\Coding\StockMarketPredectior\backend\data\models\ | Select-Object Name
 ```
-data/models/
-├── v1_2026-05-10/          # First training
-│   ├── lstm_best.pt
-│   ├── training_report.json
-│   └── ...
-├── v2_2026-06-01/          # Monthly retrain
-│   └── ...
-└── current/                # Symlink to active version
-    └── ...
+
+You should see exactly these:
+```
+lstm_best.pt
+transformer_best.pt
+cnn_best.pt
+xgboost_model.json
+lightgbm_model.pkl
+catboost_model.cbm
+ensemble_model.pkl
+scaler.pkl
+feature_names.json
+selected_feature_indices.npy
+training_report.json
+```
+
+(`.gitkeep` is fine if it's also there.)
+
+### Step 3 — Confirm gates passed
+
+```powershell
+Get-Content F:\Coding\StockMarketPredectior\backend\data\models\training_report.json |
+  ConvertFrom-Json |
+  Select-Object -ExpandProperty acceptance_gates
+```
+
+Output should include `passed : True`. If `False`, retrain — do **not** deploy a failed model.
+
+### Step 4 — Test locally (optional, recommended)
+
+Start the backend:
+
+```powershell
+cd F:\Coding\StockMarketPredectior\backend
+.\venv\Scripts\Activate.ps1
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+The startup log should show:
+```
+Trained models loaded: [LSTM, TFT, CNN, XGB, LGB, CAT] (n_features=80, seq_length=60, gates_passed=True)
+```
+
+In another terminal, check the health endpoint:
+
+```powershell
+curl http://localhost:8000/health
+```
+
+Expected:
+```json
+{"status":"healthy","models_loaded":true,"loaded_models":["lstm","transformer","cnn","xgboost","lightgbm","catboost"],"gates_passed":true}
+```
+
+Test a real signal:
+
+```powershell
+curl http://localhost:8000/api/signals/generate/AAPL
+```
+
+The response's `meta.signal_source` should be `"ml_ensemble"` (not `"statistical_fallback"`) and `meta.individual_predictions` should show all six base model probabilities.
+
+### Step 5 — Proceed to deployment
+
+Open `deployment_guide.md` and follow it end-to-end. You're done with training.
+
+---
+
+## Hot-reloading models on a running server
+
+If your FastAPI server is already running and you just dropped a fresh
+`trained_models/` payload, you can reload without restart:
+
+```powershell
+curl -X POST http://localhost:8000/api/signals/reload-models
+curl http://localhost:8000/api/signals/model-info     # verify
 ```
 
 ---
 
-## 🐛 Troubleshooting
+## Tuning knobs (quick reference)
 
-| Issue | Fix |
-|-------|-----|
-| `CUDA out of memory` | Reduce `--batch_size` to 32 or 16 |
-| `No data fetched` | Check internet; AV rate limit → Yahoo fallback should work |
-| Session disconnected | Save to Google Drive; resume with cached data |
-| `ModuleNotFoundError` | Re-run `pip install -r requirements.txt` |
-| Models not loading locally | Check file paths — must be in `backend/data/models/` |
-| Colab keeps disconnecting | Open browser console, run: `setInterval(() => { document.querySelector("colab-connect-button").click() }, 60000)` |
-| Training too slow on CPU | **You MUST use GPU runtime** — `Runtime` → `Change runtime type` → T4 GPU |
+| Flag | What it controls | When to change |
+|------|------------------|----------------|
+| `--tickers` | Universe of stocks | 10+ recommended; more = more robust |
+| `--start` | History start date | `2008-01-01` for max data; `2015-01-01` if Alpha Vantage free tier is your only source |
+| `--epochs` | Max training epochs | 150–200; early stopping picks the optimum |
+| `--patience` | Early-stopping patience | 20–30; higher = let training run longer |
+| `--seq_length` | LSTM/Transformer/CNN lookback | 30 / 60 / 90; longer = more memory |
+| `--max_features` | Top-N features kept after selection | 60–100. Smaller = less overfitting on small data |
+| `--batch_size` | Mini-batch size | 64 on T4, 128 on V100/A100 |
+| `--lr` | Learning rate | 0.0005 is the sweet spot |
+| `--label_smoothing` | Soft-label factor | 0.05 default; 0.0 disables it |
+| `--gap` | Purged gap days between splits | 5 default; raise to 10 if rolling windows are wider |
+| `--seed` | RNG seed | Keep at 42 unless A/B testing |
+| `--use_amp` | Mixed-precision on CUDA | Always include for GPU training |
+| `--device` | `auto` / `cuda` / `cpu` | `auto` for both Colab and DGX |
+| `--force_accept` | Skip acceptance gates | **DO NOT USE** for production models |
 
 ---
 
-## 📊 Expected Training Times
+## Troubleshooting
 
-| Configuration | T4 GPU | CPU (don't do this) |
-|--------------|--------|---------------------|
-| 5 tickers, 100 epochs | ~30 min | ~6 hours |
-| 15 tickers, 150 epochs | ~90 min | ~18 hours |
-| 30 tickers, 200 epochs | ~3 hours | ~36 hours |
+| Symptom | Fix |
+|---------|-----|
+| `CUDA out of memory` | Lower `--batch_size` to 32; lower `--seq_length` to 30 |
+| `No GPU detected, using CPU` on Colab | You forgot Runtime → Change runtime type → T4 GPU |
+| `No data fetched` for some tickers | Yahoo Finance fallback should kick in; if Yahoo also fails, the ticker is likely delisted/wrong |
+| Gates fail with low AUC | Add more tickers; extend `--start`; raise `--epochs` |
+| Gates fail with high train-test gap | More regularization: smaller `--max_features`, more `--label_smoothing` |
+| Gates fail with low permutation drop | Features may be noisy; revisit feature engineering |
+| `xgboost` / `lightgbm` build error on DGX | You used `requirements.txt` — switch to `requirements_dgx.txt` |
+| Colab session disconnected | Save to Drive frequently; restart and re-run |
+| Training too slow | Verify `nvidia-smi` shows the GPU is busy; check `--device auto` picked CUDA |
+| `Alpha Vantage rate limit hit` | Free tier = 25 req/day. The script auto-falls back to Yahoo Finance |
+| Local server still shows `statistical_fallback` after copying files | Run `POST /api/signals/reload-models` or restart the server |
+| `models_loaded: false` in `/health` | Files not in `backend/data/models/`; verify with `Get-ChildItem` |
 
-> [!CAUTION]
-> **Never train on CPU in Colab** — it wastes your session time.
-> Always enable GPU before running `train_cloud.py`.
+---
+
+## Retraining schedule
+
+Production models drift. Retrain on this cadence:
+
+| Trigger | Why |
+|---------|-----|
+| **Monthly** (first weekend) | Market regimes drift, model staleness |
+| **After major regime shifts** | Fed pivots, earnings season, crisis events |
+| **Live performance drops** | Backtest Sharpe < 0.5 for 2+ weeks, hit rate < 0.5 |
+| **Adding new tickers** | Need to retrain to learn the new universe |
+
+Always keep your previous `trained_models/` until the new one is verified live.
+
+---
+
+## Expected training times
+
+| Config | T4 (Colab) | V100/A100 (DGX) |
+|--------|-----------|------------------|
+| 5 tickers, 100 epochs | ~25 min | ~10 min |
+| 10 tickers, 150 epochs | ~60 min | ~25 min |
+| 15 tickers, 200 epochs | ~2 h | ~50 min |
+
+> Never train on CPU. It wastes your Colab session for nothing.
+
+---
+
+## After training, your only remaining task
+
+Read [`deployment_guide.md`](./deployment_guide.md) end-to-end and follow it.
+The trained files you just produced will be baked into the production
+Docker image automatically.

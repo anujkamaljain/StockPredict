@@ -1,5 +1,5 @@
 """
-LSTM / GRU model for time-series stock prediction.
+LSTM model for time-series stock prediction.
 Bidirectional architecture with attention mechanism for improved sequence modeling.
 """
 
@@ -165,47 +165,3 @@ class LSTMModel(nn.Module):
             result["attention_weights"] = attn_weights
 
         return result
-
-
-class GRUModel(nn.Module):
-    """GRU variant — lighter alternative to LSTM."""
-
-    def __init__(
-        self,
-        input_size: int,
-        hidden_size: int = 128,
-        num_layers: int = 2,
-        dropout: float = 0.3,
-    ):
-        super().__init__()
-
-        self.input_proj = nn.Sequential(
-            nn.Linear(input_size, hidden_size),
-            nn.LayerNorm(hidden_size),
-            nn.GELU(),
-        )
-
-        self.gru = nn.GRU(
-            input_size=hidden_size,
-            hidden_size=hidden_size,
-            num_layers=num_layers,
-            batch_first=True,
-            dropout=dropout if num_layers > 1 else 0,
-            bidirectional=True,
-        )
-
-        self.attention = AttentionLayer(hidden_size * 2)
-
-        self.head = nn.Sequential(
-            nn.Linear(hidden_size * 2, hidden_size),
-            nn.GELU(),
-            nn.Dropout(dropout),
-            nn.Linear(hidden_size, 1),
-            nn.Sigmoid(),
-        )
-
-    def forward(self, x: torch.Tensor) -> dict:
-        x = self.input_proj(x)
-        out, _ = self.gru(x)
-        context, _ = self.attention(out)
-        return {"direction_prob": self.head(context).squeeze(-1)}

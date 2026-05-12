@@ -41,14 +41,18 @@ export function StockSearch({ onSelect, riskTolerance }: Props) {
       return;
     }
 
-    // Cancel any in-flight request
+    // Cancel any in-flight request so stale responses can't overwrite
+    // newer ones (real race condition fix — the abort signal is now
+    // actually threaded into the fetch call).
     if (abortRef.current) abortRef.current.abort();
-    abortRef.current = new AbortController();
+    const controller = new AbortController();
+    abortRef.current = controller;
 
     setSearchLoading(true);
     setShowDropdown(true);
     try {
-      const results = await api.searchStocks(q);
+      const results = await api.searchStocks(q, controller.signal);
+      if (controller.signal.aborted) return;
       const mapped: SearchResult[] = results.map((r) => ({
         ticker: r.ticker,
         name: r.name || "",
@@ -59,11 +63,14 @@ export function StockSearch({ onSelect, riskTolerance }: Props) {
       setShowDropdown(true);
       setHasSearched(true);
       setHighlightIndex(-1);
-    } catch {
+    } catch (err) {
+      if ((err as Error).name === "AbortError") return;
       setSuggestions([]);
       setHasSearched(true);
     } finally {
-      setSearchLoading(false);
+      if (!controller.signal.aborted) {
+        setSearchLoading(false);
+      }
     }
   }, []);
 
@@ -179,6 +186,20 @@ export function StockSearch({ onSelect, riskTolerance }: Props) {
     };
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  // Cleanup pending debounce + in-flight search on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+        debounceRef.current = null;
+      }
+      if (abortRef.current) {
+        abortRef.current.abort();
+        abortRef.current = null;
+      }
+    };
   }, []);
 
   // Popular tickers for quick access

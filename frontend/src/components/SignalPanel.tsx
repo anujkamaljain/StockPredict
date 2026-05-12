@@ -1,6 +1,6 @@
 "use client";
 
-import { TrendingUp, TrendingDown, Minus, ShieldCheck, BarChart3 } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, ShieldCheck, BarChart3, Brain, Sigma } from "lucide-react";
 import type { SignalResponse } from "@/lib/api";
 import { getCurrencySymbol } from "@/lib/currency";
 
@@ -16,10 +16,17 @@ export function SignalPanel({ signal }: Props) {
   const ActionIcon =
     s.action === "BUY" ? TrendingUp : s.action === "SELL" ? TrendingDown : Minus;
 
+  const isML = signal.meta.signal_source === "ml_ensemble";
+  const SourceIcon = isML ? Brain : Sigma;
+  const sourceLabel = isML ? "ML Ensemble" : "Statistical Fallback";
+  const sourceColor = isML ? "var(--accent-blue)" : "var(--accent-yellow)";
+
+  const individual = signal.meta.individual_predictions ?? null;
+
   return (
     <div className="glass-card p-6 fade-in">
       {/* Header */}
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center justify-between mb-3">
         <div>
           <h3 className="text-2xl font-bold">{s.ticker}</h3>
           <p className="text-sm text-[var(--text-muted)]">
@@ -30,6 +37,24 @@ export function SignalPanel({ signal }: Props) {
           <ActionIcon className="w-4 h-4" />
           {s.action}
         </div>
+      </div>
+
+      {/* Signal source badge */}
+      <div
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-semibold mb-5 w-fit"
+        style={{
+          background: `${sourceColor}15`,
+          color: sourceColor,
+          border: `1px solid ${sourceColor}30`,
+        }}
+        title={
+          isML
+            ? "Signal produced by the trained 6-model ensemble (LSTM + Transformer + CNN + XGBoost + LightGBM + CatBoost)"
+            : "No trained models found in data/models/. Signal produced by the statistical heuristic — train models for sharper results."
+        }
+      >
+        <SourceIcon className="w-3.5 h-3.5" />
+        {sourceLabel}
       </div>
 
       {/* Price */}
@@ -112,6 +137,39 @@ export function SignalPanel({ signal }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Per-model predictions (only shown when ML ensemble is active) */}
+      {individual && Object.keys(individual).length > 0 && (
+        <div className="mt-5 pt-5 border-t border-[var(--border)]">
+          <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-3">
+            Per-Model P(Up)
+          </p>
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            {Object.entries(individual).map(([name, p]) => {
+              const up = p > 0.5;
+              return (
+                <div
+                  key={name}
+                  className="flex justify-between items-center py-1 px-2 rounded"
+                  style={{
+                    background: up ? "rgba(16,185,129,0.08)" : "rgba(239,68,68,0.08)",
+                  }}
+                >
+                  <span className="capitalize text-[var(--text-secondary)]">{name}</span>
+                  <span
+                    className="font-mono font-bold"
+                    style={{
+                      color: up ? "var(--accent-green)" : "var(--accent-red)",
+                    }}
+                  >
+                    {(p * 100).toFixed(1)}%
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 {
   "ticker": "0P0001J938.BO",
   "market_cap": null,
-  "pe_ratio": 46.211666,
+  "pe_ratio": 46.16403,
   "forward_pe": null,
   "eps": null,
   "forward_eps": null,
@@ -22,10 +22,10 @@
   "free_cash_flow": null,
   "beta": null,
   "52w_high": 40.0638,
-  "52w_low": 27.1345,
-  "50d_avg": 33.85384,
-  "200d_avg": 33.37139,
+  "52w_low": 27.4709,
+  "50d_avg": 34.009468,
+  "200d_avg": 33.422104,
   "sector": null,
   "industry": null,
-  "fetch_date": "2026-05-10T03:22:45.573087"
+  "fetch_date": "2026-05-12T15:57:25.382831"
 }

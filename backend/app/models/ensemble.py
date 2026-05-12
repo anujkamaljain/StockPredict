@@ -1,7 +1,14 @@
 """
 Meta-Ensemble Learner.
 Combines predictions from LSTM, Transformer, CNN, and tree models
-using a stacking approach with a logistic regression meta-learner.
+using a stacking approach with a regularized logistic regression meta-learner
+and cross-validated isotonic calibration.
+
+Robustness features:
+- L2-regularized logistic meta-learner (handles small val sets)
+- Optional cross-validated isotonic calibration (well-calibrated outputs)
+- Graceful handling of NaN / Inf / single-class targets
+- Deterministic feature ordering
 """
 
 import numpy as np
@@ -21,20 +28,37 @@ class EnsembleModel:
 
     Strategy:
     1. Each base model produces P(up) probability
-    2. Meta-learner (calibrated logistic regression) learns optimal weighting
-    3. Output is calibrated probability with confidence score
+    2. Meta-learner (regularized logistic regression) learns optimal weighting
+    3. Calibrator (cross-validated isotonic) corrects miscalibration
+    4. Output is well-calibrated probability with confidence score
 
     Calibration is critical — raw model probabilities are often poorly calibrated
     for financial data due to non-stationarity.
     """
 
-    def __init__(self, model_dir: Optional[Path] = None):
+    def __init__(
+        self,
+        model_dir: Optional[Path] = None,
+        C: float = 0.5,
+        calibration_cv: int = 5,
+        calibration_method: str = "isotonic",
+    ):
         self.model_dir = model_dir
-        self.meta_learner = None
-        self.calibrator = None
+        self.C = C
+        self.calibration_cv = calibration_cv
+        self.calibration_method = calibration_method
+        self.meta_learner: Optional[LogisticRegression] = None
+        self.calibrator: Optional[CalibratedClassifierCV] = None
         self.base_model_names: List[str] = []
         self.weights: Optional[np.ndarray] = None
         self._fitted = False
+
+    @staticmethod
+    def _clean_predictions(arr: np.ndarray) -> np.ndarray:
+        """Replace NaN/Inf with 0.5 (neutral) and clip to a safe range."""
+        arr = np.asarray(arr, dtype=np.float64)
+        arr = np.nan_to_num(arr, nan=0.5, posinf=1.0, neginf=0.0)
+        return np.clip(arr, 1e-6, 1.0 - 1e-6)
 
     def fit(
         self,
@@ -55,39 +79,60 @@ class EnsembleModel:
         """
         self.base_model_names = sorted(base_predictions.keys())
 
-        # Stack predictions into matrix
-        X_meta = np.column_stack(
-            [base_predictions[name] for name in self.base_model_names]
-        )
-
-        # Add interaction features
+        cleaned = {k: self._clean_predictions(v) for k, v in base_predictions.items()}
+        X_meta = np.column_stack([cleaned[name] for name in self.base_model_names])
         X_augmented = self._augment_features(X_meta)
 
-        # Train meta-learner
+        y_true = np.asarray(y_true).astype(int)
+        unique_classes = np.unique(y_true)
+
         self.meta_learner = LogisticRegression(
-            C=1.0,
+            C=self.C,
             penalty="l2",
             solver="lbfgs",
-            max_iter=1000,
+            max_iter=2000,
             random_state=42,
+            n_jobs=1,
         )
-        self.meta_learner.fit(X_augmented, y_true)
 
-        # Extract learned weights
+        if len(unique_classes) < 2:
+            logger.warning(
+                f"Ensemble fit: y_true has only one class ({unique_classes}); "
+                "using equal-weight average fallback."
+            )
+            self.weights = np.ones(len(self.base_model_names)) / len(self.base_model_names)
+            self._fitted = True
+            ensemble_pred = X_meta.mean(axis=1)
+            metrics = {
+                "ensemble_auc": 0.5,
+                "ensemble_brier": float(brier_score_loss(y_true, ensemble_pred))
+                if len(unique_classes) > 1 else float(np.mean((ensemble_pred - y_true) ** 2)),
+                "ensemble_accuracy": float(((ensemble_pred > 0.5) == y_true).mean()),
+            }
+            return metrics
+
+        self.meta_learner.fit(X_augmented, y_true)
         self.weights = self.meta_learner.coef_[0][: len(self.base_model_names)]
         weight_dict = dict(zip(self.base_model_names, self.weights))
         logger.info(f"Ensemble weights: {weight_dict}")
 
-        # Calibrate
-        if calibrate:
-            self.calibrator = CalibratedClassifierCV(
-                self.meta_learner, method="isotonic", cv=3
-            )
-            self.calibrator.fit(X_augmented, y_true)
+        if calibrate and len(y_true) >= max(50, self.calibration_cv * 10):
+            try:
+                self.calibrator = CalibratedClassifierCV(
+                    LogisticRegression(
+                        C=self.C, penalty="l2", solver="lbfgs",
+                        max_iter=2000, random_state=42,
+                    ),
+                    method=self.calibration_method,
+                    cv=self.calibration_cv,
+                )
+                self.calibrator.fit(X_augmented, y_true)
+            except Exception as e:
+                logger.warning(f"Calibration failed ({e}); using uncalibrated logistic regression.")
+                self.calibrator = None
 
         self._fitted = True
 
-        # Metrics
         ensemble_pred = self.predict_proba(base_predictions)
         metrics = {
             "ensemble_auc": float(roc_auc_score(y_true, ensemble_pred)),
@@ -95,14 +140,15 @@ class EnsembleModel:
             "ensemble_accuracy": float(((ensemble_pred > 0.5) == y_true).mean()),
         }
 
-        # Compare with individual models
-        for name, pred in base_predictions.items():
-            metrics[f"{name}_auc"] = float(roc_auc_score(y_true, pred))
-            metrics[f"{name}_brier"] = float(brier_score_loss(y_true, pred))
+        for name, pred in cleaned.items():
+            try:
+                metrics[f"{name}_auc"] = float(roc_auc_score(y_true, pred))
+                metrics[f"{name}_brier"] = float(brier_score_loss(y_true, pred))
+            except Exception:
+                continue
 
         logger.info(f"Ensemble AUC: {metrics['ensemble_auc']:.4f}")
 
-        # Save
         if self.model_dir:
             self.save(self.model_dir)
 
@@ -121,16 +167,26 @@ class EnsembleModel:
         if not self._fitted:
             raise RuntimeError("Ensemble not fitted. Call fit() first.")
 
-        X_meta = np.column_stack(
-            [base_predictions.get(name, np.zeros(len(list(base_predictions.values())[0])))
-             for name in self.base_model_names]
-        )
+        cleaned = {k: self._clean_predictions(v) for k, v in base_predictions.items()}
+        if not cleaned:
+            raise ValueError("base_predictions is empty.")
+
+        n_rows = len(next(iter(cleaned.values())))
+        cols = []
+        for name in self.base_model_names:
+            if name in cleaned:
+                cols.append(cleaned[name])
+            else:
+                logger.warning(f"Missing predictions for '{name}' at inference; using 0.5.")
+                cols.append(np.full(n_rows, 0.5))
+        X_meta = np.column_stack(cols)
         X_augmented = self._augment_features(X_meta)
 
         if self.calibrator is not None:
             return self.calibrator.predict_proba(X_augmented)[:, 1]
-        else:
+        if self.meta_learner is not None:
             return self.meta_learner.predict_proba(X_augmented)[:, 1]
+        return X_meta.mean(axis=1)
 
     def get_confidence(self, ensemble_proba: np.ndarray) -> np.ndarray:
         """

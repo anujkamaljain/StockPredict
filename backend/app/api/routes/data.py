@@ -3,14 +3,33 @@ Data API routes — fetch and manage market data.
 """
 
 from fastapi import APIRouter, Query, HTTPException
-from typing import Optional, List
+from typing import Optional
 from loguru import logger
 import numpy as np
+import pandas as pd
 
 from app.data.ingestion import DataIngestionService
 from app.config import config
 
 router = APIRouter()
+
+
+def _safe_float(x, default=0.0):
+    """Coerce to float, replacing NaN/Inf with `default`. Default may be None."""
+    try:
+        f = float(x)
+        return f if np.isfinite(f) else default
+    except (TypeError, ValueError):
+        return default
+
+
+def _safe_int(x, default: int = 0) -> int:
+    """Coerce to int, replacing NaN/Inf with default."""
+    try:
+        f = float(x)
+        return int(f) if np.isfinite(f) else default
+    except (TypeError, ValueError):
+        return default
 
 
 @router.get("/fetch/{ticker}")
@@ -23,12 +42,26 @@ async def fetch_stock_data(
     try:
         import asyncio
         service = DataIngestionService()
-        result = await asyncio.to_thread(service.fetch_stock_data, ticker.upper(), start, end)
+        result = await asyncio.to_thread(
+            service.fetch_stock_data, ticker.upper(), start, end,
+        )
 
         if result["ohlcv"].empty:
             raise HTTPException(status_code=404, detail=f"No data found for {ticker}")
 
-        df = result["ohlcv"]
+        df = result["ohlcv"].copy()
+
+        # Defensive: replace NaN/Inf in numeric columns before JSON serialization.
+        # `int(NaN)` would raise IntCastingNaNError, breaking the whole endpoint.
+        for col in ("Open", "High", "Low", "Close"):
+            if col in df.columns:
+                df[col] = df[col].replace([np.inf, -np.inf], np.nan).fillna(0.0)
+        if "Volume" in df.columns:
+            df["Volume"] = (
+                df["Volume"].replace([np.inf, -np.inf], np.nan).fillna(0).astype("int64")
+            )
+
+        last_pct = df["Close"].pct_change().iloc[-1] if len(df) > 1 else 0.0
         return {
             "ticker": ticker.upper(),
             "source": result["source"],
@@ -41,12 +74,12 @@ async def fetch_stock_data(
                 "high": df["High"].round(2).tolist(),
                 "low": df["Low"].round(2).tolist(),
                 "close": df["Close"].round(2).tolist(),
-                "volume": df["Volume"].astype(int).tolist(),
+                "volume": df["Volume"].tolist(),
             },
             "latest": {
-                "close": round(float(df["Close"].iloc[-1]), 2),
-                "change": round(float(df["Close"].pct_change().iloc[-1] * 100), 2) if len(df) > 1 and np.isfinite(df["Close"].pct_change().iloc[-1]) else 0.0,
-                "volume": int(df["Volume"].iloc[-1]) if df["Volume"].iloc[-1] == df["Volume"].iloc[-1] else 0,
+                "close": round(_safe_float(df["Close"].iloc[-1]), 2),
+                "change": round(_safe_float(last_pct) * 100, 2),
+                "volume": _safe_int(df["Volume"].iloc[-1]),
             },
         }
     except HTTPException:
@@ -152,10 +185,15 @@ async def get_macro_data(start: str = "2015-01-01"):
         if df.empty:
             return {"message": "No macro data available. Set FRED_API_KEY in .env"}
 
+        latest = {}
+        for col in df.columns:
+            val = _safe_float(df[col].iloc[-1], default=None)  # type: ignore[arg-type]
+            if val is not None:
+                latest[col] = round(val, 4)
         return {
             "rows": len(df),
             "indicators": list(df.columns),
-            "latest": {col: round(float(df[col].iloc[-1]), 4) for col in df.columns if not df[col].iloc[-1] != df[col].iloc[-1]},
+            "latest": latest,
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
