@@ -1,13 +1,13 @@
 {
   "ticker": "GOOGL",
-  "market_cap": 4855869472768,
-  "pe_ratio": 30.572083,
-  "forward_pe": 27.709045,
-  "eps": 13.11,
+  "market_cap": 4675590946816,
+  "pe_ratio": 29.459534,
+  "forward_pe": 26.68032,
+  "eps": 13.1,
   "forward_eps": 14.46459,
-  "pb_ratio": 11.667103,
-  "ps_ratio": 11.493237,
-  "dividend_yield": 0.22,
+  "pb_ratio": 9.766663,
+  "ps_ratio": 11.06654,
+  "dividend_yield": 0.23,
   "payout_ratio": 0.0641,
   "revenue": 422498009088,
   "revenue_growth": 0.218,
@@ -23,9 +23,9 @@
   "beta": 1.267,
   "52w_high": 402.0,
   "52w_low": 156.16,
-  "50d_avg": 323.729,
-  "200d_avg": 286.27386,
+  "50d_avg": 325.2666,
+  "200d_avg": 287.2562,
   "sector": "Communication Services",
   "industry": "Internet Content & Information",
-  "fetch_date": "2026-05-10T01:51:29.850393"
+  "fetch_date": "2026-05-13T00:53:07.213943"
 }

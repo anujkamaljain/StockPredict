@@ -42,17 +42,24 @@ class SignalGenerator:
     Generates trading signals from ensemble model predictions.
 
     Signal logic:
-    - P(up) > buy_threshold AND confidence > min_confidence → BUY
-    - P(up) < sell_threshold AND confidence > min_confidence → SELL
+    - P(up) > buy_threshold AND effective_confidence > min_confidence → BUY
+    - P(up) < sell_threshold AND effective_confidence > min_confidence → SELL
     - Otherwise → HOLD
+
+    Effective confidence = raw probability confidence + agreement bonus.
+    This accounts for the fact that a well-calibrated ensemble on a hard
+    problem (stock prediction, AUC ~0.52) produces modest probabilities
+    (0.45–0.58) even when it has a real edge. Model consensus amplifies
+    the signal when 4+ of 6 models agree.
 
     Thresholds are dynamic based on user's risk tolerance.
     """
 
     RISK_PROFILES = {
-        "low": {"buy_threshold": 0.65, "sell_threshold": 0.35, "min_confidence": 0.40},
-        "medium": {"buy_threshold": 0.58, "sell_threshold": 0.42, "min_confidence": 0.25},
-        "high": {"buy_threshold": 0.53, "sell_threshold": 0.47, "min_confidence": 0.10},
+        # Thresholds calibrated for ensemble AUC ~0.52 (proba range 0.45–0.58)
+        "low":    {"buy_threshold": 0.56, "sell_threshold": 0.44, "min_confidence": 0.30},
+        "medium": {"buy_threshold": 0.53, "sell_threshold": 0.47, "min_confidence": 0.15},
+        "high":   {"buy_threshold": 0.51, "sell_threshold": 0.49, "min_confidence": 0.08},
     }
 
     def __init__(self, risk_tolerance: str = "medium"):
@@ -85,14 +92,29 @@ class SignalGenerator:
         Returns:
             Signal object
         """
-        # Confidence = distance from 0.5 * 2 (scaled to [0, 1])
-        confidence = abs(ensemble_proba - 0.5) * 2
+        # Raw confidence = distance from 0.5, scaled to [0, 1]
+        raw_confidence = abs(ensemble_proba - 0.5) * 2
 
         # Model agreement
         agreement = 0.0
         if individual_predictions:
             up_votes = sum(1 for p in individual_predictions.values() if p > 0.5)
             agreement = up_votes / len(individual_predictions)
+
+        # Agreement bonus: when most models agree, boost confidence.
+        # 6/6 agree → +0.25, 5/6 → +0.15, 4/6 → +0.05, ≤3/6 → 0
+        direction_agreement = agreement if ensemble_proba > 0.5 else (1 - agreement)
+        if direction_agreement >= 0.9:
+            agreement_bonus = 0.25
+        elif direction_agreement >= 0.75:
+            agreement_bonus = 0.15
+        elif direction_agreement >= 0.60:
+            agreement_bonus = 0.05
+        else:
+            agreement_bonus = 0.0
+
+        # Effective confidence combines probability edge + consensus
+        confidence = min(1.0, raw_confidence + agreement_bonus)
 
         # Risk score (based on volatility and disagreement)
         risk_score = 0.5

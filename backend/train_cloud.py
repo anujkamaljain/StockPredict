@@ -634,7 +634,9 @@ def train_deep_model(
             if use_amp_real:
                 with torch.cuda.amp.autocast():
                     out = model(bx)
-                    loss = criterion(out["direction_prob"], by)
+                # BCELoss is unsafe under autocast — compute loss in float32
+                with torch.cuda.amp.autocast(enabled=False):
+                    loss = criterion(out["direction_prob"].float(), by.float())
                 scaler_amp.scale(loss).backward()
                 scaler_amp.unscale_(optimizer)
                 torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)

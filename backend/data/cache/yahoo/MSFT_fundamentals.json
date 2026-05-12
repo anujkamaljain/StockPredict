@@ -1,12 +1,12 @@
 {
   "ticker": "MSFT",
-  "market_cap": 3065418088448,
-  "pe_ratio": 24.563097,
-  "forward_pe": 21.321096,
+  "market_cap": 3035852701696,
+  "pe_ratio": 24.32619,
+  "forward_pe": 21.11546,
   "eps": 16.8,
   "forward_eps": 19.35454,
-  "pb_ratio": 7.39839,
-  "ps_ratio": 9.631412,
+  "pb_ratio": 7.3270345,
+  "ps_ratio": 9.538518,
   "dividend_yield": 0.88,
   "payout_ratio": 0.20729999,
   "revenue": 318272995328,
@@ -27,5 +27,5 @@
   "200d_avg": 465.171,
   "sector": "Technology",
   "industry": "Software - Infrastructure",
-  "fetch_date": "2026-05-12T15:59:01.461802"
+  "fetch_date": "2026-05-13T01:03:15.923684"
 }

@@ -1,13 +1,13 @@
 {
   "ticker": "META",
-  "market_cap": 1547498946560,
-  "pe_ratio": 22.176428,
-  "forward_pe": 16.847143,
+  "market_cap": 1526658760704,
+  "pe_ratio": 21.877777,
+  "forward_pe": 16.620262,
   "eps": 27.49,
   "forward_eps": 36.18596,
-  "pb_ratio": 7.099701,
-  "ps_ratio": 7.1989083,
-  "dividend_yield": 0.34,
+  "pb_ratio": 6.2639446,
+  "ps_ratio": 7.1019597,
+  "dividend_yield": 0.35,
   "payout_ratio": 0.0764,
   "revenue": 214962995200,
   "revenue_growth": 0.331,
@@ -23,9 +23,9 @@
   "beta": 1.243,
   "52w_high": 796.25,
   "52w_low": 520.26,
-  "50d_avg": 626.5502,
-  "200d_avg": 675.8691,
+  "50d_avg": 625.5638,
+  "200d_avg": 675.2894,
   "sector": "Communication Services",
   "industry": "Internet Content & Information",
-  "fetch_date": "2026-05-10T01:52:13.724116"
+  "fetch_date": "2026-05-13T00:53:39.686809"
 }

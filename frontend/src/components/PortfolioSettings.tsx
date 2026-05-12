@@ -160,9 +160,9 @@ export function PortfolioSettings({
         <ul className="space-y-1.5 text-xs">
           <li>• <strong>Capital</strong> affects position sizing via Kelly Criterion</li>
           <li>• <strong>Risk tolerance</strong> adjusts buy/sell thresholds and confidence minimums</li>
-          <li>• Conservative: Buy only when P(up) {">"} 65%, Sell when P(up) {"<"} 35%</li>
-          <li>• Balanced: Buy when P(up) {">"} 58%, Sell when P(up) {"<"} 42%</li>
-          <li>• Aggressive: Buy when P(up) {">"} 53%, Sell when P(up) {"<"} 47%</li>
+          <li>• Conservative: Buy when P(up) {">"} 56%, Sell when P(up) {"<"} 44%</li>
+          <li>• Balanced: Buy when P(up) {">"} 53%, Sell when P(up) {"<"} 47%</li>
+          <li>• Aggressive: Buy when P(up) {">"} 51%, Sell when P(up) {"<"} 49%</li>
         </ul>
       </div>
     </div>

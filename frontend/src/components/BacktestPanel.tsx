@@ -152,7 +152,7 @@ export function BacktestPanel({
               Capital
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[var(--text-muted)] pointer-events-none select-none">
+              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-[var(--text-muted)] pointer-events-none select-none z-10">
                 {currency}
               </span>
               <input
@@ -169,7 +169,7 @@ export function BacktestPanel({
                   if (capitalInput === "") setCapitalInput(String(capital));
                 }}
                 placeholder="100000"
-                className="input-dark w-44 pl-7"
+                className="input-dark w-44 pl-9"
                 aria-label="Initial capital"
               />
             </div>

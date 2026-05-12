@@ -331,26 +331,54 @@ You should see your GPU name (V100 / A100 / H100).
 
 ### B.5 — Run training (interactive)
 
-DGX GPUs are powerful — bump batch size and ticker count:
+DGX GPUs are powerful — use the full multi-market universe (US + India, all caps + ETFs).
+
+**If using Jupyter notebook** (copy-paste this single line):
+
+```python
+!python train_cloud.py --tickers "AAPL,MSFT,GOOGL,AMZN,NVDA,META,JPM,JNJ,V,PG,UNH,HD,MA,DIS,TSLA,BRK-B,XOM,WMT,KO,PFE,SQ,SNAP,NET,ENPH,DKNG,CROX,FIVE,DECK,ETSY,ROKU,SOFI,AFRM,UPST,CELH,RBLX,PUBM,SFIX,IONQ,SPY,QQQ,IWM,DIA,ARKK,XLF,XLE,GLD,VTI,EEM,RELIANCE.NS,TCS.NS,INFY.NS,HDFCBANK.NS,ICICIBANK.NS,BHARTIARTL.NS,ITC.NS,SBIN.NS,LT.NS,KOTAKBANK.NS,HINDUNILVR.NS,BAJFINANCE.NS,MARUTI.NS,TATAMOTORS.NS,WIPRO.NS,MPHASIS.NS,COFORGE.NS,TRENT.NS,AUROPHARMA.NS,JUBLFOOD.NS,FEDERALBNK.NS,VOLTAS.NS,TATAELXSI.NS,PERSISTENT.NS,CDSL.NS,DEEPAKNTR.NS,KPITTECH.NS,ATUL.NS,ROUTE.NS,RATNAMANI.NS,NIFTYBEES.NS,BANKBEES.NS,GOLDBEES.NS,JUNIORBEES.NS" --start 2010-01-01 --epochs 200 --patience 35 --seq_length 60 --max_features 120 --batch_size 128 --lr 0.0005 --label_smoothing 0.05 --gap 7 --seed 42 --use_amp --device auto --output_dir trained_models
+```
+
+**If using a bash terminal** (SSH into DGX):
 
 ```bash
 python train_cloud.py \
-    --tickers AAPL,MSFT,GOOGL,AMZN,NVDA,META,JPM,JNJ,V,PG,UNH,HD,MA,DIS,TSLA \
-    --start 2008-01-01 \
+    --tickers "AAPL,MSFT,GOOGL,AMZN,NVDA,META,JPM,JNJ,V,PG,UNH,HD,MA,DIS,TSLA,BRK-B,XOM,WMT,KO,PFE,SQ,SNAP,NET,ENPH,DKNG,CROX,FIVE,DECK,ETSY,ROKU,SOFI,AFRM,UPST,CELH,RBLX,PUBM,SFIX,IONQ,SPY,QQQ,IWM,DIA,ARKK,XLF,XLE,GLD,VTI,EEM,RELIANCE.NS,TCS.NS,INFY.NS,HDFCBANK.NS,ICICIBANK.NS,BHARTIARTL.NS,ITC.NS,SBIN.NS,LT.NS,KOTAKBANK.NS,HINDUNILVR.NS,BAJFINANCE.NS,MARUTI.NS,TATAMOTORS.NS,WIPRO.NS,MPHASIS.NS,COFORGE.NS,TRENT.NS,AUROPHARMA.NS,JUBLFOOD.NS,FEDERALBNK.NS,VOLTAS.NS,TATAELXSI.NS,PERSISTENT.NS,CDSL.NS,DEEPAKNTR.NS,KPITTECH.NS,ATUL.NS,ROUTE.NS,RATNAMANI.NS,NIFTYBEES.NS,BANKBEES.NS,GOLDBEES.NS,JUNIORBEES.NS" \
+    --start 2010-01-01 \
     --epochs 200 \
-    --patience 30 \
+    --patience 35 \
     --seq_length 60 \
-    --max_features 100 \
+    --max_features 120 \
     --batch_size 128 \
     --lr 0.0005 \
     --label_smoothing 0.05 \
-    --gap 5 \
+    --gap 7 \
     --seed 42 \
     --use_amp \
     --device auto \
-    --alpha_vantage_key YOUR_ALPHA_VANTAGE_KEY_HERE \
     --output_dir trained_models
 ```
+
+> **Ticker breakdown (82 total):**
+>
+> | Market | Segment | Count | Examples |
+> |--------|---------|-------|----------|
+> | US | Large cap | 20 | AAPL, MSFT, NVDA, JPM, TSLA… |
+> | US | Mid cap | 10 | SQ, NET, ENPH, DKNG, CROX… |
+> | US | Small cap | 8 | SOFI, AFRM, UPST, CELH, IONQ… |
+> | US | ETFs | 10 | SPY, QQQ, IWM, DIA, ARKK, GLD… |
+> | India | Large cap | 15 | RELIANCE, TCS, INFY, HDFC, ICICI… |
+> | India | Mid cap | 7 | MPHASIS, COFORGE, TRENT, JUBLFOOD… |
+> | India | Small cap | 8 | TATAELXSI, PERSISTENT, CDSL, KPITTECH… |
+> | India | ETFs | 4 | NIFTYBEES, BANKBEES, GOLDBEES, JUNIORBEES |
+>
+> **Tuning for reliability:**
+> - `patience 35` — more data needs more convergence time; avoids underfitting
+> - `max_features 120` — 82 tickers × 3000+ rows = ~250K samples; can support more features without overfitting
+> - `gap 7` — wider purged gap; extra protection against temporal leakage with diverse tickers
+> - Acceptance gates still enforce: AUC ≥ 0.52, train-test gap ≤ 0.10, permutation check
+>
+> **Estimated time on DGX:** ~3–4 hours. No Alpha Vantage key needed (Yahoo handles all).
 
 ### B.6 — Or submit as a Slurm batch job
 

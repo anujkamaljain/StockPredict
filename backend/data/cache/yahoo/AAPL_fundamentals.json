@@ -1,12 +1,12 @@
 {
   "ticker": "AAPL",
-  "market_cap": 4298695245824,
-  "pe_ratio": 35.476364,
-  "forward_pe": 30.615929,
+  "market_cap": 4325279268864,
+  "pe_ratio": 35.695755,
+  "forward_pe": 30.805264,
   "eps": 8.25,
   "forward_eps": 9.55973,
-  "pb_ratio": 40.31405,
-  "ps_ratio": 9.522142,
+  "pb_ratio": 40.56336,
+  "ps_ratio": 9.581092,
   "dividend_yield": 0.37,
   "payout_ratio": 0.1259,
   "revenue": 451442016256,
@@ -21,11 +21,11 @@
   "quick_ratio": 0.906,
   "free_cash_flow": 101090746368,
   "beta": 1.065,
-  "52w_high": 294.76,
+  "52w_high": 294.8999,
   "52w_low": 193.46,
   "50d_avg": 263.3726,
   "200d_avg": 257.41315,
   "sector": "Technology",
   "industry": "Consumer Electronics",
-  "fetch_date": "2026-05-12T16:03:04.692594"
+  "fetch_date": "2026-05-13T00:52:53.632664"
 }

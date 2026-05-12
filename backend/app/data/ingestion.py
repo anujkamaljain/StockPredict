@@ -16,6 +16,26 @@ from app.data.validation import DataValidator, ValidationReport
 from app.config import config
 
 
+
+def _normalize_indian_ticker(ticker: str) -> str:
+    """
+    Normalize Indian stock ticker formats for Yahoo Finance compatibility.
+
+    Yahoo Finance uses .NS (NSE) for Indian stocks. This converts:
+      - RELIANCE.BSE  → RELIANCE.NS
+      - RELIANCE.NSE  → RELIANCE.NS
+      - RELIANCE.BO   → RELIANCE.NS  (BSE's Yahoo code, often broken)
+      - RELIANCE.NS   → RELIANCE.NS  (unchanged)
+      - AAPL          → AAPL         (non-Indian, unchanged)
+    """
+    upper = ticker.upper().strip()
+    for suffix in (".BSE", ".NSE", ".BO"):
+        if upper.endswith(suffix):
+            base = upper[: -len(suffix)]
+            return f"{base}.NS"
+    return ticker
+
+
 class DataIngestionService:
     """
     Orchestrates data fetching from multiple providers.
@@ -49,10 +69,17 @@ class DataIngestionService:
         Priority:
         🥇 1. Alpha Vantage (primary — official API, stable, OHLCV + indicators)
         🥈 2. Yahoo Finance (fallback — missing data recovery, sanity checks)
+        🥉 3. Yahoo Finance with .NS suffix (auto-retry for Indian .BSE/.NSE tickers)
 
         Returns:
             Dict with 'ohlcv', 'fundamentals', 'validation_report'
         """
+        # Normalize Indian tickers (.BSE/.NSE/.BO → .NS)
+        normalized = _normalize_indian_ticker(ticker)
+        if normalized != ticker:
+            logger.info(f"Normalized Indian ticker: {ticker} → {normalized}")
+            ticker = normalized
+
         result = {
             "ticker": ticker,
             "ohlcv": pd.DataFrame(),
@@ -88,9 +115,21 @@ class DataIngestionService:
             if not ohlcv.empty:
                 result["source"] = "yahoo"
                 logger.info(f"Yahoo Finance returned {len(ohlcv)} rows for {ticker}")
-            else:
-                logger.error(f"All data sources exhausted for {ticker}")
-                return result
+
+        # 🥉 If still empty and ticker doesn't already end with .NS, try .NS
+        if ohlcv.empty and not ticker.upper().endswith(".NS"):
+            ns_ticker = f"{ticker}.NS"
+            logger.info(f"Retrying with NSE suffix: {ns_ticker}")
+            ohlcv = self.yahoo.fetch_ohlcv(ns_ticker, start=start, end=end, interval=interval)
+            if not ohlcv.empty:
+                result["source"] = "yahoo"
+                result["ticker"] = ns_ticker
+                ticker = ns_ticker
+                logger.info(f"Yahoo Finance returned {len(ohlcv)} rows for {ns_ticker}")
+
+        if ohlcv.empty:
+            logger.error(f"All data sources exhausted for {ticker}")
+            return result
 
         # If Alpha Vantage was primary and start date filtering is needed
         if result["source"] == "alpha_vantage" and start:
